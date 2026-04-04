@@ -1,10 +1,10 @@
 <?php
 
-namespace backend\modules\content\controllers;
+namespace backend\modules\emailcontent\controllers;
 
-use backend\modules\content\models\ContentForm;
-use backend\modules\content\models\ContentSearch;
-use common\models\Content;
+use backend\modules\emailcontent\models\EmailContentForm;
+use backend\modules\emailcontent\models\EmailContentSearch;
+use common\models\EmailContent;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -12,7 +12,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class ContentController extends Controller
+class EmailContentController extends Controller
 {
     public function behaviors(): array
     {
@@ -37,7 +37,7 @@ class ContentController extends Controller
 
     public function actionIndex(): string
     {
-        $searchModel = new ContentSearch();
+        $searchModel = new EmailContentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,10 +48,10 @@ class ContentController extends Controller
 
     public function actionCreate(): string|Response
     {
-        $form = new ContentForm();
+        $form = new EmailContentForm();
 
         if ($form->load(Yii::$app->request->post()) && $form->save()) {
-            Yii::$app->session->setFlash('success', 'Content created.');
+            Yii::$app->session->setFlash('success', 'Email content created.');
 
             return $this->redirect(['index']);
         }
@@ -70,10 +70,10 @@ class ContentController extends Controller
 
     public function actionUpdate(int $id): string|Response
     {
-        $form = new ContentForm($this->findModel($id));
+        $form = new EmailContentForm($this->findModel($id));
 
         if ($form->load(Yii::$app->request->post()) && $form->save()) {
-            Yii::$app->session->setFlash('success', 'Content updated.');
+            Yii::$app->session->setFlash('success', 'Email content updated.');
 
             return $this->redirect(['index']);
         }
@@ -86,17 +86,17 @@ class ContentController extends Controller
     public function actionDelete(int $id): Response
     {
         $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', 'Content deleted.');
+        Yii::$app->session->setFlash('success', 'Email content deleted.');
 
         return $this->redirect(['index']);
     }
 
-    protected function findModel(int $id): Content
+    protected function findModel(int $id): EmailContent
     {
-        $model = Content::find()->with('translations')->where(['id' => $id])->one();
+        $model = EmailContent::find()->with('translations')->where(['id' => $id])->one();
 
         if ($model === null) {
-            throw new NotFoundHttpException('The requested content does not exist.');
+            throw new NotFoundHttpException('The requested email content does not exist.');
         }
 
         return $model;

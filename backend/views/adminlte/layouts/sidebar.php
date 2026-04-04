@@ -4,6 +4,32 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username;
+$menuItems = [
+    ['label' => 'Main Navigation', 'header' => true],
+    ['label' => 'Dashboard', 'icon' => 'tachometer-alt', 'url' => ['/site/index']],
+    ['label' => 'Content', 'header' => true],
+    ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index']],
+    ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index']],
+    ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index']],
+    ['label' => 'Yii Tools', 'header' => true, 'visible' => YII_ENV_DEV],
+    ['label' => 'Gii', 'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
+    ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
+    ['label' => 'Frontend', 'header' => true],
+    ['label' => 'Open Site', 'icon' => 'globe', 'url' => ['/'], 'linkOptions' => ['target' => '_blank', 'rel' => 'noopener']],
+    ['label' => 'Account', 'header' => true, 'visible' => !Yii::$app->user->isGuest],
+];
+
+if (!Yii::$app->user->isGuest) {
+    $menuItems[] = [
+        'label' => Html::beginForm(['/site/logout'], 'post')
+            . Html::submitButton(
+                '<span class="nav-icon fas fa-sign-out-alt"></span><p>Logout</p>',
+                ['class' => 'btn btn-link nav-link text-left p-0 border-0 bg-transparent']
+            )
+            . Html::endForm(),
+        'encode' => false,
+    ];
+}
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="<?= Url::to(['/site/index']) ?>" class="brand-link">
@@ -23,20 +49,7 @@ $username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->user
 
         <nav class="mt-2">
             <?= \hail812\adminlte\widgets\Menu::widget([
-                'items' => [
-                    ['label' => 'Main Navigation', 'header' => true],
-                    ['label' => 'Dashboard', 'icon' => 'tachometer-alt', 'url' => ['/site/index']],
-                    ['label' => 'Content', 'header' => true],
-                    ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index']],
-                    ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index']],
-                    ['label' => 'Yii Tools', 'header' => true, 'visible' => YII_ENV_DEV],
-                    ['label' => 'Gii', 'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
-                    ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
-                    ['label' => 'Frontend', 'header' => true],
-                    ['label' => 'Open Site', 'icon' => 'globe', 'url' => ['/'], 'linkOptions' => ['target' => '_blank', 'rel' => 'noopener']],
-                    ['label' => 'Account', 'header' => true, 'visible' => !Yii::$app->user->isGuest],
-                    ['label' => 'Logout', 'icon' => 'sign-out-alt', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post'], 'visible' => !Yii::$app->user->isGuest],
-                ],
+                'items' => $menuItems,
             ]) ?>
         </nav>
     </div>

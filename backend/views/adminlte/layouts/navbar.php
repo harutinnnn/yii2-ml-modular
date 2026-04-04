@@ -27,7 +27,11 @@ $username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->user
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <span class="dropdown-item-text text-muted"><?= Html::encode($username) ?></span>
                 <div class="dropdown-divider"></div>
-                <?= Html::a('Logout', ['/site/logout'], ['data-method' => 'post', 'class' => 'dropdown-item']) ?>
+                <?php if (!Yii::$app->user->isGuest): ?>
+                    <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'px-3 py-1']) ?>
+                    <?= Html::submitButton('Logout', ['class' => 'btn btn-link dropdown-item p-0 text-left']) ?>
+                    <?= Html::endForm() ?>
+                <?php endif; ?>
             </div>
         </li>
         <li class="nav-item">

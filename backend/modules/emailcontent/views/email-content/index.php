@@ -1,21 +1,21 @@
 <?php
 
 /** @var yii\web\View $this */
-/** @var backend\modules\language\models\LanguageSearch $searchModel */
+/** @var backend\modules\emailcontent\models\EmailContentSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-$this->title = 'Languages';
+$this->title = 'Email Contents';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="language-index">
+<div class="email-content-index">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="m-0"><?= Html::encode($this->title) ?></h1>
-        <?= Html::a('Create Language', ['create'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Create Email Content', ['create'], ['class' => 'btn btn-primary']) ?>
     </div>
 
     <div class="card">
@@ -27,20 +27,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'layout' => "{items}\n<div class=\"card-footer clearfix\">{summary}{pager}</div>",
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
-                    'code',
-                    'name',
+                    'id',
                     [
-                        'attribute' => 'sort_order',
+                        'attribute' => 'title',
+                        'value' => static fn($model) => $model->getDisplayTitle(),
                     ],
                     [
-                        'attribute' => 'is_default',
-                        'format' => 'boolean',
-                        'filter' => [1 => 'Yes', 0 => 'No'],
-                    ],
-                    [
-                        'attribute' => 'is_active',
-                        'format' => 'boolean',
-                        'filter' => [1 => 'Yes', 0 => 'No'],
+                        'attribute' => 'status',
+                        'filter' => \common\models\EmailContent::statusOptions(),
+                        'value' => static fn($model) => $model->getStatusLabel(),
                     ],
                     [
                         'class' => ActionColumn::class,

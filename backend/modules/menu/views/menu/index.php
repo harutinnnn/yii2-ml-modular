@@ -158,7 +158,6 @@ JS);
 
 <div class="menu-index">
     <div class="menu-toolbar">
-        <h1 class="m-0"><?= Html::encode($this->title) ?></h1>
         <?= Html::a('Create Menu Item', ['create'], ['class' => 'btn btn-primary']) ?>
     </div>
 

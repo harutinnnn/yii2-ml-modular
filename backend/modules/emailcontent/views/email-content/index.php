@@ -14,7 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="email-content-index">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="m-0"><?= Html::encode($this->title) ?></h1>
         <?= Html::a('Create Email Content', ['create'], ['class' => 'btn btn-primary']) ?>
     </div>
 

@@ -97,6 +97,15 @@ return [
             'rules' => [
             ],
         ],
+        'urlManagerFrontend' => [
+            'class' => \yii\web\UrlManager::class,
+            'hostInfo' => 'http://yii2-ml.local',
+            'baseUrl' => '',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
     ],
     'params' => $params,
 ];

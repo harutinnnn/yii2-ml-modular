@@ -38,8 +38,17 @@ return [
         'email-content' => [
             'class' => \backend\modules\emailcontent\Module::class,
         ],
+        'frontend-language' => [
+            'class' => \backend\modules\frontendlanguage\Module::class,
+        ],
+        'menu' => [
+            'class' => \backend\modules\menu\Module::class,
+        ],
         'language' => [
             'class' => \backend\modules\language\Module::class,
+        ],
+        'section' => [
+            'class' => \backend\modules\section\Module::class,
         ],
     ],
     'components' => [

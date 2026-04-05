@@ -5,14 +5,13 @@ use yii\helpers\Url;
 
 $username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username;
 $menuItems = [
-        ['label' => 'Main Navigation', 'header' => true],
         ['label' => 'Dashboard', 'icon' => 'tachometer-alt', 'url' => ['/site/index']],
+        ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index']],
         ['label' => 'Content', 'header' => true],
         ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index']],
         ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index']],
         ['label' => 'Frontend Languages', 'icon' => 'tags', 'url' => ['/frontend-language/frontend-language/index']],
         ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index']],
-        ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index']],
         ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index']],
         ['label' => 'Settings', 'icon' => 'cogs', 'url' => ['/settings/setting/index']],
         ['label' => 'Yii Tools', 'header' => true, 'visible' => YII_ENV_DEV],

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Menu;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -75,6 +76,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
+//        $menuModel = new Menu();
+//        $menuList = $menuModel::find()->one();
+
+//        dump($menuList->getTranslation('am')->attributes);
+//        dd($menuList);
+
         return $this->render('index');
     }
 
@@ -217,8 +225,8 @@ class SiteController extends Controller
      * Verify email address
      *
      * @param string $token
-     * @throws BadRequestHttpException
      * @return yii\web\Response
+     * @throws BadRequestHttpException
      */
     public function actionVerifyEmail($token)
     {

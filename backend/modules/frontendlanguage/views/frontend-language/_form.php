@@ -56,6 +56,7 @@ CkEditorAsset::register($this);
                     <?php $fieldId = Html::getInputId($model, "translations[{$language->code}][text]"); ?>
                     <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>" id="frontend-language-pane-<?= Html::encode($language->code) ?>" role="tabpanel">
                         <?= $form->field($model, "translations[{$language->code}][text]")
+                            ->label("Text ({$language->name})")
                             ->textarea([
                                 'rows' => 8,
                                 'class' => 'form-control js-frontend-language-text',

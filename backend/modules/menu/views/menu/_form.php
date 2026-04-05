@@ -62,7 +62,7 @@ $menuIdJson = Json::htmlEncode($menuId);
                 <?php foreach ($languages as $index => $language): ?>
                     <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>" id="menu-lang-<?= Html::encode($language->code) ?>" role="tabpanel">
                         <div class="row">
-                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][title]")->label('Title')->textInput([
+                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][title]")->label("Title ({$language->name})")->textInput([
                                 'maxlength' => true,
                                 'class' => 'form-control js-menu-title',
                                 'data-lang' => $language->code,
@@ -70,12 +70,12 @@ $menuIdJson = Json::htmlEncode($menuId);
                             <div class="col-md-6"></div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][meta_title]")->label('Meta Title')->textInput(['maxlength' => true]) ?></div>
+                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][meta_title]")->label("Meta Title ({$language->name})")->textInput(['maxlength' => true]) ?></div>
                             <div class="col-md-6"></div>
                         </div>
-                        <?= $form->field($model, "translations[{$language->code}][meta_desc]")->label('Meta Description')->textarea(['rows' => 2]) ?>
-                        <?= $form->field($model, "translations[{$language->code}][meta_keywords]")->label('Meta Keywords')->textarea(['rows' => 2]) ?>
-                        <?= $form->field($model, "translations[{$language->code}][description]")->label('Description')->widget(CkEditor::class, [
+                        <?= $form->field($model, "translations[{$language->code}][meta_desc]")->label("Meta Description ({$language->name})")->textarea(['rows' => 2]) ?>
+                        <?= $form->field($model, "translations[{$language->code}][meta_keywords]")->label("Meta Keywords ({$language->name})")->textarea(['rows' => 2]) ?>
+                        <?= $form->field($model, "translations[{$language->code}][description]")->label("Description ({$language->name})")->widget(CkEditor::class, [
                             'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
                             'clientOptions' => [
                                 'height' => 220,

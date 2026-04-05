@@ -50,12 +50,14 @@ $languages = $model->getLanguages();
                         aria-labelledby="email-lang-tab-<?= Html::encode($language->code) ?>"
                     >
                         <?= $form->field($model, "translations[{$language->code}][title]")
+                            ->label("Title ({$language->name})")
                             ->textInput([
                                 'maxlength' => true,
                                 'placeholder' => "Title in {$language->name}",
                             ]) ?>
 
                         <?= $form->field($model, "translations[{$language->code}][text]")
+                            ->label("Text ({$language->name})")
                             ->widget(CkEditor::class, [
                                 'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
                                 'clientOptions' => [

@@ -14,24 +14,12 @@ $menuItems = [
         ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index']],
         ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index']],
         ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index']],
+        ['label' => 'Settings', 'icon' => 'cogs', 'url' => ['/settings/setting/index']],
         ['label' => 'Yii Tools', 'header' => true, 'visible' => YII_ENV_DEV],
         ['label' => 'Gii', 'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
         ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
-        ['label' => 'Account', 'header' => true, 'visible' => !Yii::$app->user->isGuest],
 ];
 
-if (!Yii::$app->user->isGuest) {
-    $menuItems[] = [
-            'icon' => "",
-            'label' => Html::beginForm(['/site/logout'], 'post')
-                    . Html::submitButton(
-                            '<i class="nav-icon fas fa-sign-out-alt"></i> Logout',
-                            ['class' => 'btn btn-link nav-link text-left p-0 border-0 bg-transparent']
-                    )
-                    . Html::endForm(),
-            'encode' => false,
-    ];
-}
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="<?= Url::to(['/site/index']) ?>" class="brand-link">

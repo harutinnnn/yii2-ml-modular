@@ -50,6 +50,9 @@ return [
         'section' => [
             'class' => \backend\modules\section\Module::class,
         ],
+        'settings' => [
+            'class' => \backend\modules\settings\Module::class,
+        ],
     ],
     'components' => [
         'request' => [

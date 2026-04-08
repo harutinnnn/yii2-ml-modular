@@ -11,7 +11,7 @@ use yii\base\Model;
 class EmailContentForm extends Model
 {
     public ?EmailContent $emailContent = null;
-    public int $status = EmailContent::STATUS_PENDING;
+    public int $status = EmailContent::STATUS_PUBLISHED;
     public array $translations = [];
 
     private ?array $_languages = null;

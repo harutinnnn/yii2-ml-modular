@@ -11,7 +11,7 @@ use yii\base\Model;
 class ContentForm extends Model
 {
     public ?Content $content = null;
-    public int $status = Content::STATUS_PENDING;
+    public int $status = Content::STATUS_PUBLISHED;
     public array $translations = [];
 
     private ?array $_languages = null;

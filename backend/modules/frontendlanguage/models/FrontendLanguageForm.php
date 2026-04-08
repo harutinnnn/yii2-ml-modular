@@ -12,8 +12,8 @@ class FrontendLanguageForm extends Model
 {
     public ?FrontendLanguage $frontendLanguage = null;
     public string $key = '';
-    public int $status = FrontendLanguage::STATUS_PENDING;
-    public string $type = FrontendLanguage::TYPE_CONTENT;
+    public int $status = FrontendLanguage::STATUS_PUBLISHED;
+    public string $type = FrontendLanguage::TYPE_LABEL;
     public array $translations = [];
 
     private ?array $_languages = null;

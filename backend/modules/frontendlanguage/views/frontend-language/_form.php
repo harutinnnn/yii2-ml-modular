@@ -19,14 +19,16 @@ CkEditorAsset::register($this);
     <div class="card card-primary">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-4">
-                    <?= $form->field($model, 'key')->textInput(['maxlength' => true]) ?>
-                </div>
+
                 <div class="col-md-6">
                     <?= $form->field($model, 'status')->dropDownList(FrontendLanguage::statusOptions()) ?>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-6">
                     <?= $form->field($model, 'type')->dropDownList(FrontendLanguage::typeOptions(), ['id' => 'frontend-language-type']) ?>
+                </div>
+
+                <div class="col-md-12">
+                    <?= $form->field($model, 'key')->textInput(['maxlength' => true]) ?>
                 </div>
             </div>
         </div>

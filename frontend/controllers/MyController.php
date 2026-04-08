@@ -16,8 +16,6 @@ class MyController extends Controller
         parent::__construct($id, $module, $config);
         \Yii::$app->globalData->setLang($this->lang);
         \Yii::$app->globalData->init();
-
-
     }
 
 }

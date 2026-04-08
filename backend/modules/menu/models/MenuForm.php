@@ -15,7 +15,7 @@ use yii\web\UploadedFile;
 class MenuForm extends Model
 {
     public ?Menu $menu = null;
-    public int $status = Menu::STATUS_PENDING;
+    public int $status = Menu::STATUS_PUBLISHED;
     public int $show_in_menu = 1;
     public ?int $position = null;
     public ?int $content_id = null;

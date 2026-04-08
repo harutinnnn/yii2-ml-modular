@@ -2,13 +2,13 @@
 
 namespace frontend\controllers;
 
+use common\helpers\I18n;
 use common\models\Menu;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
@@ -20,7 +20,7 @@ use frontend\models\ContactForm;
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends MyController
 {
     /**
      * {@inheritdoc}
@@ -77,11 +77,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
 
-//        $menuModel = new Menu();
-//        $menuList = $menuModel::find()->one();
-
-//        dump($menuList->getTranslation('am')->attributes);
-//        dd($menuList);
+        dd(\common\components\I18n::translate('name'));
 
         return $this->render('index');
     }

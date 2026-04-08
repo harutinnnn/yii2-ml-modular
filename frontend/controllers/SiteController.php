@@ -77,7 +77,7 @@ class SiteController extends MyController
     public function actionIndex()
     {
 
-        dd(\common\components\I18n::translate('name'));
+//        dd(\common\components\I18n::translate('name'));
 
         return $this->render('index');
     }

@@ -35,6 +35,9 @@ return [
         'content' => [
             'class' => \backend\modules\content\Module::class,
         ],
+        'posts' => [
+            'class' => \backend\modules\posts\Module::class,
+        ],
         'email-content' => [
             'class' => \backend\modules\emailcontent\Module::class,
         ],

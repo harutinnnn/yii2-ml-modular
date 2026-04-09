@@ -9,6 +9,7 @@ $menuItems = [
         ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index']],
         ['label' => 'Content', 'header' => true],
         ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index']],
+        ['label' => 'Posts', 'icon' => 'file-alt', 'url' => ['/posts/post/index']],
         ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index']],
         ['label' => 'Frontend Languages', 'icon' => 'tags', 'url' => ['/frontend-language/frontend-language/index']],
         ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index']],

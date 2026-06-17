@@ -58,6 +58,9 @@ return [
         ],
     ],
     'components' => [
+        'authManager' => [
+            'class' => yii\rbac\DbManager::class,
+        ],
         'request' => [
             'csrfParam' => '_csrf-backend',
             'baseUrl' => '/admin',

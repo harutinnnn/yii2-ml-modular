@@ -78,6 +78,13 @@ return [
         ],
     ],
     'components' => [
+        'frontendUrlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'baseUrl' => '',
+//            'hostInfo' => 'https://your-frontend-domain.com',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+        ],
         'authManager' => [
             'class' => yii\rbac\DbManager::class,
         ],

@@ -20,7 +20,7 @@ class SectionController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [[
                     'allow' => true,
-                    'roles' => ['@'],
+                    'roles' => ['admin'],
                 ]],
             ],
             'verbs' => [

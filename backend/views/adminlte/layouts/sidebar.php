@@ -5,19 +5,51 @@ use yii\helpers\Url;
 
 $username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username;
 $menuItems = [
-        ['label' => 'Dashboard', 'icon' => 'tachometer-alt', 'url' => ['/site/index']],
-        ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index']],
+        ['label' => 'Dashboard', 'icon' => 'tachometer-alt', 'url' => ['/site/index'],
+                'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('teacher')
+        ],
+        ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
         ['label' => 'Content', 'header' => true],
-        ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index']],
+        ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
         ['label' => 'Posts', 'icon' => 'file-alt', 'url' => ['/posts/post/index']],
-        ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index']],
-        ['label' => 'Frontend Languages', 'icon' => 'tags', 'url' => ['/frontend-language/frontend-language/index']],
-        ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index']],
-        ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index']],
-        ['label' => 'Settings', 'icon' => 'cogs', 'url' => ['/settings/setting/index']],
-        ['label' => 'Yii Tools', 'header' => true, 'visible' => YII_ENV_DEV],
-        ['label' => 'Gii', 'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
-        ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank', 'visible' => YII_ENV_DEV],
+        ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
+        ['label' => 'Frontend Languages', 'icon' => 'tags', 'url' => ['/frontend-language/frontend-language/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
+        ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
+        ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
+        ['label' => 'Settings', 'icon' => 'cogs', 'url' => ['/settings/setting/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
+
+        ['label' => 'RBAC', 'header' => true,
+                'visible' => Yii::$app->user->can('admin')
+        ],
+        ['label' => 'Assignment', 'icon' => 'users', 'url' => ['/admin/assignment/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
+//        ['label' => 'Permission', 'icon' => 'lock', 'url' => ['/admin/permission/index'],
+//                'visible' => Yii::$app->user->can('admin')
+//        ],
+        ['label' => 'Role', 'icon' => 'user-tag', 'url' => ['/admin/role/index'],
+                'visible' => Yii::$app->user->can('admin')
+        ],
+//        ['label' => 'Route', 'icon' => 'route', 'url' => ['/admin/route/index'],
+//                'visible' => Yii::$app->user->can('admin')
+//        ],
+        ['label' => 'Yii Tools', 'header' => true, 'visible' => YII_ENV_DEV && Yii::$app->user->can('admin')],
+        ['label' => 'Gii', 'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank', 'visible' => YII_ENV_DEV && Yii::$app->user->can('admin')],
+        ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank', 'visible' => YII_ENV_DEV && Yii::$app->user->can('admin')],
 ];
 
 ?>

@@ -32,6 +32,26 @@ return [
         ],
     ],
     'modules' => [
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+            'controllerMap' => [
+                'assignment' => [
+                    'class' => 'backend\controllers\AssignmentController',
+                    'userClassName' => 'common\models\User',
+                ],
+                'role' => [
+                    'class' => 'backend\controllers\RoleController',
+                ],
+                'route' => [
+                    'class' => 'backend\controllers\RouteController',
+                ],
+                'permission' => [
+                    'class' => 'backend\controllers\PermissionController',
+                ],
+            ],
+        ],
+
+
         'content' => [
             'class' => \backend\modules\content\Module::class,
         ],

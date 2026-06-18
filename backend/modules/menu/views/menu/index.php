@@ -84,6 +84,22 @@ $this->registerJs(<<<JS
     function depthOf(list) {
         return parseInt(list.dataset.depth || '1', 10);
     }
+    
+    function syncNestedLists(list) {
+        const sectionId = list.dataset.section || '';
+        const parentValue = list.dataset.parent || '';
+    
+        Array.from(list.children).forEach(function (item) {
+            if (!item.classList.contains('menu-node')) return;
+    
+            const childList = item.querySelector(':scope > .menu-tree');
+            if (childList) {
+                childList.dataset.section = sectionId;
+                childList.dataset.parent = item.dataset.id;
+                syncNestedLists(childList);
+            }
+        });
+    }
 
     function collect(list, result) {
         const sectionId = parseInt(list.dataset.section || '0', 10);
@@ -107,15 +123,20 @@ $this->registerJs(<<<JS
     }
 
     async function saveTree() {
+        document.querySelectorAll('.menu-section-card > .menu-tree').forEach(function (rootList) {
+            syncNestedLists(rootList);
+        });
+    
         const items = [];
+    
         document.querySelectorAll('.menu-tree').forEach(function (list) {
             collect(list, items);
         });
-
+    
         const body = new URLSearchParams();
         body.append('items', JSON.stringify(items));
         body.append(csrfParam, csrfToken);
-
+    
         const response = await fetch(saveUrl, {
             method: 'POST',
             headers: {
@@ -124,7 +145,7 @@ $this->registerJs(<<<JS
             },
             body: body
         });
-
+    
         const data = await response.json();
         if (!data.success) {
             alert(data.message || 'Failed to save menu order.');

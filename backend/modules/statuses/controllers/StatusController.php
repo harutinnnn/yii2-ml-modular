@@ -1,10 +1,10 @@
 <?php
 
-namespace backend\modules\posts\controllers;
+namespace backend\modules\statuses\controllers;
 
-use backend\modules\posts\models\PostForm;
-use backend\modules\posts\models\PostSearch;
-use common\models\Post;
+use backend\modules\statuses\models\StatusesForm;
+use backend\modules\statuses\models\StatusesSearch;
+use common\models\Statuses;
 use Yii;
 use yii\helpers\FileHelper;
 use yii\filters\AccessControl;
@@ -14,7 +14,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
-class PostController extends Controller
+class StatusController extends Controller
 {
     public function behaviors(): array
     {
@@ -24,7 +24,7 @@ class PostController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['teacher','admin'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],
@@ -32,7 +32,6 @@ class PostController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['post'],
-                    'upload-image' => ['post'],
                 ],
             ],
         ];
@@ -40,7 +39,7 @@ class PostController extends Controller
 
     public function actionIndex(): string
     {
-        $searchModel = new PostSearch();
+        $searchModel = new StatusesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -51,10 +50,10 @@ class PostController extends Controller
 
     public function actionCreate(): string|Response
     {
-        $form = new PostForm();
+        $form = new StatusesForm();
 
         if ($form->load(Yii::$app->request->post()) && $form->save()) {
-            Yii::$app->session->setFlash('success', 'Post created.');
+            Yii::$app->session->setFlash('success', 'Status created.');
 
             return $this->redirect(['index']);
         }
@@ -73,10 +72,10 @@ class PostController extends Controller
 
     public function actionUpdate(int $id): string|Response
     {
-        $form = new PostForm($this->findModel($id));
+        $form = new StatusesForm($this->findModel($id));
 
         if ($form->load(Yii::$app->request->post()) && $form->save()) {
-            Yii::$app->session->setFlash('success', 'Post updated.');
+            Yii::$app->session->setFlash('success', 'Status updated.');
 
             return $this->redirect(['index']);
         }
@@ -89,7 +88,7 @@ class PostController extends Controller
     public function actionDelete(int $id): Response
     {
         $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', 'Post deleted.');
+        Yii::$app->session->setFlash('success', 'Status deleted.');
 
         return $this->redirect(['index']);
     }
@@ -114,7 +113,7 @@ class PostController extends Controller
             ];
         }
 
-        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/posts/editorjs';
+        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/statuses/editorjs';
         FileHelper::createDirectory($basePath);
 
         $fileName = Yii::$app->security->generateRandomString(16) . '.' . $file->extension;
@@ -130,17 +129,17 @@ class PostController extends Controller
         return [
             'success' => 1,
             'file' => [
-                'url' => '/uploads/posts/editorjs/' . $fileName,
+                'url' => '/uploads/statuses/editorjs/' . $fileName,
             ],
         ];
     }
 
-    protected function findModel(int $id): Post
+    protected function findModel(int $id): Statuses
     {
-        $model = Post::find()->with('translations')->where(['id' => $id])->one();
+        $model = Statuses::find()->with('translations')->where(['id' => $id])->one();
 
         if ($model === null) {
-            throw new NotFoundHttpException('The requested post does not exist.');
+            throw new NotFoundHttpException('The requested statuses does not exist.');
         }
 
         return $model;

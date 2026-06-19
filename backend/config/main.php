@@ -78,6 +78,9 @@ return [
         'settings' => [
             'class' => \backend\modules\settings\Module::class,
         ],
+        'statuses' => [
+            'class' => \backend\modules\statuses\Module::class,
+        ],
     ],
     'components' => [
         'frontendUrlManager' => [

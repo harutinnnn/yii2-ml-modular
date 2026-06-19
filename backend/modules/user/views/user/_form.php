@@ -1,6 +1,6 @@
 <?php
 
-use backend\models\User;
+use backend\modules\user\models\User;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -53,7 +53,7 @@ use yii\widgets\ActiveForm;
                                 'id' => 'user-password'
                         ]) ?>
                 <?=
-                Html::button('Generate Password', ['onclick' => 'generatePassword(8)'])
+                Html::button('Generate Password', ['onclick' => 'generatePassword(8)','class' =>'btn btn-primary'])
 
                 ?>
 

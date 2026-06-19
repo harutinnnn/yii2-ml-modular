@@ -10,7 +10,7 @@ $menuItems = [
                 'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('teacher')
         ],
 
-        ['label' => 'Users', 'icon' => 'users', 'url' => ['/user/index'],
+        ['label' => 'Users', 'icon' => 'users', 'url' => ['/user/user/index'],
                 'visible' => Yii::$app->user->can('admin')
         ],
 

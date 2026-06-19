@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\models;
+namespace backend\modules\user\models;
 
 use Symfony\Component\VarDumper\Cloner\Data;
 use Yii;

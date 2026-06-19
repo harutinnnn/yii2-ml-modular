@@ -51,7 +51,9 @@ return [
             ],
         ],
 
-
+        'user' => [
+            'class' => \backend\modules\user\Module::class,
+        ],
         'content' => [
             'class' => \backend\modules\content\Module::class,
         ],

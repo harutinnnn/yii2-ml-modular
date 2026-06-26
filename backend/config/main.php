@@ -54,11 +54,17 @@ return [
         'user' => [
             'class' => \backend\modules\user\Module::class,
         ],
+        'faculties' => [
+            'class' => \backend\modules\faculties\Module::class,
+        ],
         'content' => [
             'class' => \backend\modules\content\Module::class,
         ],
         'posts' => [
             'class' => \backend\modules\posts\Module::class,
+        ],
+        'journal' => [
+            'class' => \backend\modules\journal\Module::class,
         ],
         'email-content' => [
             'class' => \backend\modules\emailcontent\Module::class,

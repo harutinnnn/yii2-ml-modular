@@ -4,20 +4,75 @@ use common\components\RbacUtilities;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username;
+$email = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->email;
 $menuItems = [
 
         ['label' => 'Dashboard', 'icon' => 'tachometer-alt', 'url' => ['/site/index'],
                 'visible' => RbacUtilities::allowRoles(['admin', 'teacher'])
         ],
 
-        ['label' => 'Users', 'icon' => 'users', 'url' => ['/user/user/index'],
-                'visible' => RbacUtilities::allowRoles(['admin'])
+
+        [
+                'label' => 'Users',
+                'icon' => 'users',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        ['label' => 'Applicant', 'icon' => 'users', 'url' => ['/user/applicant/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin'])
+                        ],
+                        ['label' => 'Students', 'icon' => 'users', 'url' => ['/user/student/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin'])
+                        ],
+                        ['label' => 'Users', 'icon' => 'users', 'url' => ['/user/user/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin'])
+                        ],
+                ]
         ],
 
-        ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index'],
-                'visible' => RbacUtilities::allowRoles(['admin'])
+        [
+                'label' => 'Menu/Sections',
+                'icon' => 'bars',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin'])
+                        ],
+                        ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin'])
+                        ],
+                ]
         ],
+
+        [
+                'label' => 'Faculties/Chairs',
+                'icon' => 'user-graduate',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        ['label' => 'Faculties', 'icon' => 'folder', 'url' => ['/faculties/faculty/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin'])
+                        ],
+                        ['label' => 'Chairs', 'icon' => 'chalkboard-teacher', 'url' => ['/faculties/chair/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin'])
+                        ],
+                ]
+        ],
+
+
+
+
+
+        [
+                'label' => 'Journals',
+                'icon' => 'newspaper',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        ['label' => 'Scientific journal', 'icon' => 'newspaper', 'url' => ['/journal/journal/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin'])
+                        ],
+                ]
+        ],
+
+
         ['label' => 'Content', 'header' => true],
 
         ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index'],
@@ -40,10 +95,6 @@ $menuItems = [
                 'visible' => RbacUtilities::allowRoles(['admin'])
         ],
 
-        ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index'],
-                'visible' => RbacUtilities::allowRoles(['admin'])
-        ],
-
         ['label' => 'Settings', 'icon' => 'cogs', 'url' => ['/settings/setting/index'],
                 'visible' => RbacUtilities::allowRoles(['admin'])
         ],
@@ -51,22 +102,40 @@ $menuItems = [
                 'visible' => RbacUtilities::allowRoles(['admin'])
         ],
 
-        ['label' => 'RBAC', 'header' => true,
-                'visible' => RbacUtilities::allowRoles(['admin'])
+        [
+                'label' => 'RBAC',
+                'icon' => 'user-shield',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        [
+                                'label' => 'Assignment',
+                                'icon' => 'users',
+                                'url' => ['/admin/assignment/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                        ],
+                        [
+                                'label' => 'Role',
+                                'icon' => 'user-tag',
+                                'url' => ['/admin/role/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                        ],
+
+//                        [
+//                                'label' => 'Permission',
+//                                'icon' => 'lock',
+//                                'url' => ['/admin/permission/index'],
+//                                'visible' => RbacUtilities::allowRoles(['admin'])
+//                        ],
+//
+//                        [
+//                                'label' => 'Route',
+//                                'icon' => 'route',
+//                                'url' => ['/admin/route/index'],
+//                                'visible' => RbacUtilities::allowRoles(['admin'])
+//                        ],
+                ],
         ],
 
-        ['label' => 'Assignment', 'icon' => 'users', 'url' => ['/admin/assignment/index'],
-                'visible' => RbacUtilities::allowRoles(['admin'])
-        ],
-//        ['label' => 'Permission', 'icon' => 'lock', 'url' => ['/admin/permission/index'],
-//                'visible' => RbacUtilities::allowRoles(['admin'])
-//        ],
-        ['label' => 'Role', 'icon' => 'user-tag', 'url' => ['/admin/role/index'],
-                'visible' => RbacUtilities::allowRoles(['admin'])
-        ],
-//        ['label' => 'Route', 'icon' => 'route', 'url' => ['/admin/route/index'],
-//                'visible' => RbacUtilities::allowRoles(['admin'])
-//        ],
 
         ['label' => 'Yii Tools', 'header' => true, 'visible' => YII_ENV_DEV && RbacUtilities::allowRoles(['admin'])],
 
@@ -89,7 +158,7 @@ $menuItems = [
                 <img src="<?= $assetDir ?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="<?= Url::to(['/site/index']) ?>" class="d-block"><?= Html::encode($username) ?></a>
+                <a href="<?= Url::to(['/site/index']) ?>" class="d-block"><?= Html::encode($email) ?></a>
             </div>
         </div>
 

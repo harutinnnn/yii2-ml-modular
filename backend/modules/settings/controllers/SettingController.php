@@ -69,6 +69,9 @@ class SettingController extends Controller
 
     public function actionDelete(int $id): Response
     {
+        throw new NotFoundHttpException('The requested setting does not exist.');
+        die;
+
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', 'Setting deleted.');
 

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username;
+$email = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->email;
 ?>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
@@ -22,10 +22,10 @@ $username = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->user
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
                 <i class="far fa-user"></i>
-                <span class="ml-1"><?= Html::encode($username) ?></span>
+                <span class="ml-1"><?= Html::encode($email) ?></span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-item-text text-muted"><?= Html::encode($username) ?></span>
+                <span class="dropdown-item-text text-muted"><?= Html::encode($email) ?></span>
                 <div class="dropdown-divider"></div>
                 <?php if (!Yii::$app->user->isGuest): ?>
                     <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'px-3 py-1']) ?>

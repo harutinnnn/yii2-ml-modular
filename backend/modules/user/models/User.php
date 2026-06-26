@@ -2,14 +2,14 @@
 
 namespace backend\modules\user\models;
 
-use Symfony\Component\VarDumper\Cloner\Data;
+use common\models\UserAdditionalData;
+use common\models\UserFacultyChairLcp;
 use Yii;
 
 /**
  * This is the model class for table "user".
  *
  * @property int $id
- * @property string $username
  * @property string $auth_key
  * @property string $password_hash
  * @property string|null $password_reset_token
@@ -18,13 +18,12 @@ use Yii;
  * @property int $created_at
  * @property int $updated_at
  * @property string|null $verification_token
- * @property string|null $full_name
  */
 class User extends \yii\db\ActiveRecord
 {
-    public const STATUS_DELETED = 0;
     public const STATUS_INACTIVE = 9;
     public const STATUS_ACTIVE = 10;
+    public const STATUS_REJECTED = 2;
 
 
     public $password;
@@ -43,13 +42,12 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['password_reset_token', 'verification_token', 'full_name'], 'default', 'value' => null],
+            [['password_reset_token', 'verification_token'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 10],
-            [['username', 'email', 'password'], 'required'],
+            [['email', 'password'], 'required'],
             [['password'], 'string', 'min' => 8],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token', 'full_name'], 'string', 'max' => 255],
-            [['username'], 'unique'],
+            [[ 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['email'], 'unique'],
             [['email'], 'email'],
             [['password_reset_token'], 'unique'],
@@ -63,7 +61,6 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'username' => 'Username',
             'auth_key' => 'Auth Key',
             'password' => 'Password',
             'password_hash' => 'Password Hash',
@@ -73,7 +70,6 @@ class User extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'verification_token' => 'Verification Token',
-            'full_name' => 'Full Name',
         ];
     }
 
@@ -82,6 +78,7 @@ class User extends \yii\db\ActiveRecord
         return [
             self::STATUS_INACTIVE => 'Pending',
             self::STATUS_ACTIVE => 'Published',
+            self::STATUS_REJECTED => 'Rejected',
         ];
     }
 
@@ -123,4 +120,20 @@ class User extends \yii\db\ActiveRecord
             ->setSubject('Account registration at ' . Yii::$app->name)
             ->send();
     }
+
+
+    public function getAdditional()
+    {
+        return $this->hasOne(UserAdditionalData::class, ['user_id' => 'id']);
+    }
+    public function getFaculty()
+    {
+        return $this->hasOne(UserFacultyChairLcp::class, ['user_id' => 'id']);
+    }
+
+    public function getStatusLabel(): string
+    {
+        return self::statusOptions()[$this->status] ?? 'Unknown';
+    }
+
 }

@@ -27,7 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'layout' => "{items}\n<div class=\"card-footer clearfix\">{summary}{pager}</div>",
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
-                    'id',
                     [
                         'attribute' => 'title',
                         'value' => static fn($model) => $model->getDisplayTitle(),

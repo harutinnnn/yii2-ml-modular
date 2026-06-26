@@ -17,6 +17,7 @@ use yii\helpers\Html;
 
         <?= $form->field($model, 'key')->textInput([
             'maxlength' => true,
+            'readonly' =>'readonly'
         ]) ?>
 
         <?= $form->field($model, 'value')->textarea([

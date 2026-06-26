@@ -38,6 +38,7 @@ return [
                 'assignment' => [
                     'class' => 'backend\controllers\AssignmentController',
                     'userClassName' => 'common\models\User',
+                    'usernameField' => 'email',
                 ],
                 'role' => [
                     'class' => 'backend\controllers\RoleController',

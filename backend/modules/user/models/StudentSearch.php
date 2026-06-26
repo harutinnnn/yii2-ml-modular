@@ -3,7 +3,7 @@
 namespace backend\modules\user\models;
 
 use common\components\UserRoles;
-use common\models\Applicant;
+use common\models\Student;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -11,7 +11,7 @@ use yii\data\ActiveDataProvider;
 /**
  * UserSearch represents the model behind the search form of `common\models\User`.
  */
-class ApplicantSearch extends Applicant
+class StudentSearch extends Student
 {
     /**
      * {@inheritdoc}
@@ -44,7 +44,7 @@ class ApplicantSearch extends Applicant
     public function search($params, $formName = null)
     {
         $query = User::find()
-            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::APPLICANT])
+            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::STUDENT])
             ->joinWith('additional add');
         // add conditions that should always apply here
 

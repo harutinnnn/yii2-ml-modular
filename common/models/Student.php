@@ -1,9 +1,7 @@
 <?php
 
-namespace backend\modules\user\models;
+namespace common\models;
 
-use common\models\UserAdditionalData;
-use common\models\UserFacultyChairLcp;
 use Symfony\Component\VarDumper\Cloner\Data;
 use Yii;
 
@@ -15,17 +13,26 @@ use Yii;
  * @property string $password_hash
  * @property string|null $password_reset_token
  * @property string $email
+ * @property string $first_name
+ * @property string $last_name
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
  * @property string|null $verification_token
  */
-class ApplicantBack extends \yii\db\ActiveRecord
+class Student extends \yii\db\ActiveRecord
 {
+
+    public const STATUS_DELETED = 0;
     public const STATUS_INACTIVE = 9;
     public const STATUS_ACTIVE = 10;
     public const STATUS_REJECTED = 2;
 
+
+//    public $password;
+    public $first_name;
+    public $last_name;
+    public $phone;
 
     public $password;
 
@@ -43,12 +50,10 @@ class ApplicantBack extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['password_reset_token', 'verification_token'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 10],
-            [['email', 'password'], 'required'],
-            [['password'], 'string', 'min' => 8],
+            [['email'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [[ 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
+            [['password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['email'], 'unique'],
             [['email'], 'email'],
             [['password_reset_token'], 'unique'],
@@ -68,6 +73,8 @@ class ApplicantBack extends \yii\db\ActiveRecord
             'password_reset_token' => 'Password Reset Token',
             'email' => 'Email',
             'status' => 'Status',
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'verification_token' => 'Verification Token',
@@ -86,18 +93,27 @@ class ApplicantBack extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
+
         if (!parent::beforeSave($insert)) {
+
             return false;
         }
 
         if ($insert) {
+
             $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
             $this->auth_key = Yii::$app->security->generateRandomString();
             $this->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
             $this->created_at = time();
             $this->updated_at = time();
+
         } else {
+
+            $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
+            $this->auth_key = Yii::$app->security->generateRandomString();
+            $this->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
             $this->updated_at = time();
+
         }
 
         return true;
@@ -122,11 +138,11 @@ class ApplicantBack extends \yii\db\ActiveRecord
             ->send();
     }
 
-
     public function getAdditional()
     {
         return $this->hasOne(UserAdditionalData::class, ['user_id' => 'id']);
     }
+
     public function getFaculty()
     {
         return $this->hasOne(UserFacultyChairLcp::class, ['user_id' => 'id']);
@@ -136,5 +152,4 @@ class ApplicantBack extends \yii\db\ActiveRecord
     {
         return self::statusOptions()[$this->status] ?? 'Unknown';
     }
-
 }

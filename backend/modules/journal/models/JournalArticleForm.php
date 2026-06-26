@@ -2,41 +2,35 @@
 
 namespace backend\modules\journal\models;
 
-use common\models\Journal;
-use common\models\JournalMl;
+use common\models\JournalArticles;
+use common\models\JournalArticlesMl;
 use common\models\Language;
 use Yii;
 use yii\base\Model;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
-class JournalForm extends Model
+class JournalArticleForm extends Model
 {
-    public ?Journal $journal = null;
-    public string $status = Journal::STATUS_ACTIVE;
-    public int $year = 0;
-    public int $number = 1;
-    public string $doi_prefix = "";
-    public ?string $cover_image = null;
+    public ?JournalArticles $journalArticle = null;
+    public string $status = JournalArticles::STATUS_UNDER_REVIEW;
+    public int $journal_id = 0;
+    public string $doi = "";
     public array $translations = [];
-    public $imageFile = null;
 
     private ?array $_languages = null;
 
-    public function __construct(?Journal $journal = null, $config = [])
+    public function __construct(?JournalArticles $journalArticle = null, $config = [])
     {
-        $this->journal = $journal;
+        $this->journalArticle = $journalArticle;
         parent::__construct($config);
 
-        if ($this->journal !== null) {
+        if ($this->journalArticle !== null) {
 
-            $this->status = (string)$this->journal->status;
-            $this->year = $this->journal->year;
-            $this->number = $this->journal->number;
-            $this->doi_prefix = $this->journal->doi_prefix;
-            $this->cover_image = $this->journal->cover_image;
+            $this->status = (string)$this->journalArticle->status;
+            $this->doi = $this->journalArticle->doi;
 
-            foreach ($this->journal->translations as $translation) {
+            foreach ($this->journalArticle->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
                     'description' => $translation->description,
@@ -55,13 +49,11 @@ class JournalForm extends Model
     public function rules(): array
     {
         return [
-            [['status', 'year', 'number', 'doi_prefix'], 'required'],
-            [['status', 'doi_prefix'], 'string'],
-            [['year', 'number'], 'integer'],
-            [['status'], 'in', 'range' => array_keys(Journal::statusOptions())],
+            [['status', 'doi'], 'required'],
+            [['status',], 'string'],
+            [['status'], 'in', 'range' => array_keys(JournalArticles::optsStatus())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
     }
 
@@ -69,10 +61,8 @@ class JournalForm extends Model
     {
         return [
             'status' => 'Status',
-            'year' => 'Year',
             'number' => 'Number',
-            'doi_prefix' => 'Doi prefix',
-            'imageFile' => 'Image',
+            'doi' => 'Doi prefix',
         ];
     }
 
@@ -83,51 +73,42 @@ class JournalForm extends Model
             $title = trim((string)($data['title'] ?? ''));
             $description = trim((string)($data['description'] ?? ''));
 
-            if ($title === '') {
-                $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
-            }
-
             if ($description === '') {
                 $this->addError("translations[{$language->code}][description]", "Description is required for {$language->name}.");
             }
         }
     }
 
-    public function save(): bool
+    public function save($journalId): bool
     {
 
-        $this->imageFile = UploadedFile::getInstance($this, 'imageFile');
-
+        $this->journal_id = intval($journalId);
 
         if (!$this->validate()) {
             return false;
         }
 
 
-        $journal = $this->journal ?? new Journal();
-        $journal->status = $this->status;
-        $journal->year = $this->year;
-        $journal->number = $this->number;
-        $journal->doi_prefix = $this->doi_prefix;
+        $journalArticle = $this->journalArticle ?? new JournalArticles();
+        $journalArticle->status = $this->status;
+        $journalArticle->doi = $this->doi;
+        $journalArticle->journal_id = $this->journal_id;
 
-        if ($this->imageFile !== null) {
-            $journal->cover_image = $this->saveUpload($this->imageFile);
-        }
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            if (!$journal->save()) {
-                $this->addErrors($journal->getErrors());
+            if (!$journalArticle->save()) {
+                $this->addErrors($journalArticle->getErrors());
                 $transaction->rollBack();
 
                 return false;
             }
 
-            JournalMl::deleteAll(['journal_id' => $journal->id]);
+            JournalArticlesMl::deleteAll(['article_id' => $journalArticle->id]);
 
             foreach ($this->getLanguages() as $language) {
-                $translation = new JournalMl();
-                $translation->journal_id = $journal->id;
+                $translation = new JournalArticlesMl();
+                $translation->article_id = $journalArticle->id;
                 $translation->lang = $language->code;
                 $translation->title = trim((string)$this->translations[$language->code]['title']);
                 $translation->description = trim((string)$this->translations[$language->code]['description']);
@@ -141,7 +122,7 @@ class JournalForm extends Model
             }
 
             $transaction->commit();
-            $this->journal = $journal;
+            $this->journalArticle = $journalArticle;
 
             return true;
         } catch (\Throwable $e) {

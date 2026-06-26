@@ -40,12 +40,7 @@ class Journal extends \yii\db\ActiveRecord
         return '{{%journal}}';
     }
 
-//    public function behaviors(): array
-//    {
-//        return [
-//            TimestampBehavior::class,
-//        ];
-//    }
+
     /**
      * {@inheritdoc}
      */

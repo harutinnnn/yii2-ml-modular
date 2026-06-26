@@ -18,7 +18,6 @@ use Yii;
  * @property string|null $status
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property string $slug
  * @property string|null $abstract
  * @property string|null $keywords
  * @property string|null $pdf_file
@@ -26,7 +25,7 @@ use Yii;
  * @property ArticleAuthors[] $articleAuthors
  * @property User[] $authors
  * @property Journal $journal
- * @property JournalArticlesMl[] $journalArticlesMls
+ * @property JournalArticlesMl[] $translations
  */
 class JournalArticles extends \yii\db\ActiveRecord
 {
@@ -58,13 +57,13 @@ class JournalArticles extends \yii\db\ActiveRecord
         return [
             [['doi', 'first_page', 'last_page', 'received_at', 'accepted_at', 'published_at', 'abstract', 'keywords', 'pdf_file'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'submitted'],
-            [['journal_id', 'slug'], 'required'],
+            [['journal_id'], 'required'],
             [['journal_id', 'first_page', 'last_page'], 'integer'],
             [['received_at', 'accepted_at', 'published_at', 'created_at', 'updated_at'], 'safe'],
             [['status', 'abstract', 'keywords'], 'string'],
-            [['doi', 'slug', 'pdf_file'], 'string', 'max' => 255],
+            [['doi', 'pdf_file'], 'string', 'max' => 255],
             ['status', 'in', 'range' => array_keys(self::optsStatus())],
-            [['journal_id', 'slug'], 'unique', 'targetAttribute' => ['journal_id', 'slug']],
+//            [['journal_id'], 'unique', 'targetAttribute' => ['journal_id']],
             [['journal_id'], 'exist', 'skipOnError' => true, 'targetClass' => Journal::class, 'targetAttribute' => ['journal_id' => 'id']],
         ];
     }
@@ -86,7 +85,6 @@ class JournalArticles extends \yii\db\ActiveRecord
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'slug' => 'Slug',
             'abstract' => 'Abstract',
             'keywords' => 'Keywords',
             'pdf_file' => 'Pdf File',
@@ -128,9 +126,35 @@ class JournalArticles extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getJournalArticlesMls()
+    public function getTranslations()
     {
         return $this->hasMany(JournalArticlesMl::class, ['article_id' => 'id']);
+    }
+
+    public function getTranslation(string $lang): ?JournalArticlesMl
+    {
+        $translations = $this->translations;
+
+        return $translations[$lang] ?? null;
+    }
+
+    public function getDisplayTitle(): string
+    {
+        $defaultLanguage = Language::find()->where(['is_default' => 1])->select('code')->scalar();
+        if ($defaultLanguage) {
+            $translation = $this->getTranslation($defaultLanguage);
+            if ($translation !== null && $translation->title !== '') {
+                return $translation->title;
+            }
+        }
+
+        foreach ($this->translations as $translation) {
+            if ($translation->title !== '') {
+                return $translation->title;
+            }
+        }
+
+        return 'Untitled';
     }
 
 
@@ -149,6 +173,11 @@ class JournalArticles extends \yii\db\ActiveRecord
             self::STATUS_PUBLISHED => 'published',
             self::STATUS_ARCHIVED => 'archived',
         ];
+    }
+
+    public function getStatusLabel(): string
+    {
+        return self::optsStatus()[$this->status] ?? 'Unknown';
     }
 
     /**

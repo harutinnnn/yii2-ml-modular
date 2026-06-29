@@ -74,6 +74,10 @@ $menuItems = [
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
                                 'active' => Yii::$app->controller->id == 'journal'
                         ],
+                        ['label' => 'Journal authors', 'icon' => 'newspaper', 'url' => ['/journal/journal-authors/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'journal-authors'
+                        ],
                 ]
         ],
 

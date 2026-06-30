@@ -127,7 +127,7 @@
 
     configs.forEach(createEditor);
 
-    const form = document.querySelector('.post-form form');
+    const form = editors.length > 0 ? editors[0].input.closest('form') : null;
     if (!form) {
         return;
     }

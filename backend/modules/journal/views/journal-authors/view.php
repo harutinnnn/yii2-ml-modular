@@ -6,35 +6,37 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\JournalAuthors $model */
 
-$this->title = $model->id;
+$this->title = 'View Chair #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Journal Authors', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+
 ?>
 <div class="journal-authors-view">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0"><?= $model->first_name . ' ' . $model->last_name ?></h3>
+            <div>
+                <?= Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm']) ?>
+                <?= Html::a('Back', ['index'], ['class' => 'btn btn-secondary btn-sm']) ?>
+            </div>
+        </div>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+        <div class="card-body">
+            <p><strong>ID:</strong> <?= Html::encode($model->id) ?></p>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'first_name',
-            'last_name',
-            'bio:ntext',
-            'img',
-        ],
-    ]) ?>
+            <?= DetailView::widget([
+                    'model' => $model,
+                    'attributes' => [
+                            'id',
+                            'first_name',
+                            'last_name',
+                            'bio:raw',
+                            'img',
+                    ],
+            ]) ?>
+
+        </div>
+    </div>
 
 </div>

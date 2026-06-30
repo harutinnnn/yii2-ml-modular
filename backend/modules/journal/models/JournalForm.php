@@ -3,10 +3,12 @@
 namespace backend\modules\journal\models;
 
 use common\models\Journal;
+use common\models\JournalAuthorsLcp;
 use common\models\JournalMl;
 use common\models\Language;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -20,6 +22,8 @@ class JournalForm extends Model
     public ?string $cover_image = null;
     public array $translations = [];
     public $imageFile = null;
+
+    public  $authors;
 
     private ?array $_languages = null;
 
@@ -42,6 +46,11 @@ class JournalForm extends Model
                     'description' => $translation->description,
                 ];
             }
+
+            if($journal->id){
+                $this->authors = ArrayHelper::getColumn(JournalAuthorsLcp::find()->where(['journal_id' => $journal->id])->all(),['author_id']);
+            }
+
         }
 
         foreach ($this->getLanguages() as $language) {
@@ -59,7 +68,7 @@ class JournalForm extends Model
             [['status', 'doi_prefix'], 'string'],
             [['year', 'number'], 'integer'],
             [['status'], 'in', 'range' => array_keys(Journal::statusOptions())],
-            [['translations'], 'safe'],
+            [['translations','authors'], 'safe'],
             [['translations'], 'validateTranslations'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
@@ -115,6 +124,7 @@ class JournalForm extends Model
         }
 
         $transaction = Yii::$app->db->beginTransaction();
+
         try {
             if (!$journal->save()) {
                 $this->addErrors($journal->getErrors());
@@ -139,6 +149,19 @@ class JournalForm extends Model
                     return false;
                 }
             }
+
+            if ($journal->id && count($this->authors)) {
+
+                JournalAuthorsLcp::deleteAll(['journal_id' => $journal->id]);
+                foreach ($this->authors as $aithor) {
+                    $newAuthorLcp = new JournalAuthorsLcp();
+                    $newAuthorLcp->journal_id = $journal->id;
+                    $newAuthorLcp->author_id = $aithor;
+                    $newAuthorLcp->save();
+                }
+
+            }
+
 
             $transaction->commit();
             $this->journal = $journal;

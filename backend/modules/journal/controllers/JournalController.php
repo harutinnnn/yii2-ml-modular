@@ -8,8 +8,10 @@ use backend\modules\journal\models\JournalForm;
 use common\models\Journal;
 use backend\modules\journal\models\JournalSearch;
 use common\models\JournalArticles;
+use common\models\JournalAuthors;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -58,6 +60,9 @@ class JournalController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'authors' => ArrayHelper::map(JournalAuthors::find()->all(), 'id', function ($user) {
+                return $user->first_name . ' ' . $user->last_name;
+            })
         ]);
     }
 
@@ -71,6 +76,9 @@ class JournalController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'authors' => ArrayHelper::map(JournalAuthors::find()->all(), 'id', function ($user) {
+                return $user->first_name . ' ' . $user->last_name;
+            })
         ]);
     }
 
@@ -86,9 +94,11 @@ class JournalController extends Controller
 
         return $this->render('create', [
             'model' => $form,
+            'authors' => ArrayHelper::map(JournalAuthors::find()->all(), 'id', function ($user) {
+                return $user->first_name . ' ' . $user->last_name;
+            })
         ]);
     }
-
 
     public function actionUpdate(int $id): string|Response
     {
@@ -102,9 +112,11 @@ class JournalController extends Controller
 
         return $this->render('update', [
             'model' => $form,
+            'authors' => ArrayHelper::map(JournalAuthors::find()->all(), 'id', function ($user) {
+                return $user->first_name . ' ' . $user->last_name;
+            })
         ]);
     }
-
 
     /**
      * Deletes an existing Journal model.
@@ -133,6 +145,11 @@ class JournalController extends Controller
             return $model;
         }
 
+        $authors = JournalAuthors::find()
+//            ->with('getJournalAuthorsLcps')
+            ->where(['journal_id' => $id])
+            ->all();
+
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
@@ -152,7 +169,6 @@ class JournalController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
     public function actionArticles($id)
     {
 
@@ -166,7 +182,6 @@ class JournalController extends Controller
         ]);
 
     }
-
 
     public function actionCreateArticle($journalId): string|Response
     {
@@ -186,7 +201,6 @@ class JournalController extends Controller
         ]);
     }
 
-
     public function actionUpdateArticle(int $id, int $journalId): string|Response
     {
         $form = new JournalArticleForm($this->findModelArticle($id));
@@ -202,7 +216,6 @@ class JournalController extends Controller
             'journalId' => $journalId
         ]);
     }
-
 
     /**
      * Displays a single Journal model.

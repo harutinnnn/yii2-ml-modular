@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'yii\grid\SerialColumn'],
                     [
                             'attribute' => 'title',
-                            'value' => static fn($model) => Html::a($model->getDisplayTitle(), ['articles', 'id' => $model->id]),
+                            'value' => static fn($model) => $model->getDisplayTitle(),
                             'format' => 'raw',
                     ],
                     [

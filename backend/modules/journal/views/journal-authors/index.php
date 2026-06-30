@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'columns' => [
                     'first_name',
                     'last_name',
-                    'bio:ntext',
+                    'bio:raw',
                     'img',
                     [
                             'class' => ActionColumn::className(),

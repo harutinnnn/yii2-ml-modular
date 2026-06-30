@@ -6,8 +6,10 @@
 
 use common\models\Journal;
 use common\widgets\ckeditor\CkEditor;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
+
 
 $languages = $model->getLanguages();
 ?>
@@ -17,6 +19,22 @@ $languages = $model->getLanguages();
 
     <div class="card card-primary">
         <div class="card-body">
+
+
+            <?=
+            $form->field($model, 'authors')->widget(Select2::classname(), [
+                    'data' => $authors ?? [],
+                    'value' => $model->authors ?? [],
+                    'options' => [
+                            'placeholder' => 'Select categories...',
+                            'multiple' => true, // This enables multi-select
+                    ],
+                    'pluginOptions' => [
+                            'allowClear' => true, // Adds a clear button
+                    ],
+            ]);
+            ?>
+
             <?= $form->field($model, 'status')->dropDownList(Journal::statusOptions()) ?>
             <?= $form->field($model, 'year')->dropDownList(array_combine(range(date('Y'), 2000),range(date('Y'), 2000))) ?>
 

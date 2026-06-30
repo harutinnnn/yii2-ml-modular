@@ -31,6 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div><?= $translation->description ?></div>
             <?php endforeach; ?>
 
+            <hr>
+            <p><strong>Authors: </strong>
+                <?= isset($journal_authors) && !empty($journal_authors) ? implode(', ', $journal_authors) : '-' ?>
+            </p>
+
         </div>
+
     </div>
 </div>

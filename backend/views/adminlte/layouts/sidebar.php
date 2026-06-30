@@ -25,15 +25,19 @@ $menuItems = [
                                 'visible' => RbacUtilities::allowRoles(['admin']),
                                 'active' => Yii::$app->controller->id == 'student'
                         ],
-                        ['label' => 'Users', 'icon' => 'users', 'url' => ['/user/user/index'],
+                        ['label' => 'Teachers', 'icon' => 'chalkboard-teacher', 'url' => ['/user/teacher/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
-                                'active' => Yii::$app->controller->id == 'user'
+                                'active' => Yii::$app->controller->id == 'teacher'
+                        ],
+                        ['label' => 'Admins', 'icon' => 'users-cog', 'url' => ['/user/admin/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'active' => Yii::$app->controller->id == 'admin'
                         ],
                 ]
         ],
 
         [
-                'label' => 'Menu/Sections',
+                'label' => 'Menus/Contents',
                 'icon' => 'bars',
                 'visible' => RbacUtilities::allowRoles(['admin']),
                 'items' => [
@@ -44,6 +48,14 @@ $menuItems = [
                         ['label' => 'Menu', 'icon' => 'bars', 'url' => ['/menu/menu/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
                                 'active' => Yii::$app->controller->id == 'menu'
+                        ],
+                        ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'content'
+                        ],
+                        ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'active' => Yii::$app->controller->id == 'email-content'
                         ],
                 ]
         ],
@@ -82,41 +94,43 @@ $menuItems = [
         ],
 
 
-        ['label' => 'Content', 'header' => true],
 
-        ['label' => 'Content Items', 'icon' => 'copy', 'url' => ['/content/content/index'],
-                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
-                'active' => Yii::$app->controller->id == 'content'
-        ],
+
 
         ['label' => 'Posts', 'icon' => 'file-alt', 'url' => ['/posts/post/index'],
                 'visible' => RbacUtilities::allowRoles(['teacher', 'admin']),
                 'active' => Yii::$app->controller->id == 'post'
         ],
 
-        ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index'],
+
+        [
+                'label' => 'Languages/Settings',
+                'icon' => 'sliders-h',
                 'visible' => RbacUtilities::allowRoles(['admin']),
-                'active' => Yii::$app->controller->id == 'email-content'
+                'items' => [
+
+                        ['label' => 'Frontend Languages', 'icon' => 'tags', 'url' => ['/frontend-language/frontend-language/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'active' => Yii::$app->controller->id == 'frontend-language'
+                        ],
+
+                        ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'active' => Yii::$app->controller->id == 'language'
+                        ],
+
+                        ['label' => 'Settings', 'icon' => 'cogs', 'url' => ['/settings/setting/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'active' => Yii::$app->controller->id == 'setting'
+                        ],
+                        ['label' => 'Statuses', 'icon' => 'toggle-off', 'url' => ['/statuses/status/index'],
+                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'active' => Yii::$app->controller->id == 'status'
+                        ],
+
+                ]
         ],
 
-        ['label' => 'Frontend Languages', 'icon' => 'tags', 'url' => ['/frontend-language/frontend-language/index'],
-                'visible' => RbacUtilities::allowRoles(['admin']),
-                'active' => Yii::$app->controller->id == 'frontend-language'
-        ],
-
-        ['label' => 'Languages', 'icon' => 'language', 'url' => ['/language/language/index'],
-                'visible' => RbacUtilities::allowRoles(['admin']),
-                'active' => Yii::$app->controller->id == 'language'
-        ],
-
-        ['label' => 'Settings', 'icon' => 'cogs', 'url' => ['/settings/setting/index'],
-                'visible' => RbacUtilities::allowRoles(['admin']),
-                'active' => Yii::$app->controller->id == 'setting'
-        ],
-        ['label' => 'Statuses', 'icon' => 'toggle-off', 'url' => ['/statuses/status/index'],
-                'visible' => RbacUtilities::allowRoles(['admin']),
-                'active' => Yii::$app->controller->id == 'status'
-        ],
 
         [
                 'label' => 'RBAC',

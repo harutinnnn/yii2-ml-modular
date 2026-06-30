@@ -9,6 +9,7 @@ use common\models\Journal;
 use backend\modules\journal\models\JournalSearch;
 use common\models\JournalArticles;
 use common\models\JournalAuthors;
+use common\models\JournalAuthorsLcp;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -74,11 +75,17 @@ class JournalController extends Controller
      */
     public function actionView($id)
     {
+
+        $journalAuthors = JournalAuthors::find()->alias('jo')
+            ->innerJoin(JournalAuthorsLcp::tableName(), "jo.id = " . JournalAuthorsLcp::tableName() . ".author_id")
+            ->where([JournalAuthorsLcp::tableName().'.journal_id' => $id])->all();
+
+
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'authors' => ArrayHelper::map(JournalAuthors::find()->all(), 'id', function ($user) {
-                return $user->first_name . ' ' . $user->last_name;
-            })
+            'journal_authors' => ArrayHelper::map($journalAuthors, 'id', function ($author){
+                return $author->first_name . ' ' . $author->last_name;
+            }),
         ]);
     }
 

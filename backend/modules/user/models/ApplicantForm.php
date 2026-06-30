@@ -4,6 +4,8 @@ namespace backend\modules\user\models;
 
 use common\components\UserRoles;
 use common\models\Applicant;
+use common\models\Chairs;
+use common\models\Faculties;
 use common\models\UserAdditionalData;
 use common\models\UserFacultyChairLcp;
 use Yii;
@@ -40,14 +42,19 @@ class ApplicantForm extends \yii\base\Model
     public $updated_at;
     public $verification_token;
 
+    public $faculty_title;
+    public $chair_title;
+
     public const STATUS_INACTIVE = 9;
     public const STATUS_ACTIVE = 10;
 
 
     public function __construct(?Applicant $user = null, $config = [])
     {
+
         $this->user = $user;
         parent::__construct($config);
+
 
 
         if ($this->user !== null) {
@@ -61,6 +68,12 @@ class ApplicantForm extends \yii\base\Model
             if ($user->faculty) {
                 $this->faculty_id = (int)$user->faculty->faculty_id ?? 0;
                 $this->chair_id = (int)$user->faculty->chair_id ?? 0;
+
+                $faculty = Faculties::find()->where(['id' => $this->faculty_id])->one();
+                $this->faculty_title = $faculty->getDisplayTitle();
+
+                $chair = Chairs::find()->where(['id' => $this->chair_id])->one();
+                $this->chair_title = $chair->getDisplayTitle();
             } else {
                 $this->faculty_id = 0;
                 $this->chair_id = 0;

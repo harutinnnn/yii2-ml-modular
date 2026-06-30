@@ -156,5 +156,16 @@ return [
             ],
         ],
     ],
+    'container' => [
+        'definitions' => [
+            yii\widgets\ActiveField::class => [
+                'errorOptions' => [
+                    'class' => 'invalid-feedback d-block',
+                ],
+                // Optional:
+                // 'template' => "{label}\n{input}\n{error}\n{hint}",
+            ],
+        ],
+    ],
     'params' => $params,
 ];

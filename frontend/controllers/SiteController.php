@@ -2,7 +2,9 @@
 
 namespace frontend\controllers;
 
+use backend\modules\user\models\ApplicantForm;
 use common\helpers\I18n;
+use common\models\Chairs;
 use common\models\Menu;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
@@ -16,6 +18,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Response;
 
 /**
  * Site controller
@@ -260,4 +263,45 @@ class SiteController extends MyController
             'model' => $model
         ]);
     }
+
+
+    public function actionApplicant()
+    {
+        $model = new ApplicantForm();
+        $model->scenario = ApplicantForm::SCENARIO_CREATE;
+        $model->chair_id = 0;
+        $model->status = ApplicantForm::STATUS_INACTIVE;
+
+
+        if ($this->request->isPost) {
+
+            if ($model->load($this->request->post()) && $model->registerApplicant()) {
+                Yii::$app->session->setFlash('success', 'Applicant updated.');
+                return $this->redirect(['site/applicant', 'id' => $model->id]);
+            }
+        }
+
+
+        return $this->render('applicant', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * @return array
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionGetChairs(): array
+    {
+
+        if (!Yii::$app->request->isAjax) {
+            throw new \yii\web\BadRequestHttpException('Invalid request.');
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return Chairs::getFalcultiesKeyVal(intval($this->request->get('faculty_id')));
+    }
+
+
 }

@@ -17,6 +17,9 @@ return [
             'csrfParam' => '_csrf-frontend',
             'baseUrl' => '',
         ],
+        'authManager' => [
+            'class' => yii\rbac\DbManager::class,
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -46,6 +49,17 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+            ],
+        ],
+    ],
+    'container' => [
+        'definitions' => [
+            yii\widgets\ActiveField::class => [
+                'errorOptions' => [
+                    'class' => 'invalid-feedback d-block',
+                ],
+                // Optional:
+                // 'template' => "{label}\n{input}\n{error}\n{hint}",
             ],
         ],
     ],

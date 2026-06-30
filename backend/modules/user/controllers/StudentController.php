@@ -3,6 +3,7 @@
 namespace backend\modules\user\controllers;
 
 
+use backend\modules\user\models\ApplicantForm;
 use backend\modules\user\models\StudentForm;
 use backend\modules\user\models\StudentSearch;
 use common\models\Chairs;
@@ -68,7 +69,7 @@ class StudentController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model = new StudentForm($this->findModel($id)),
         ]);
     }
 

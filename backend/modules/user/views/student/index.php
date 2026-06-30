@@ -14,8 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="student-index">
 
 
-<?= var_dump(Yii::$app->controller->id); ?>
-
     <div class="card">
         <div class="card-body p-0">
             <?= GridView::widget([

@@ -32,6 +32,8 @@ class Journal extends \yii\db\ActiveRecord
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
 
+    const UPLOAD_DIR = 'journal';
+
     /**
      * {@inheritdoc}
      */

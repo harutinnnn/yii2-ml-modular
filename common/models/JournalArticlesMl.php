@@ -13,7 +13,7 @@ use Yii;
  * @property string $title
  * @property string|null $abstract
  * @property string|null $keywords
- * @property string|null $description
+ * @property string $description
  *
  * @property JournalArticles $article
  */
@@ -35,7 +35,7 @@ class JournalArticlesMl extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['abstract', 'keywords','description'], 'default', 'value' => null],
+            [['abstract', 'keywords','description'], 'default'],
             [['article_id', 'lang', 'title'], 'required'],
             [['article_id'], 'integer'],
             [['abstract', 'keywords','description'], 'string'],

@@ -13,10 +13,12 @@ use common\models\JournalAuthorsLcp;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * JournalController implements the CRUD actions for Journal model.
@@ -78,12 +80,12 @@ class JournalController extends Controller
 
         $journalAuthors = JournalAuthors::find()->alias('jo')
             ->innerJoin(JournalAuthorsLcp::tableName(), "jo.id = " . JournalAuthorsLcp::tableName() . ".author_id")
-            ->where([JournalAuthorsLcp::tableName().'.journal_id' => $id])->all();
+            ->where([JournalAuthorsLcp::tableName() . '.journal_id' => $id])->all();
 
 
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'journal_authors' => ArrayHelper::map($journalAuthors, 'id', function ($author){
+            'journal_authors' => ArrayHelper::map($journalAuthors, 'id', function ($author) {
                 return $author->first_name . ' ' . $author->last_name;
             }),
         ]);
@@ -212,6 +214,7 @@ class JournalController extends Controller
     {
         $form = new JournalArticleForm($this->findModelArticle($id));
 
+
         if ($form->load(Yii::$app->request->post()) && $form->save($journalId)) {
             Yii::$app->session->setFlash('success', 'Article updated.');
 
@@ -254,4 +257,44 @@ class JournalController extends Controller
     }
 
 
+    public function actionUploadImage(): array
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $file = UploadedFile::getInstanceByName('image');
+        if ($file === null) {
+            return [
+                'success' => 0,
+                'message' => 'Image file is required.',
+            ];
+        }
+
+        $allowedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+        if (!in_array(strtolower((string)$file->extension), $allowedExtensions, true)) {
+            return [
+                'success' => 0,
+                'message' => 'Unsupported image format.',
+            ];
+        }
+
+        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/' . Journal::UPLOAD_DIR . '/editorjs';
+        FileHelper::createDirectory($basePath);
+
+        $fileName = Yii::$app->security->generateRandomString(16) . '.' . $file->extension;
+        $filePath = $basePath . '/' . $fileName;
+
+        if (!$file->saveAs($filePath)) {
+            return [
+                'success' => 0,
+                'message' => 'Failed to save uploaded image.',
+            ];
+        }
+
+        return [
+            'success' => 1,
+            'file' => [
+                'url' => '/uploads/' . Journal::UPLOAD_DIR . '/editorjs/' . $fileName,
+            ],
+        ];
+    }
 }

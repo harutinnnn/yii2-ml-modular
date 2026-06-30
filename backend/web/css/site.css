@@ -8,3 +8,15 @@
 .selectize-input {
     border: 1px solid #ccc !important; /* or whatever your design needs */
 }
+
+.ce-block__content,
+.ce-toolbar__content {
+    max-width: 100%;
+}
+.editorjs-image img {
+    max-width: 100%;
+    height: auto;
+}
+.codex-editorjs .ce-paragraph {
+    line-height: 1.6;
+}

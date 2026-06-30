@@ -73,6 +73,10 @@ class JournalArticleForm extends Model
             $title = trim((string)($data['title'] ?? ''));
             $description = trim((string)($data['description'] ?? ''));
 
+            if ($title === '') {
+                $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
+            }
+
             if ($description === '') {
                 $this->addError("translations[{$language->code}][description]", "Description is required for {$language->name}.");
             }

@@ -4,27 +4,21 @@
 
 /** @var backend\modules\journal\models\JournalArticleForm $model */
 
-use common\helpers\EditorJsHelper;
-use common\models\JournalArticles;
+use common\models\Journal;
+use common\widgets\ckeditor\CkEditor;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
-use yii\helpers\Json;
-use yii\helpers\Url;
 
 $languages = $model->getLanguages();
-$editorConfigs = [];
-$uploadImageUrl = Url::to(['upload-image']);
-$csrfParam = Yii::$app->request->csrfParam;
-$csrfToken = Yii::$app->request->csrfToken;
 ?>
 
 <div class="journal-form">
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin(); ?>
 
     <div class="card card-primary">
         <div class="card-body">
             <?= $form->field($model, "journal_id")->hiddenInput()->label(false) ?>
-            <?= $form->field($model, 'status')->dropDownList(JournalArticles::optsStatus()) ?>
+            <?= $form->field($model, 'status')->dropDownList(\common\models\JournalArticles::optsStatus()) ?>
 
             <?= $form->field($model, "doi")->textInput(['maxlength' => true]) ?>
         </div>
@@ -66,24 +60,24 @@ $csrfToken = Yii::$app->request->csrfToken;
                                         'placeholder' => "Title in {$language->name}",
                                 ]) ?>
 
-
-
                         <?= $form->field($model, "translations[{$language->code}][description]")
                                 ->label("Description ({$language->name})")
-                                ->hiddenInput(['id' => "post-text-{$language->code}"])
-                                ->label("Description ({$language->name})") ?>
-                        <div
-                                class="border rounded p-3 bg-white js-editorjs-holder"
-                                id="editorjs-<?= Html::encode($language->code) ?>"
-                                style="min-height: 320px;padding-left: 60px !important;"
-                        ></div>
-                        <?php
-                        $editorConfigs[] = [
-                                'holderId' => "editorjs-{$language->code}",
-                                'inputId' => "post-text-{$language->code}",
-                                'data' => Json::decode(EditorJsHelper::encodeInitialData($model->translations[$language->code]['description'] ?? '')),
-                        ];
-                        ?>
+                                ->widget(CkEditor::class, [
+                                        'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
+                                        'clientOptions' => [
+                                                'height' => 300,
+                                                'toolbar' => [
+                                                        ['name' => 'document', 'items' => ['Source']],
+                                                        ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
+                                                        ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
+                                                        ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
+                                                        ['name' => 'links', 'items' => ['Link', 'Unlink']],
+                                                        ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
+                                                        ['name' => 'styles', 'items' => ['Format']],
+                                                        ['name' => 'colors', 'items' => ['TextColor', 'BGColor']],
+                                                ],
+                                        ],
+                                ]) ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -96,27 +90,3 @@ $csrfToken = Yii::$app->request->csrfToken;
 
     <?php ActiveForm::end(); ?>
 </div>
-
-
-<?php
-$editorConfigsJson = Json::htmlEncode($editorConfigs);
-$uploadImageUrlJson = Json::htmlEncode($uploadImageUrl);
-$csrfParamJson = Json::htmlEncode($csrfParam);
-$csrfTokenJson = Json::htmlEncode($csrfToken);
-
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/header@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/list@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/quote@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/image@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJs(<<<JS
-    const configs = {$editorConfigsJson};
-    const uploadImageUrl = {$uploadImageUrlJson};
-    const csrfParam = {$csrfParamJson};
-    const csrfToken = {$csrfTokenJson};
-    const editors = [];
-JS, \yii\web\View::POS_HEAD);
-
-$this->registerJsFile('/admin/js/js-content-editor.js', ['position' => \yii\web\View::POS_END]);
-?>

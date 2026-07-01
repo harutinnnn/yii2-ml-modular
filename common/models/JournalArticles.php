@@ -175,9 +175,22 @@ class JournalArticles extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function statusLabels()
+    {
+        return [
+            self::STATUS_SUBMITTED => 'Submitted',
+            self::STATUS_UNDER_REVIEW => 'Under review',
+            self::STATUS_REVISION_REQUIRED => 'Revision required',
+            self::STATUS_ACCEPTED => 'Accepted',
+            self::STATUS_REJECTED => 'Rejected',
+            self::STATUS_PUBLISHED => 'Published',
+            self::STATUS_ARCHIVED => 'Archived',
+        ];
+    }
+
     public function getStatusLabel(): string
     {
-        return self::optsStatus()[$this->status] ?? 'Unknown';
+        return self::statusLabels()[$this->status] ?? 'Unknown';
     }
 
     /**

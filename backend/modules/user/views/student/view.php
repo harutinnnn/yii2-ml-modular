@@ -38,7 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         'faculty_title',
                         'chair_title',
 
-//                        'created_at',
+                        [
+                                'attribute' => 'created_at',
+                                'format' => ['date', 'php:Y-m-d H:i:s'],
+                        ],
                 ],
         ]) ?>
 

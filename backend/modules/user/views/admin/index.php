@@ -1,50 +1,38 @@
 <?php
 
+use common\models\User;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var backend\modules\user\models\ApplicantSearch $searchModel */
+/** @var backend\modules\user\models\AdminUserSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Applicants';
+$this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="applicant-index">
-
+<div class="user-index">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <?= Html::a('Create Applicant', ['create'], ['class' => 'btn btn-primary']) ?>
     </div>
 
+
     <div class="card">
         <div class="card-body p-0">
+
             <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'tableOptions' => ['class' => 'table table-hover mb-0'],
                     'layout' => "{items}\n<div class=\"card-footer clearfix\">{summary}{pager}</div>",
                     'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
                             'email',
-                            [
-                                    'attribute' => 'first_name',
-                                    'value' => 'additional.first_name',
-                            ],
-                            [
-                                    'attribute' => 'last_name',
-                                    'value' => 'additional.last_name',
-                            ],
-                            [
-                                    'attribute' => 'phone',
-                                    'value' => 'additional.phone',
-                            ],
-                            [
-                                    'attribute' => 'status',
-                                    'filter' => \common\models\Applicant::statusOptions(),
-                                    'value' => static fn($model) => $model->getStatusLabel(),
-                            ],
+                            'full_name',
+                            'status',
+                            'full_name',
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Actions',
@@ -65,5 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
         </div>
     </div>
+
 
 </div>

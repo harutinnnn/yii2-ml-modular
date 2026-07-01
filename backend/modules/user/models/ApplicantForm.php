@@ -64,6 +64,7 @@ class ApplicantForm extends \yii\base\Model
             $this->last_name = (string)$user->additional->last_name ?? "";
             $this->phone = (string)$user->additional->phone ?? "";
             $this->email = (string)$user->email;
+            $this->created_at = $user->created_at;
 
             if ($user->faculty) {
                 $this->faculty_id = (int)$user->faculty->faculty_id ?? 0;

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\UserRoles;
 use mdm\admin\controllers\AssignmentController as BaseAssignmentController;
 use yii\filters\AccessControl;
 
@@ -16,7 +17,7 @@ class AssignmentController extends BaseAssignmentController
             'rules' => [
                 [
                     'allow' => true,
-                    'roles' => ['admin'], // only admin role
+                    'roles' => [UserRoles::SUPER_ADMIN,], // only admin role
                 ],
             ],
         ];

@@ -51,6 +51,7 @@ class StudentForm extends \yii\base\Model
 
     public function __construct(?Student $user = null, $config = [])
     {
+
         $this->user = $user;
         parent::__construct($config);
 
@@ -62,6 +63,7 @@ class StudentForm extends \yii\base\Model
             $this->last_name = (string)$user->additional->last_name ?? "";
             $this->phone = (string)$user->additional->phone ?? "";
             $this->email = (string)$user->email;
+            $this->created_at = $user->created_at;
 
             if ($user->faculty) {
                 $this->faculty_id = (int)$user->faculty->faculty_id ?? 0;
@@ -222,7 +224,6 @@ class StudentForm extends \yii\base\Model
 
         try {
 
-//            dd($this);
             $pass = substr(md5(sha1(microtime())), 0, 8);
 
             $user = new Student();

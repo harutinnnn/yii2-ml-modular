@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\UserRoles;
 use mdm\admin\controllers\RoleController as BaseRoleController;
 use yii\filters\AccessControl;
 
@@ -16,7 +17,7 @@ class RoleController extends BaseRoleController
             'rules' => [
                 [
                     'allow' => true,
-                    'roles' => ['admin'],
+                    'roles' => [UserRoles::SUPER_ADMIN],
                 ],
             ],
         ];

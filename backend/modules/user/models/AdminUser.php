@@ -5,7 +5,6 @@ namespace backend\modules\user\models;
 use common\models\UserAdditionalData;
 use common\models\UserFacultyChairLcp;
 use Yii;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "user".
@@ -20,7 +19,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_at
  * @property string|null $verification_token
  */
-class User extends \yii\db\ActiveRecord
+class AdminUser extends \yii\db\ActiveRecord
 {
     public const STATUS_INACTIVE = 9;
     public const STATUS_ACTIVE = 10;
@@ -29,12 +28,6 @@ class User extends \yii\db\ActiveRecord
 
     public $password;
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
     /**
      * {@inheritdoc}
      */
@@ -51,7 +44,8 @@ class User extends \yii\db\ActiveRecord
         return [
             [['password_reset_token', 'verification_token'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 10],
-            [['email', 'password'], 'required'],
+            [['email','full_name'], 'required'],
+            [['full_name'], 'string'],
             [['password'], 'string', 'min' => 8],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [[ 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],

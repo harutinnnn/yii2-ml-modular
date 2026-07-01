@@ -208,4 +208,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public static function statusOptions(): array
+    {
+        return [
+            self::STATUS_INACTIVE => 'Pending',
+            self::STATUS_ACTIVE => 'Published',
+        ];
+    }
 }

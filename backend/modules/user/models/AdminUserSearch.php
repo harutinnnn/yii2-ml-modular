@@ -2,14 +2,14 @@
 
 namespace backend\modules\user\models;
 
+use common\components\UserRoles;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\User;
 
 /**
- * UserSearch represents the model behind the search form of `common\models\User`.
+ * UserSearch represents the model behind the search form of `common\models\AdminUser`.
  */
-class UserSearch extends User
+class AdminUserSearch extends AdminUser
 {
     /**
      * {@inheritdoc}
@@ -41,7 +41,7 @@ class UserSearch extends User
      */
     public function search($params, $formName = null)
     {
-        $query = User::find();
+        $query = AdminUser::find() ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::ADMIN]);
 
         // add conditions that should always apply here
 

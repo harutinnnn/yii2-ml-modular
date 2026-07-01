@@ -19,6 +19,7 @@ class JournalForm extends Model
     public int $year = 0;
     public int $number = 1;
     public string $doi_prefix = "";
+    public string  $doi_suffix = "";
     public ?string $cover_image = null;
     public array $translations = [];
     public $imageFile = null;
@@ -38,6 +39,7 @@ class JournalForm extends Model
             $this->year = $this->journal->year;
             $this->number = $this->journal->number;
             $this->doi_prefix = $this->journal->doi_prefix;
+            $this->doi_suffix = $this->journal->doi_suffix;
             $this->cover_image = $this->journal->cover_image;
 
             foreach ($this->journal->translations as $translation) {
@@ -65,7 +67,7 @@ class JournalForm extends Model
     {
         return [
             [['status', 'year', 'number', 'doi_prefix'], 'required'],
-            [['status', 'doi_prefix'], 'string'],
+            [['status', 'doi_prefix','doi_suffix'], 'string'],
             [['year', 'number'], 'integer'],
             [['status'], 'in', 'range' => array_keys(Journal::statusOptions())],
             [['translations','authors'], 'safe'],
@@ -81,6 +83,7 @@ class JournalForm extends Model
             'year' => 'Year',
             'number' => 'Number',
             'doi_prefix' => 'Doi prefix',
+            'doi_suffix' => 'Doi Suffix',
             'imageFile' => 'Image',
         ];
     }
@@ -118,6 +121,10 @@ class JournalForm extends Model
         $journal->year = $this->year;
         $journal->number = $this->number;
         $journal->doi_prefix = $this->doi_prefix;
+
+
+
+
 
         if ($this->imageFile !== null) {
             $journal->cover_image = $this->saveUpload($this->imageFile);

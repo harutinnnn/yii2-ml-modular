@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => static fn($model) => $model->getDisplayTitle(),
                             'format' => 'raw',
                     ],
+                    'doi_prefix',
                     'year',
                     'number',
                     [

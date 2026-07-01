@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\DoiHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -17,6 +18,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string|null $logo
  * @property string|null $cover_image
  * @property string|null $status
+ * @property string|null $doi_suffix
  * @property string|null $created_at
  * @property string|null $updated_at
  *
@@ -55,7 +57,8 @@ class Journal extends \yii\db\ActiveRecord
             [['year', 'number'], 'integer'],
             [['status'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
-            [['doi_prefix'], 'string', 'max' => 100],
+            [['doi_prefix', 'doi_suffix'], 'string', 'max' => 100],
+            [['doi_prefix', 'doi_suffix'], 'unique'],
             [['issn_print', 'issn_online'], 'string', 'max' => 50],
             [['logo', 'cover_image'], 'string', 'max' => 255],
             ['status', 'in', 'range' => array_keys(self::statusOptions())],
@@ -77,6 +80,7 @@ class Journal extends \yii\db\ActiveRecord
             'logo' => 'Logo',
             'cover_image' => 'Cover Image',
             'status' => 'Status',
+            'doi_suffix' => 'Doi suffix',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -145,4 +149,22 @@ class Journal extends \yii\db\ActiveRecord
     {
         return self::statusOptions()[$this->status] ?? 'Unknown';
     }
+
+    public function afterSave($insert, $changedAttributes): void
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        if ($insert) {
+            $this->updateAttributes([
+                'doi_suffix' => DoiHelper::generateJournalDoiPrefix($this)
+            ]);
+        } else {
+            if (!$this->doi_suffix) {
+                $this->updateAttributes([
+                    'doi_suffix' => DoiHelper::generateJournalDoiPrefix($this)
+                ]);
+            }
+        }
+    }
+
 }

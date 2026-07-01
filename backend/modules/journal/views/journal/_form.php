@@ -20,6 +20,11 @@ $languages = $model->getLanguages();
     <div class="card card-primary">
         <div class="card-body">
 
+            <?= $form->field($model, "doi_prefix")->textInput(['maxlength' => true]) ?>
+
+            <?php if (isset($model->journal->id) ): ?>
+                <?= $form->field($model, "doi_suffix")->textInput(['maxlength' => true, 'disabled' => true]) ?>
+            <?php endif; ?>
 
             <?=
             $form->field($model, 'authors')->widget(Select2::classname(), [
@@ -36,10 +41,10 @@ $languages = $model->getLanguages();
             ?>
 
             <?= $form->field($model, 'status')->dropDownList(Journal::statusOptions()) ?>
-            <?= $form->field($model, 'year')->dropDownList(array_combine(range(date('Y'), 2000),range(date('Y'), 2000))) ?>
+            <?= $form->field($model, 'year')->dropDownList(array_combine(range(date('Y'), 2000), range(date('Y'), 2000))) ?>
 
             <?= $form->field($model, "number")->textInput(['maxlength' => true]) ?>
-            <?= $form->field($model, "doi_prefix")->textInput(['maxlength' => true]) ?>
+
         </div>
     </div>
 

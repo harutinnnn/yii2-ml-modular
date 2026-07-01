@@ -6,6 +6,7 @@ use backend\modules\journal\models\JournalArticleForm;
 use backend\modules\journal\models\JournalArticlesSearch;
 use backend\modules\journal\models\JournalForm;
 use backend\modules\user\models\AdminUser;
+use common\components\RbacUtilities;
 use common\components\UserRoles;
 use common\models\Journal;
 use backend\modules\journal\models\JournalSearch;
@@ -39,8 +40,49 @@ class JournalController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['admin'],
+//                        'actions' => ['update', 'delete', 'create'],
+                        'roles' => [UserRoles::ADMIN, UserRoles::SUPER_ADMIN],
+                        'matchCallback' => function ($rule, $action) {
+
+                            $roles = ArrayHelper::getColumn(Yii::$app->authManager->getRolesByUser(Yii::$app->user->id), 'name');
+
+                            if (RbacUtilities::allowRoles([UserRoles::SUPER_ADMIN])) {
+                                return true;
+                            } else {
+
+
+                                if (in_array($action->id, ['index', 'articles','view','article-view'])) {
+                                    return true;
+                                }
+
+                                if($action->id === 'delete'){
+                                    return  false;
+                                }
+
+                                $result = array_intersect($roles, [UserRoles::ADMIN]);
+
+
+                                if (!count($result)) {
+                                    return false;
+                                }
+
+
+                                if (in_array($action->id, ['create-article','update-article', 'article-view', 'article-delete'])) {
+                                    $id = Yii::$app->request->get('journalId');
+                                } else {
+                                    $id = Yii::$app->request->get('id');
+                                }
+
+                                $journalAdminLcp = JournalAdminLcp::find()->where(['journal_id' => $id, 'admin_id' => (int)Yii::$app->user->id])->one();
+
+                                if (empty($journalAdminLcp)) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        },
                     ],
+
                 ],
             ],
             'verbs' => [

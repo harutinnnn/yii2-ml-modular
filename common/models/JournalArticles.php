@@ -21,6 +21,7 @@ use Yii;
  * @property string|null $abstract
  * @property string|null $keywords
  * @property string|null $pdf_file
+ * @property string|null $doi_suffix
  *
  * @property ArticleAuthors[] $articleAuthors
  * @property User[] $authors
@@ -61,7 +62,7 @@ class JournalArticles extends \yii\db\ActiveRecord
             [['journal_id', 'first_page', 'last_page'], 'integer'],
             [['received_at', 'accepted_at', 'published_at', 'created_at', 'updated_at'], 'safe'],
             [['status', 'abstract', 'keywords'], 'string'],
-            [['doi', 'pdf_file'], 'string', 'max' => 255],
+            [['doi', 'pdf_file','doi_suffix'], 'string', 'max' => 255],
             ['status', 'in', 'range' => array_keys(self::optsStatus())],
 //            [['journal_id'], 'unique', 'targetAttribute' => ['journal_id']],
             [['journal_id'], 'exist', 'skipOnError' => true, 'targetClass' => Journal::class, 'targetAttribute' => ['journal_id' => 'id']],
@@ -88,6 +89,7 @@ class JournalArticles extends \yii\db\ActiveRecord
             'abstract' => 'Abstract',
             'keywords' => 'Keywords',
             'pdf_file' => 'Pdf File',
+            'doi_suffix' => 'Doi suffix',
         ];
     }
 

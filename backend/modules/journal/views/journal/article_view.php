@@ -1,5 +1,6 @@
 <?php
 
+use common\helpers\EditorJsHelper;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -29,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php foreach ($model->translations as $translation): ?>
                 <hr>
                 <h5><?= Html::encode(strtoupper($translation->lang)) ?>: <?= Html::encode($translation->title) ?></h5>
-                <div><?= $translation->description ?></div>
+                <div><?= EditorJsHelper::render($translation->description) ?></div>
             <?php endforeach; ?>
 
         </div>

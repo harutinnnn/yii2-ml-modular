@@ -100,6 +100,7 @@ class JournalArticleForm extends Model
 
 
         $transaction = Yii::$app->db->beginTransaction();
+
         try {
             if (!$journalArticle->save()) {
                 $this->addErrors($journalArticle->getErrors());
@@ -107,6 +108,9 @@ class JournalArticleForm extends Model
 
                 return false;
             }
+
+            dd($journalArticle->errors);
+
 
             JournalArticlesMl::deleteAll(['article_id' => $journalArticle->id]);
 

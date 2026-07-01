@@ -90,6 +90,8 @@ class AdminController extends Controller
                 $role = $auth->getRole(UserRoles::ADMIN);
                 $auth->assign($role, $model->id);
 
+                $model->sendEmail($model);
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {

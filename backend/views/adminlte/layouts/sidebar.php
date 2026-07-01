@@ -1,6 +1,7 @@
 <?php
 
 use common\components\RbacUtilities;
+use common\components\UserRoles;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -135,20 +136,20 @@ $menuItems = [
         [
                 'label' => 'RBAC',
                 'icon' => 'user-shield',
-                'visible' => RbacUtilities::allowRoles(['admin']),
+                'visible' => RbacUtilities::allowRoles([UserRoles::SUPER_ADMIN]),
                 'items' => [
                         [
                                 'label' => 'Assignment',
                                 'icon' => 'users',
                                 'url' => ['/admin/assignment/index'],
-                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'visible' => RbacUtilities::allowRoles([UserRoles::SUPER_ADMIN]),
                                 'active' => Yii::$app->controller->id == 'assignment'
                         ],
                         [
                                 'label' => 'Role',
                                 'icon' => 'user-tag',
                                 'url' => ['/admin/role/index'],
-                                'visible' => RbacUtilities::allowRoles(['admin']),
+                                'visible' => RbacUtilities::allowRoles([UserRoles::SUPER_ADMIN]),
                                 'active' => Yii::$app->controller->id == 'role'
                         ],
 
@@ -156,14 +157,14 @@ $menuItems = [
 //                                'label' => 'Permission',
 //                                'icon' => 'lock',
 //                                'url' => ['/admin/permission/index'],
-//                                'visible' => RbacUtilities::allowRoles(['admin'])
+//                                'visible' => RbacUtilities::allowRoles([UserRoles::SUPER_ADMIN])
 //                        ],
 //
 //                        [
 //                                'label' => 'Route',
 //                                'icon' => 'route',
 //                                'url' => ['/admin/route/index'],
-//                                'visible' => RbacUtilities::allowRoles(['admin'])
+//                                'visible' => RbacUtilities::allowRoles([UserRoles::SUPER_ADMIN])
 //                        ],
                 ],
         ],

@@ -44,11 +44,11 @@ class AdminUser extends \yii\db\ActiveRecord
         return [
             [['password_reset_token', 'verification_token'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 10],
-            [['email','full_name'], 'required'],
+            [['email', 'full_name'], 'required'],
             [['full_name'], 'string'],
             [['password'], 'string', 'min' => 8],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [[ 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
+            [['password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['email'], 'unique'],
             [['email'], 'email'],
             [['password_reset_token'], 'unique'],
@@ -89,6 +89,7 @@ class AdminUser extends \yii\db\ActiveRecord
         if (!parent::beforeSave($insert)) {
             return false;
         }
+        $this->password = substr(md5(sha1(microtime() . rand())), 0, 8);
 
         if ($insert) {
             $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
@@ -108,12 +109,12 @@ class AdminUser extends \yii\db\ActiveRecord
      * @param \common\models\User $user user model to with email should be send
      * @return bool whether the email was sent
      */
-    public function sendEmail($user)
+    public function sendEmail(AdminUser $user)
     {
         return Yii::$app
             ->mailer
             ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
+                ['html' => 'emailVerifyAdmin-html', 'text' => 'emailVerifyAdmin-text'],
                 ['user' => $user]
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
@@ -127,6 +128,7 @@ class AdminUser extends \yii\db\ActiveRecord
     {
         return $this->hasOne(UserAdditionalData::class, ['user_id' => 'id']);
     }
+
     public function getFaculty()
     {
         return $this->hasOne(UserFacultyChairLcp::class, ['user_id' => 'id']);

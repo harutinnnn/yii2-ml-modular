@@ -104,12 +104,21 @@ $uploadImageUrlJson = Json::htmlEncode($uploadImageUrl);
 $csrfParamJson = Json::htmlEncode($csrfParam);
 $csrfTokenJson = Json::htmlEncode($csrfToken);
 
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/header@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/list@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/quote@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest', ['position' => \yii\web\View::POS_END]);
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/image@latest', ['position' => \yii\web\View::POS_END]);
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.31.0', ['position' => \yii\web\View::POS_END]);
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.8', ['position' => \yii\web\View::POS_END]);
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.7', ['position' => \yii\web\View::POS_END]);
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/list@2.0.8', ['position' => \yii\web\View::POS_END]);
+
+//$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest', ['position' => \yii\web\View::POS_END]);
+//$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/header@latest', ['position' => \yii\web\View::POS_END]);
+//$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/list@latest', ['position' => \yii\web\View::POS_END]);
+//$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/quote@latest', ['position' => \yii\web\View::POS_END]);
+//$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest', ['position' => \yii\web\View::POS_END]);
+//$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest', ['position' => \yii\web\View::POS_END]);
+//$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/image@latest', ['position' => \yii\web\View::POS_END]);
+
+
+
 $this->registerJs(<<<JS
     const configs = {$editorConfigsJson};
     const uploadImageUrl = {$uploadImageUrlJson};

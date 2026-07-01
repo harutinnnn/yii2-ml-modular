@@ -119,7 +119,13 @@
                     }
                 },
                 youtube: YouTubeEmbed
-            }
+            },
+            async onChange(api, event) {
+                console.log(event);
+
+                const data = await api.saver.save();
+                console.log(data);
+            },
         });
 
         editors.push({editor, input});

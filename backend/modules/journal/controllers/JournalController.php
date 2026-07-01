@@ -5,8 +5,11 @@ namespace backend\modules\journal\controllers;
 use backend\modules\journal\models\JournalArticleForm;
 use backend\modules\journal\models\JournalArticlesSearch;
 use backend\modules\journal\models\JournalForm;
+use backend\modules\user\models\AdminUser;
+use common\components\UserRoles;
 use common\models\Journal;
 use backend\modules\journal\models\JournalSearch;
+use common\models\JournalAdminLcp;
 use common\models\JournalArticles;
 use common\models\JournalAuthors;
 use common\models\JournalAuthorsLcp;
@@ -296,5 +299,57 @@ class JournalController extends Controller
                 'url' => '/uploads/' . Journal::UPLOAD_DIR . '/editorjs/' . $fileName,
             ],
         ];
+    }
+
+
+    public function actionAdministrators($id)
+    {
+
+        if (!$id) {
+            return $this->redirect(['index']);
+        }
+
+        $journal = Journal::findOne($id);
+
+        if (!$journal) {
+            return $this->redirect(['index']);
+        }
+
+        $model = new JournalAdminLcp();
+        $model->journal_id = $id;
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            JournalAdminLcp::deleteAll(['journal_id' => $id]);
+
+
+            if (!empty($model->adminIds)) {
+                foreach ($model->adminIds as $adminId) {
+
+                    $journalAdminLcp = new JournalAdminLcp();
+                    $journalAdminLcp->journal_id = $id;
+                    $journalAdminLcp->admin_id = $adminId;
+                    $journalAdminLcp->save();
+                }
+
+            }
+
+            Yii::$app->session->setFlash('success', 'Journal admins added.');
+
+            return $this->redirect(['index']);
+        }
+
+
+        $model->adminIds = ArrayHelper::getColumn(JournalAdminLcp::findAll(['journal_id' => $id]), 'admin_id');
+
+        $adminUsers = AdminUser::find()->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::ADMIN])->all();
+
+        return $this->render('administrators', [
+            'model' => $model,
+            'adminUsers' => ArrayHelper::map($adminUsers, 'id', 'full_name'),
+            'authors' => ArrayHelper::map(JournalAuthors::find()->all(), 'id', function ($user) {
+                return $user->first_name . ' ' . $user->last_name;
+            })
+        ]);
     }
 }

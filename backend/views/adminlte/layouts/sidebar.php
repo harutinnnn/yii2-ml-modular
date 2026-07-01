@@ -83,7 +83,7 @@ $menuItems = [
                 'icon' => 'newspaper',
                 'visible' => RbacUtilities::allowRoles(['admin']),
                 'items' => [
-                        ['label' => 'Scientific journal', 'icon' => 'newspaper', 'url' => ['/journal/journal/index'],
+                        ['label' => 'Journals', 'icon' => 'newspaper', 'url' => ['/journal/journal/index'],
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
                                 'active' => Yii::$app->controller->id == 'journal'
                         ],

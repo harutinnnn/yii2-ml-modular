@@ -48,6 +48,12 @@ class JournalSearch extends Journal
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'year' => SORT_DESC,
+                    'number' => SORT_DESC,
+                ],
+            ],
         ]);
 
         $this->load($params, $formName);
@@ -56,6 +62,7 @@ class JournalSearch extends Journal
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
+
         }
 
         // grid filtering conditions

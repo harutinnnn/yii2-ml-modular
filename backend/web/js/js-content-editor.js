@@ -19,6 +19,42 @@
             return;
         }
 
+        let syncTimer = null;
+        let saveQueue = Promise.resolve();
+        let editor;
+
+        function saveToInput() {
+            saveQueue = saveQueue.then(async function () {
+                try {
+                    await editor.isReady;
+                    const output = await editor.save();
+                    input.value = JSON.stringify(output);
+                } catch (error) {
+                    console.error('Failed to save Editor.js content.', error);
+                }
+            });
+
+            return saveQueue;
+        }
+
+        function scheduleSave() {
+            if (syncTimer !== null) {
+                clearTimeout(syncTimer);
+            }
+
+            syncTimer = setTimeout(function () {
+                syncTimer = null;
+                saveToInput();
+            }, 300);
+        }
+
+        function cancelScheduledSave() {
+            if (syncTimer !== null) {
+                clearTimeout(syncTimer);
+                syncTimer = null;
+            }
+        }
+
         class YouTubeEmbed {
             static get toolbox() {
                 return {
@@ -83,11 +119,19 @@
             }
         }
 
-        const editor = new EditorJS({
+        editor = new EditorJS({
             holder: config.holderId,
             data: config.data || {blocks: []},
             minHeight: 280,
+            defaultBlock: 'paragraph',
             tools: {
+                paragraph: {
+                    class: Paragraph,
+                    inlineToolbar: true,
+                    config: {
+                        preserveBlank: true
+                    }
+                },
                 header: {
                     class: Header,
                     inlineToolbar: true,
@@ -120,15 +164,12 @@
                 },
                 youtube: YouTubeEmbed
             },
-            async onChange(api, event) {
-                console.log(event);
-
-                const data = await api.saver.save();
-                console.log(data);
+            onChange() {
+                scheduleSave();
             },
         });
 
-        editors.push({editor, input});
+        editors.push({editor, input, saveToInput, cancelScheduledSave});
     }
 
     configs.forEach(createEditor);
@@ -137,15 +178,4 @@
     if (!form) {
         return;
     }
-
-    form.addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        for (const item of editors) {
-            const output = await item.editor.save();
-            item.input.value = JSON.stringify(output);
-        }
-
-        form.submit();
-    });
 })();

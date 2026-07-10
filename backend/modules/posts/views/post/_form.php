@@ -105,8 +105,11 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest', 
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/header@latest', ['position' => \yii\web\View::POS_END]);
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/list@latest', ['position' => \yii\web\View::POS_END]);
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/quote@latest', ['position' => \yii\web\View::POS_END]);
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest', ['position' => \yii\web\View::POS_END]);
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest', ['position' => \yii\web\View::POS_END]);
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/@editorjs/image@latest', ['position' => \yii\web\View::POS_END]);
+
+
 $this->registerJs(<<<JS
     const configs = {$editorConfigsJson};
     const uploadImageUrl = {$uploadImageUrlJson};

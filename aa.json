@@ -1,0 +1,33 @@
+{
+  "time": 1782914057797,
+  "blocks": [
+    {
+      "id": "welcome001",
+      "type": "header",
+      "data": {
+        "text": "Build your story",
+        "level": 2
+      }
+    },
+    {
+      "id": "welcome002",
+      "type": "paragraph",
+      "data": {
+        "text": "<h2 style=\"margin: 0px 0px 10px; padding: 0px; font-weight: 400; font-family: DauphinPlain; font-size: 24px; line-height: 24px; color: rgb(0, 0, 0);\">What is Lorem Ipsum?</h2><p style=\"margin: 0px 0px 15px; padding: 0px; text-align: justify; color: rgb(0, 0, 0); font-family: &quot;Open Sans&quot;, Arial, sans-serif; font-size: 14px;\"><strong style=\"margin: 0px; padding: 0px;\">Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.</p>"
+      }
+    },
+    {
+      "id": "1X9JCtaUfZ",
+      "type": "video",
+      "data": {
+        "service": "youtube",
+        "source": "https://www.youtube.com/embed/8yMgrkeGgOs",
+        "embed": "https://www.youtube.com/embed/8yMgrkeGgOs",
+        "width": 640,
+        "height": 360,
+        "caption": ""
+      }
+    }
+  ],
+  "version": "2.31.6"
+}

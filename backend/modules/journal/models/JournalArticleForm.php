@@ -109,9 +109,6 @@ class JournalArticleForm extends Model
                 return false;
             }
 
-            dd($journalArticle->errors);
-
-
             JournalArticlesMl::deleteAll(['article_id' => $journalArticle->id]);
 
             foreach ($this->getLanguages() as $language) {

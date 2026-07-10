@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
 
 $this->title = 'View Journal #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Journals', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => 'Journal Articles', 'url' => ['articles','id' => $journalId??0]];
+$this->params['breadcrumbs'][] = ['label' => 'Journal Articles', 'url' => ['articles', 'id' => $journalId ?? 0, 'number_id' => $number_id ?? 0]];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -18,8 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0"><?= Html::encode($model->getDisplayTitle()) ?></h3>
             <div>
-                <?= Html::a('Edit', ['update-article', 'id' => $model->id,'journalId' => $model->journal_id], ['class' => 'btn btn-success btn-sm']) ?>
-                <?= Html::a('Back', ['articles', 'id' => $journalId ?? 0], ['class' => 'btn btn-secondary btn-sm']) ?>
+                <?= Html::a('Edit', ['update-article', 'id' => $model->id, 'journalId' => $model->journal_id, 'number_id' => $number_id ?? 0], ['class' => 'btn btn-success btn-sm']) ?>
+                <?= Html::a('Back', ['articles', 'id' => $journalId ?? 0, 'number_id' => $number_id ?? 0], ['class' => 'btn btn-secondary btn-sm']) ?>
             </div>
         </div>
         <div class="card-body">

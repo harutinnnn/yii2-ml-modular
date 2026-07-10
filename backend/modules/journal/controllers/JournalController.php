@@ -5,6 +5,7 @@ namespace backend\modules\journal\controllers;
 use backend\modules\journal\models\JournalArticleForm;
 use backend\modules\journal\models\JournalArticlesSearch;
 use backend\modules\journal\models\JournalForm;
+use backend\modules\journal\models\JournalNumbersSearch;
 use backend\modules\user\models\AdminUser;
 use common\components\RbacUtilities;
 use common\components\UserRoles;
@@ -14,6 +15,8 @@ use common\models\JournalAdminLcp;
 use common\models\JournalArticles;
 use common\models\JournalAuthors;
 use common\models\JournalAuthorsLcp;
+use common\models\JournalNumbers;
+use mysql_xdevapi\CollectionModify;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -51,12 +54,12 @@ class JournalController extends Controller
                             } else {
 
 
-                                if (in_array($action->id, ['index', 'articles','view','article-view'])) {
+                                if (in_array($action->id, ['index', 'articles', 'view', 'article-view', 'numbers'])) {
                                     return true;
                                 }
 
-                                if($action->id === 'delete'){
-                                    return  false;
+                                if ($action->id === 'delete') {
+                                    return false;
                                 }
 
                                 $result = array_intersect($roles, [UserRoles::ADMIN]);
@@ -67,7 +70,11 @@ class JournalController extends Controller
                                 }
 
 
-                                if (in_array($action->id, ['create-article','update-article', 'article-view', 'article-delete'])) {
+                                if (in_array($action->id, ['create-number', 'delete-journal-number'])) {
+
+                                    $id = Yii::$app->request->get('journal_id');
+
+                                } else if (in_array($action->id, ['create-article', 'update-article', 'article-view', 'article-delete'])) {
                                     $id = Yii::$app->request->get('journalId');
                                 } else {
                                     $id = Yii::$app->request->get('id');
@@ -223,52 +230,55 @@ class JournalController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionArticles($id)
+    public function actionArticles($id, $number_id)
     {
 
         $searchModel = new JournalArticlesSearch();
-        $dataProvider = $searchModel->search($id, $this->request->queryParams);
+        $dataProvider = $searchModel->search($id, $this->request->queryParams, $number_id);
 
         return $this->render('article_index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'journalId' => $id
+            'journalId' => $id,
+            'number_id' => $number_id
         ]);
 
     }
 
-    public function actionCreateArticle($journalId): string|Response
+    public function actionCreateArticle($journalId, $number_id): string|Response
     {
 
         $form = new JournalArticleForm();
 
-        if ($form->load(Yii::$app->request->post()) && $form->save($journalId)) {
+        if ($form->load(Yii::$app->request->post()) && $form->save($journalId, $number_id)) {
             Yii::$app->session->setFlash('success', 'Journal created.');
 
-            return $this->redirect(['articles', 'id' => $journalId]);
+            return $this->redirect(['articles', 'id' => $journalId, 'number_id' => $number_id]);
         }
 
 
         return $this->render('create_article', [
             'model' => $form,
-            'journalId' => $journalId
+            'journalId' => $journalId,
+            'number_id' => $number_id
         ]);
     }
 
-    public function actionUpdateArticle(int $id, int $journalId): string|Response
+    public function actionUpdateArticle(int $id, int $journalId, $number_id): string|Response
     {
+
         $form = new JournalArticleForm($this->findModelArticle($id));
 
-
-        if ($form->load(Yii::$app->request->post()) && $form->save($journalId)) {
+        if ($form->load(Yii::$app->request->post()) && $form->save($journalId, $number_id)) {
             Yii::$app->session->setFlash('success', 'Article updated.');
 
-            return $this->redirect(['articles', 'id' => $journalId]);
+            return $this->redirect(['articles', 'id' => $journalId, 'number_id' => $number_id]);
         }
 
         return $this->render('update_article', [
             'model' => $form,
-            'journalId' => $journalId
+            'journalId' => $journalId,
+            'number_id' => $number_id
         ]);
     }
 
@@ -278,14 +288,14 @@ class JournalController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionArticleView($id, $journalId)
+    public function actionArticleView($id, $journalId, $number_id)
     {
         return $this->render('article_view', [
             'model' => $this->findModelArticle($id),
-            'journalId' => $journalId
+            'journalId' => $journalId,
+            'number_id' => $number_id
         ]);
     }
-
 
     /**
      * Deletes an existing Journal model.
@@ -294,15 +304,16 @@ class JournalController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionArticleDelete($id, $journalId)
+    public
+    function actionArticleDelete($id, $journalId, $number_id)
     {
 
         $this->findModelArticle($id)->delete();
-        return $this->redirect(['articles', 'id' => $journalId]);
+        return $this->redirect(['articles', 'id' => $journalId, 'number_id' => $number_id]);
     }
 
-
-    public function actionUploadImage(): array
+    public
+    function actionUploadImage(): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -343,8 +354,8 @@ class JournalController extends Controller
         ];
     }
 
-
-    public function actionAdministrators($id)
+    public
+    function actionAdministrators($id)
     {
 
         if (!$id) {
@@ -393,5 +404,55 @@ class JournalController extends Controller
                 return $user->first_name . ' ' . $user->last_name;
             })
         ]);
+    }
+
+    public
+    function actionNumbers($journal_id)
+    {
+
+        $searchModel = new JournalNumbersSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, $journal_id);
+
+        return $this->render('numbers', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'journal_id' => $journal_id
+        ]);
+    }
+
+    public
+    function actionCreateNumber($journal_id): string|Response
+    {
+        $form = new JournalNumbers();
+        $form->journal_id = $journal_id;
+
+        if ($form->load(Yii::$app->request->post()) && $form->save()) {
+            Yii::$app->session->setFlash('success', 'Journal created.');
+
+            return $this->redirect(['numbers', 'journal_id' => $journal_id]);
+        }
+
+//        dd($form->errors);
+
+        return $this->render('create-journal-number', [
+            'model' => $form,
+        ]);
+    }
+
+    public
+    function actionDeleteJournalNumber($id, $journal_id)
+    {
+        $this->findJournalNumberModel($id)->delete();
+        return $this->redirect(['numbers', 'journal_id' => $journal_id]);
+    }
+
+    protected
+    function findJournalNumberModel($id)
+    {
+        if (($model = JournalNumbers::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

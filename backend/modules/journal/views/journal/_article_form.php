@@ -23,6 +23,7 @@ $csrfToken = Yii::$app->request->csrfToken;
 
     <div class="card card-primary">
         <div class="card-body">
+            <?= $form->field($model, 'number_id')->hiddenInput()->label(false) ?>
             <?= $form->field($model, "journal_id")->hiddenInput()->label(false) ?>
             <?= $form->field($model, 'status')->dropDownList(JournalArticles::optsStatus()) ?>
 

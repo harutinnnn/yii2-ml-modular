@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $journal_id
+ * @property int $number_id
  * @property string|null $doi
  * @property int|null $first_page
  * @property int|null $last_page
@@ -58,14 +59,15 @@ class JournalArticles extends \yii\db\ActiveRecord
         return [
             [['doi', 'first_page', 'last_page', 'received_at', 'accepted_at', 'published_at', 'abstract', 'keywords', 'pdf_file'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'submitted'],
-            [['journal_id'], 'required'],
-            [['journal_id', 'first_page', 'last_page'], 'integer'],
+            [['journal_id', 'number_id'], 'required'],
+            [['journal_id', 'number_id', 'first_page', 'last_page'], 'integer'],
             [['received_at', 'accepted_at', 'published_at', 'created_at', 'updated_at'], 'safe'],
             [['status', 'abstract', 'keywords'], 'string'],
-            [['doi', 'pdf_file','doi_suffix'], 'string', 'max' => 255],
+            [['doi', 'pdf_file', 'doi_suffix'], 'string', 'max' => 255],
             ['status', 'in', 'range' => array_keys(self::optsStatus())],
 //            [['journal_id'], 'unique', 'targetAttribute' => ['journal_id']],
             [['journal_id'], 'exist', 'skipOnError' => true, 'targetClass' => Journal::class, 'targetAttribute' => ['journal_id' => 'id']],
+            [['number_id'], 'exist', 'skipOnError' => true, 'targetClass' => JournalNumbers::class, 'targetAttribute' => ['journal_id' => 'id']],
         ];
     }
 
@@ -77,6 +79,7 @@ class JournalArticles extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'journal_id' => 'Journal ID',
+            'number_id' => 'Number ID',
             'doi' => 'Doi',
             'first_page' => 'First Page',
             'last_page' => 'Last Page',

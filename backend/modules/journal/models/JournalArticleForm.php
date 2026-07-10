@@ -15,6 +15,7 @@ class JournalArticleForm extends Model
     public ?JournalArticles $journalArticle = null;
     public string $status = JournalArticles::STATUS_UNDER_REVIEW;
     public int $journal_id = 0;
+    public int $number_id = 0;
     public string $doi = "";
     public array $translations = [];
 
@@ -83,10 +84,11 @@ class JournalArticleForm extends Model
         }
     }
 
-    public function save($journalId): bool
+    public function save($journalId,$number_id): bool
     {
 
         $this->journal_id = intval($journalId);
+        $this->number_id = intval($number_id);
 
         if (!$this->validate()) {
             return false;
@@ -97,6 +99,7 @@ class JournalArticleForm extends Model
         $journalArticle->status = $this->status;
         $journalArticle->doi = $this->doi;
         $journalArticle->journal_id = $this->journal_id;
+        $journalArticle->number_id = $this->number_id;
 
 
         $transaction = Yii::$app->db->beginTransaction();

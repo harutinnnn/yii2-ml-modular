@@ -33,6 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             'format' => 'raw',
                     ],
                     'doi_prefix',
+                    'year',
+                    'number',
                     [
                             'attribute' => 'status',
                             'filter' => \common\models\Post::statusOptions(),
@@ -41,12 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                             'class' => ActionColumn::class,
                             'header' => 'Actions',
-                            'template' => '{update} {numbers} {administrators} {view} {delete}',
+                            'template' => '{update} {articles} {administrators} {view} {delete}',
                             'contentOptions' => ['class' => 'text-nowrap'],
                             'buttons' => [
                                     'view' => static fn($url, $model) => Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-info btn-sm mr-1']),
                                     'update' => static fn($url, $model) => Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
-                                    'numbers' => static fn($url, $model) => Html::a('<i class="fas fa-newspaper"></i>&nbsp;&nbsp; Numbers', ['numbers', 'journal_id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
+                                    'articles' => static fn($url, $model) => Html::a('<i class="fas fa-newspaper"></i>&nbsp;&nbsp; Articles', ['articles', 'id' => $model->id], ['class' => 'btn btn-primary btn-sm mr-1']),
                                     'administrators' => static fn($url, $model) => Html::a('<i class="fas fa-users"></i>&nbsp;&nbsp; Admins', ['administrators', 'id' => $model->id], ['class' => 'btn btn-warning btn-sm mr-1']),
                                     'delete' => static fn($url, $model) => Html::a('Remove', ['delete', 'id' => $model->id], [
                                             'class' => 'btn btn-danger btn-sm',

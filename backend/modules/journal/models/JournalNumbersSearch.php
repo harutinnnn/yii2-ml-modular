@@ -2,15 +2,14 @@
 
 namespace backend\modules\journal\models;
 
-use common\models\JournalArticles;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Journal;
+use common\models\JournalNumbers;
 
 /**
- * JournalSearch represents the model behind the search form of `common\models\Journal`.
+ * JournalNumbersSearch represents the model behind the search form of `common\models\JournalNumbers`.
  */
-class JournalArticlesSearch extends JournalArticles
+class JournalNumbersSearch extends JournalNumbers
 {
     /**
      * {@inheritdoc}
@@ -18,8 +17,7 @@ class JournalArticlesSearch extends JournalArticles
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['cover_image', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'journal_id', 'year', 'number'], 'integer'],
         ];
     }
 
@@ -40,9 +38,9 @@ class JournalArticlesSearch extends JournalArticles
      *
      * @return ActiveDataProvider
      */
-    public function search($journalId, $params, $number_id)
+    public function search($params, $journal_id)
     {
-        $query = JournalArticles::find()->where(['journal_id' => $journalId, 'number_id' => $number_id]);
+        $query = JournalNumbers::find()->where(['journal_id' => $journal_id]);
 
         // add conditions that should always apply here
 
@@ -61,11 +59,10 @@ class JournalArticlesSearch extends JournalArticles
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'journal_id' => $this->journal_id,
+            'year' => $this->year,
+            'number' => $this->number,
         ]);
-
-        $query->andFilterWhere(['like', 'status', $this->status]);
 
         return $dataProvider;
     }

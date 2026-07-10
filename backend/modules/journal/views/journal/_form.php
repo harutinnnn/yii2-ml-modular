@@ -41,9 +41,9 @@ $languages = $model->getLanguages();
             ?>
 
             <?= $form->field($model, 'status')->dropDownList(Journal::statusOptions()) ?>
-            <?= $form->field($model, 'year')->dropDownList(array_combine(range(date('Y'), 2000), range(date('Y'), 2000))) ?>
+<!--            --><?php //= $form->field($model, 'year')->dropDownList(array_combine(range(date('Y'), 2000), range(date('Y'), 2000))) ?>
 
-            <?= $form->field($model, "number")->textInput(['maxlength' => true]) ?>
+<!--            --><?php //= $form->field($model, "number")->textInput(['maxlength' => true]) ?>
 
         </div>
     </div>

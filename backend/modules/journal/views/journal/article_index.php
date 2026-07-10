@@ -10,12 +10,13 @@ use yii\grid\GridView;
 
 $this->title = 'Journal articles';
 $this->params['breadcrumbs'][] = ['label' => 'Journals', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Journal Numbers', 'url' => ['numbers','journal_id' => $journalId, ]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="journal-article-index">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <?= Html::a('Create Article', ['create-article', 'journalId' => $journalId ?? 0], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Create Article', ['create-article', 'journalId' => $journalId ?? 0, 'number_id' => $number_id ?? 0], ['class' => 'btn btn-primary']) ?>
     </div>
 
 
@@ -41,9 +42,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             'template' => '{update} {view} {delete}',
                             'contentOptions' => ['class' => 'text-nowrap'],
                             'buttons' => [
-                                    'view' => static fn($url, $model) => Html::a('View', ['article-view', 'id' => $model->id, 'journalId' => $model->journal_id], ['class' => 'btn btn-info btn-sm mr-1']),
-                                    'update' => static fn($url, $model) => Html::a('Edit', ['update-article', 'id' => $model->id, 'journalId' => $model->journal_id], ['class' => 'btn btn-success btn-sm mr-1']),
-                                    'delete' => static fn($url, $model) => Html::a('Remove', ['article-delete', 'id' => $model->id, 'journalId' => $model->journal_id], [
+                                    'view' => static fn($url, $model) => Html::a('View', ['article-view', 'id' => $model->id, 'journalId' => $model->journal_id, 'number_id' => $model->number_id], ['class' => 'btn btn-info btn-sm mr-1']),
+                                    'update' => static fn($url, $model) => Html::a('Edit', ['update-article', 'id' => $model->id, 'journalId' => $model->journal_id, 'number_id' => $model->number_id], ['class' => 'btn btn-success btn-sm mr-1']),
+                                    'delete' => static fn($url, $model) => Html::a('Remove', ['article-delete', 'id' => $model->id, 'journalId' => $model->journal_id, 'number_id' => $model->number_id], [
                                             'class' => 'btn btn-danger btn-sm',
                                             'data-method' => 'post',
                                             'data-confirm' => 'Are you sure you want to delete this item?',

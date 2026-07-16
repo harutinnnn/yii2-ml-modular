@@ -24,7 +24,7 @@ class JournalForm extends Model
     public array $translations = [];
     public $imageFile = null;
 
-    public  $authors;
+    public  $authors = [];
 
     private ?array $_languages = null;
 
@@ -157,7 +157,7 @@ class JournalForm extends Model
                 }
             }
 
-            if ($journal->id && count($this->authors)) {
+            if ($journal->id && is_array($journal->id) &&  count($this->authors)) {
 
                 JournalAuthorsLcp::deleteAll(['journal_id' => $journal->id]);
                 foreach ($this->authors as $aithor) {

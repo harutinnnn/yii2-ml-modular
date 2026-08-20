@@ -64,6 +64,9 @@ return [
         'posts' => [
             'class' => \backend\modules\posts\Module::class,
         ],
+        'news' => [
+            'class' => \backend\modules\news\Module::class,
+        ],
         'journal' => [
             'class' => \backend\modules\journal\Module::class,
         ],

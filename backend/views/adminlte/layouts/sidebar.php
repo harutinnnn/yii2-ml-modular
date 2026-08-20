@@ -98,6 +98,22 @@ $menuItems = [
                 ]
         ],
 
+        [
+                'label' => 'News',
+                'icon' => 'newspaper',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        ['label' => 'News', 'icon' => 'newspaper', 'url' => ['/news/news/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'news'
+                        ],
+                        ['label' => 'Categories', 'icon' => 'gem', 'url' => ['/news/news-categories/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'news-categories'
+                        ],
+                ]
+        ],
+
 
 
 

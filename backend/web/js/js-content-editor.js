@@ -125,13 +125,13 @@
             minHeight: 280,
             defaultBlock: 'paragraph',
             tools: {
-                paragraph: {
-                    class: Paragraph,
-                    inlineToolbar: true,
-                    config: {
-                        preserveBlank: true
-                    }
-                },
+                // paragraph: {
+                //     class: Paragraph,
+                //     inlineToolbar: true,
+                //     config: {
+                //         preserveBlank: true
+                //     }
+                // },
                 header: {
                     class: Header,
                     inlineToolbar: true,

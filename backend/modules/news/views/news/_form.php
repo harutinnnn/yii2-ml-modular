@@ -10,6 +10,7 @@ use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\jui\DatePicker;
 
 $languages = $model->getLanguages();
 $editorConfigs = [];
@@ -25,6 +26,21 @@ $csrfToken = Yii::$app->request->csrfToken;
         <div class="card-body">
             <?= $form->field($model, 'status')->dropDownList(News::statusOptions()) ?>
             <?= $form->field($model, 'category_id')->dropDownList($categories ?? []) ?>
+
+
+
+            <?= $form->field($model, 'date')->widget(DatePicker::class, [
+                    'dateFormat' => 'yyyy-MM-dd',
+                    'options' => [
+                            'class' => 'form-control',
+                            'autocomplete' => 'off',
+                    ],
+                    'clientOptions' => [
+                            'changeMonth' => true,
+                            'changeYear' => true,
+                            'yearRange' => '1950:2050',
+                    ],
+            ]) ?>
 
             <?= $form->field($model, 'imageFile')->fileInput() ?>
             <?php if ($model->image): ?>

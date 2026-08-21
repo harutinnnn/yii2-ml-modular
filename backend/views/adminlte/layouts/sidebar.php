@@ -99,13 +99,21 @@ $menuItems = [
         ],
 
         [
-                'label' => 'News',
+                'label' => 'News / Media',
                 'icon' => 'newspaper',
                 'visible' => RbacUtilities::allowRoles(['admin']),
                 'items' => [
                         ['label' => 'News', 'icon' => 'newspaper', 'url' => ['/news/news/index'],
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
                                 'active' => Yii::$app->controller->id == 'news'
+                        ],
+                        ['label' => 'Events', 'icon' => 'calendar-alt', 'url' => ['/news/events/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'events'
+                        ],
+                        ['label' => 'Announcements', 'icon' => 'bullhorn', 'url' => ['/news/announcements/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'announcements'
                         ],
                         ['label' => 'Categories', 'icon' => 'gem', 'url' => ['/news/news-categories/index'],
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),

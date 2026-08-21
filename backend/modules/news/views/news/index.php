@@ -32,6 +32,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'value' => static fn($model) => $model->getDisplayTitle(),
                             ],
                             [
+                                    'attribute' => 'date',
+                                    'value' => static fn($model) => substr($model->date, 0, 10),
+                            ],
+                            [
                                     'attribute' => 'category_id',
                                     'filter' => $categories ?? [],
                                     'value' => static fn($model) => $categories[$model->category_id] ?? null,

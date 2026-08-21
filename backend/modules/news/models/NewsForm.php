@@ -15,6 +15,7 @@ class NewsForm extends Model
     public ?News $news = null;
     public int $status = News::STATUS_PUBLISHED;
     public int $category_id = 0;
+    public string|null $date = null;
     public ?string $image = null;
     public array $translations = [];
     public $imageFile = null;
@@ -27,8 +28,9 @@ class NewsForm extends Model
         parent::__construct($config);
 
         if ($this->news !== null) {
-            $this->status = (int) $this->news->status;
-            $this->category_id = (int) $this->news->category_id;
+            $this->status = (int)$this->news->status;
+            $this->category_id = (int)$this->news->category_id;
+            $this->date = (string)$this->news->date;
             $this->image = $this->news->image;
             foreach ($this->news->translations as $translation) {
                 $this->translations[$translation->lang] = [
@@ -49,8 +51,9 @@ class NewsForm extends Model
     public function rules(): array
     {
         return [
-            [['status','category_id'], 'required'],
-            [['status','category_id'], 'integer'],
+            [['status', 'category_id','date'], 'required'],
+            [['status', 'category_id'], 'integer'],
+            [['date'], 'string'],
             [['status'], 'in', 'range' => array_keys(News::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
@@ -63,6 +66,7 @@ class NewsForm extends Model
         return [
             'status' => 'Status',
             'category_id' => 'Category',
+            'date' => 'Date',
             'imageFile' => 'Image',
         ];
     }
@@ -71,8 +75,8 @@ class NewsForm extends Model
     {
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
-            $title = trim((string) ($data['title'] ?? ''));
-            $text = trim((string) ($data['text'] ?? ''));
+            $title = trim((string)($data['title'] ?? ''));
+            $text = trim((string)($data['text'] ?? ''));
 
             if ($title === '') {
                 $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
@@ -95,6 +99,7 @@ class NewsForm extends Model
         $news = $this->news ?? new News();
         $news->status = $this->status;
         $news->category_id = $this->category_id;
+        $news->date = $this->date;
 
         if ($this->imageFile !== null) {
             $news->image = $this->saveUpload($this->imageFile);
@@ -115,8 +120,8 @@ class NewsForm extends Model
                 $translation = new NewsMl();
                 $translation->news_id = $news->id;
                 $translation->lang = $language->code;
-                $translation->title = trim((string) $this->translations[$language->code]['title']);
-                $translation->text = trim((string) $this->translations[$language->code]['text']);
+                $translation->title = trim((string)$this->translations[$language->code]['title']);
+                $translation->text = trim((string)$this->translations[$language->code]['text']);
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

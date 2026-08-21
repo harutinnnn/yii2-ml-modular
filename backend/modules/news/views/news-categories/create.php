@@ -3,7 +3,7 @@
 /** @var yii\web\View $this */
 /** @var backend\modules\news\models\NewsCategoriesForm $model */
 
-$this->title = 'Create Post';
+$this->title = 'Create Category';
 $this->params['breadcrumbs'][] = ['label' => 'News Categories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

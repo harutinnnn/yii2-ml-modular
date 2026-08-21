@@ -3,7 +3,7 @@
 /** @var yii\web\View $this */
 /** @var backend\modules\news\models\NewsForm $model */
 
-$this->title = 'Create Post';
+$this->title = 'Create News';
 $this->params['breadcrumbs'][] = ['label' => 'News', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

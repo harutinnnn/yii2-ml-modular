@@ -10,6 +10,7 @@ use yii\db\ActiveRecord;
  * @property int $status
  * @property int $category_id
  * @property string|null $image
+ * @property string $date
  * @property int $created_at
  * @property int $updated_at
  *
@@ -35,9 +36,9 @@ class News extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['status','category_id'], 'required'],
+            [['status','category_id','date'], 'required'],
             [['status','category_id'], 'integer'],
-            [['image'], 'string', 'max' => 255],
+            [['image','date'], 'string', 'max' => 255],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
     }

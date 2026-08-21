@@ -39,7 +39,7 @@ $menuItems = [
 
         [
                 'label' => 'Menus/Contents',
-                'icon' => 'bars',
+                'icon' => 'list',
                 'visible' => RbacUtilities::allowRoles(['admin']),
                 'items' => [
                         ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index'],
@@ -80,7 +80,7 @@ $menuItems = [
 
         [
                 'label' => 'Journals',
-                'icon' => 'newspaper',
+                'icon' => 'journal-whills',
                 'visible' => RbacUtilities::allowRoles(['admin']),
                 'items' => [
                         ['label' => 'Journals', 'icon' => 'newspaper', 'url' => ['/journal/journal/index'],
@@ -100,7 +100,7 @@ $menuItems = [
 
         [
                 'label' => 'News / Media',
-                'icon' => 'newspaper',
+                'icon' => 'rss-square',
                 'visible' => RbacUtilities::allowRoles(['admin']),
                 'items' => [
                         ['label' => 'News', 'icon' => 'newspaper', 'url' => ['/news/news/index'],

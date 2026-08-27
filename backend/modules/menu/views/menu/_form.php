@@ -1,11 +1,17 @@
 <?php
 
+use backend\modules\menu\models\MenuForm;
 use common\models\Menu;
 use common\widgets\ckeditor\CkEditor;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
+
+
+/** @var MenuForm $model */
 
 $languages = $model->getLanguages();
 $sectionOptions = $model::sectionOptions();
@@ -30,16 +36,31 @@ $menuIdJson = Json::htmlEncode($menuId);
             <div class="row">
                 <div class="col-md-4"><?= $form->field($model, 'url')->textInput(['maxlength' => true, 'id' => 'menu-url']) ?></div>
                 <div class="col-md-4"><?= $form->field($model, 'section_id')->dropDownList($sectionOptions) ?></div>
-                <div class="col-md-4"><?= $form->field($model, 'parent_id')->dropDownList($parentOptions) ?></div>
+                <div class="col-md-4">
+                    <?php
+                    echo $form->field($model, 'parent_id')->widget(Select2::class, [
+                            'data' => $parentOptions,
+                            'options' => [
+                                    'placeholder' => 'Select parent menu...',
+                            ],
+                            'pluginOptions' => [
+                                    'allowClear' => true,
+                            ],
+                    ]);
+                    ?>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <?= $form->field($model, 'imageFile')->fileInput() ?>
-                    <?php if ($model->image): ?><p class="mb-0"><img src="<?= Html::encode($model->image) ?>" alt="" style="max-height: 70px;"></p><?php endif; ?>
+                    <?php if ($model->image): ?><p class="mb-0"><img src="<?= Html::encode($model->image) ?>" alt=""
+                                                                     style="max-height: 70px;"></p><?php endif; ?>
                 </div>
                 <div class="col-md-6">
                     <?= $form->field($model, 'headerImageFile')->fileInput() ?>
-                    <?php if ($model->header_image): ?><p class="mb-0"><img src="<?= Html::encode($model->header_image) ?>" alt="" style="max-height: 70px;"></p><?php endif; ?>
+                    <?php if ($model->header_image): ?><p class="mb-0"><img
+                                src="<?= Html::encode($model->header_image) ?>" alt="" style="max-height: 70px;">
+                        </p><?php endif; ?>
                 </div>
             </div>
         </div>
@@ -50,7 +71,8 @@ $menuIdJson = Json::htmlEncode($menuId);
             <ul class="nav nav-tabs" role="tablist">
                 <?php foreach ($languages as $index => $language): ?>
                     <li class="nav-item">
-                        <a class="nav-link <?= $index === 0 ? 'active' : '' ?>" data-toggle="pill" href="#menu-lang-<?= Html::encode($language->code) ?>" role="tab">
+                        <a class="nav-link <?= $index === 0 ? 'active' : '' ?>" data-toggle="pill"
+                           href="#menu-lang-<?= Html::encode($language->code) ?>" role="tab">
                             <?= Html::encode(strtoupper($language->code)) ?>: <?= Html::encode($language->name) ?>
                         </a>
                     </li>
@@ -60,13 +82,14 @@ $menuIdJson = Json::htmlEncode($menuId);
         <div class="card-body">
             <div class="tab-content">
                 <?php foreach ($languages as $index => $language): ?>
-                    <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>" id="menu-lang-<?= Html::encode($language->code) ?>" role="tabpanel">
+                    <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>"
+                         id="menu-lang-<?= Html::encode($language->code) ?>" role="tabpanel">
                         <div class="row">
                             <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][title]")->label("Title ({$language->name})")->textInput([
-                                'maxlength' => true,
-                                'class' => 'form-control js-menu-title',
-                                'data-lang' => $language->code,
-                            ]) ?></div>
+                                        'maxlength' => true,
+                                        'class' => 'form-control js-menu-title',
+                                        'data-lang' => $language->code,
+                                ]) ?></div>
                             <div class="col-md-6"></div>
                         </div>
                         <div class="row">
@@ -76,19 +99,19 @@ $menuIdJson = Json::htmlEncode($menuId);
                         <?= $form->field($model, "translations[{$language->code}][meta_desc]")->label("Meta Description ({$language->name})")->textarea(['rows' => 2]) ?>
                         <?= $form->field($model, "translations[{$language->code}][meta_keywords]")->label("Meta Keywords ({$language->name})")->textarea(['rows' => 2]) ?>
                         <?= $form->field($model, "translations[{$language->code}][description]")->label("Description ({$language->name})")->widget(CkEditor::class, [
-                            'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
-                            'clientOptions' => [
-                                'height' => 220,
-                                'toolbar' => [
-                                    ['name' => 'document', 'items' => ['Source']],
-                                    ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
-                                    ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
-                                    ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
-                                    ['name' => 'links', 'items' => ['Link', 'Unlink']],
-                                    ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
-                                    ['name' => 'styles', 'items' => ['Format']],
+                                'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
+                                'clientOptions' => [
+                                        'height' => 220,
+                                        'toolbar' => [
+                                                ['name' => 'document', 'items' => ['Source']],
+                                                ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
+                                                ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
+                                                ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
+                                                ['name' => 'links', 'items' => ['Link', 'Unlink']],
+                                                ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
+                                                ['name' => 'styles', 'items' => ['Format']],
+                                        ],
                                 ],
-                            ],
                         ]) ?>
                     </div>
                 <?php endforeach; ?>
@@ -103,6 +126,7 @@ $menuIdJson = Json::htmlEncode($menuId);
     <?php ActiveForm::end(); ?>
 </div>
 <?php
+if(!isset($model->menu->id)){
 $this->registerJs(<<<JS
 (function () {
     const slugUrl = {$slugUrlJson};
@@ -146,4 +170,5 @@ $this->registerJs(<<<JS
         }
     });
 })();
-JS); ?>
+JS
+); } ?>

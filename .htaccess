@@ -16,6 +16,7 @@ DirectoryIndex index.php
     RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
     RewriteRule ^js/(.*)$ frontend/web/js/$1 [L]
     RewriteRule ^uploads/(.*)$ frontend/web/uploads/$1 [L]
+    RewriteRule ^images/(.*)$ frontend/web/images/$1 [L]
     RewriteRule ^favicon\.ico$ frontend/web/favicon.ico [L]
     RewriteRule ^robots\.txt$ frontend/web/robots.txt [L]
 

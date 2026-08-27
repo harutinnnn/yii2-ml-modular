@@ -32,7 +32,7 @@ $renderTree = function ($sectionId, $parentId, $depth) use (&$renderTree, $group
         $html .= '<span class="menu-node__handle"><i class="fas fa-grip-vertical"></i></span>';
         $html .= '<div class="menu-node__meta">';
         $html .= '<div class="menu-node__title">' . Html::encode($item->getDisplayTitle()) . '</div>';
-        $html .= '<div class="menu-node__sub">#' . (int) $item->id . ' | ' . Html::encode($item->url) . ' | ' . ($item->show_in_menu ? 'Show' : 'Hidden') . '</div>';
+
         $html .= '</div></div>';
         $html .= '<div class="menu-node__actions">';
         $html .= Html::a('View', ['view', 'id' => $item->id], ['class' => 'btn btn-info btn-sm mr-1']);
@@ -63,8 +63,8 @@ $this->registerCss(<<<CSS
 .menu-tree { list-style:none; margin:0; padding: .75rem 1rem 1rem 1rem; min-height: 24px; }
 .menu-tree .menu-tree { margin-left: 2rem; padding-top: .5rem; padding-bottom: 0; border-left: 2px dashed #d7dee8; }
 .menu-tree--child-empty { min-height: 22px; margin-left: 2rem; padding-top: .5rem; padding-bottom: 0; border-left: 2px dashed #d7dee8; }
-.menu-node { margin-bottom: .75rem; }
-.menu-node__card { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.85rem 1rem; border:1px solid #dbe3ec; border-radius:.5rem; background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); }
+.menu-node { margin-bottom: .5rem; }
+.menu-node__card { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.5rem 1rem; border:1px solid #dbe3ec; border-radius:.5rem; background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); }
 .menu-node__main { display:flex; align-items:center; gap:.85rem; min-width:0; }
 .menu-node__handle { cursor:move; color:#64748b; font-size:1rem; }
 .menu-node__title { font-weight:600; color:#1f2937; }

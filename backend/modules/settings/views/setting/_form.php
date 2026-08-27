@@ -15,10 +15,16 @@ use yii\helpers\Html;
             'maxlength' => true,
         ]) ?>
 
+        <?php if($model->id): ?>
         <?= $form->field($model, 'key')->textInput([
             'maxlength' => true,
             'readonly' =>'readonly'
         ]) ?>
+        <?php else: ?>
+            <?= $form->field($model, 'key')->textInput([
+                    'maxlength' => true,
+            ]) ?>
+        <?php endif; ?>
 
         <?= $form->field($model, 'value')->textarea([
             'rows' => 6,

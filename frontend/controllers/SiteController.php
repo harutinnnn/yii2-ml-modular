@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use backend\modules\user\models\ApplicantForm;
 use common\helpers\I18n;
 use common\models\Chairs;
+use common\models\Faculties;
 use common\models\Menu;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
@@ -80,9 +81,12 @@ class SiteController extends MyController
     public function actionIndex()
     {
 
-//        dd(\common\components\I18n::translate('name'));
 
-        return $this->render('index');
+        return $this->render('index',
+            [
+                'facultiesCount' => Faculties::find()->count(),
+                'chairCount' => Chairs::find()->count(),
+            ]);
     }
 
     /**

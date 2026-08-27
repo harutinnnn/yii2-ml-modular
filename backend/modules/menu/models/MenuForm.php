@@ -36,13 +36,13 @@ class MenuForm extends Model
         parent::__construct($config);
 
         if ($this->menu !== null) {
-            $this->status = (int) $this->menu->status;
-            $this->show_in_menu = (int) $this->menu->show_in_menu;
+            $this->status = (int)$this->menu->status;
+            $this->show_in_menu = (int)$this->menu->show_in_menu;
             $this->position = $this->menu->position;
             $this->content_id = $this->menu->content_id;
             $this->section_id = $this->menu->section_id;
             $this->parent_id = $this->menu->parent_id;
-            $this->url = (string) $this->menu->url;
+            $this->url = (string)$this->menu->url;
             $this->image = $this->menu->image;
             $this->header_image = $this->menu->header_image;
             foreach ($this->menu->translations as $translation) {
@@ -114,7 +114,7 @@ class MenuForm extends Model
     {
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
-            if (trim((string) ($data['title'] ?? '')) === '') {
+            if (trim((string)($data['title'] ?? '')) === '') {
                 $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
             }
         }
@@ -160,11 +160,11 @@ class MenuForm extends Model
                 $translation = new MenuMl();
                 $translation->menu_id = $menu->id;
                 $translation->lang = $language->code;
-                $translation->title = trim((string) $data['title']);
-                $translation->meta_title = trim((string) ($data['meta_title'] ?? '')) ?: null;
-                $translation->meta_desc = trim((string) ($data['meta_desc'] ?? '')) ?: null;
-                $translation->description = trim((string) ($data['description'] ?? '')) ?: null;
-                $translation->meta_keywords = trim((string) ($data['meta_keywords'] ?? '')) ?: null;
+                $translation->title = trim((string)$data['title']);
+                $translation->meta_title = trim((string)($data['meta_title'] ?? '')) ?: null;
+                $translation->meta_desc = trim((string)($data['meta_desc'] ?? '')) ?: null;
+                $translation->description = trim((string)($data['description'] ?? '')) ?: null;
+                $translation->meta_keywords = trim((string)($data['meta_keywords'] ?? '')) ?: null;
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());
@@ -212,14 +212,60 @@ class MenuForm extends Model
 
     public static function parentOptions(?int $excludeId = null): array
     {
-        $items = Menu::find()->with('translations')->orderBy(['position' => SORT_ASC, 'id' => SORT_ASC])->all();
         $result = ['' => 'No Parent'];
+        $items = Menu::find()->with('translations')->where(['!=','id',  intval($excludeId)])->orderBy(['position' => SORT_ASC, 'id' => SORT_ASC])->all();
+        $result = self::getItemsWithParentTitles($items);
+//        foreach ($items as $item) {
+//            if ($excludeId !== null && $item->id === $excludeId) {
+//                continue;
+//            }
+//            $result[$item->id] = '#' . $item->id . ' ' . $item->getDisplayTitle();
+//        }
+        return $result;
+    }
+
+
+    public static function getItemsWithParentTitles(array $items): array
+    {
+        // First create index by ID
+        $indexed = [];
+
         foreach ($items as $item) {
-            if ($excludeId !== null && $item->id === $excludeId) {
-                continue;
-            }
-            $result[$item->id] = '#' . $item->id . ' ' . $item->getDisplayTitle();
+            $indexed[$item['id']] = $item;
         }
+
+        $result = [];
+        $cache = [];
+
+        $getFullTitle = function ($id) use (&$getFullTitle, &$indexed, &$cache) {
+            if (isset($cache[$id])) {
+                return $cache[$id];
+            }
+
+            if (!isset($indexed[$id])) {
+                return '';
+            }
+
+            $item = $indexed[$id];
+
+            $title = $item->getDisplayTitle();
+            $parentId = $item['parent_id'];
+
+            if ($parentId && isset($indexed[$parentId])) {
+                $parentTitle = $getFullTitle($parentId);
+
+                if ($parentTitle !== '') {
+                    $title = $parentTitle . ' |- ' . $title;
+                }
+            }
+
+            return $cache[$id] = $title;
+        };
+
+        foreach ($items as $item) {
+            $result[$item['id']] = $getFullTitle($item['id']);
+        }
+
         return $result;
     }
 

@@ -49,6 +49,12 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+
+                '<language:(en|ru|am)>' => 'site/index',
+
+                '<language:(en|ru|am)>/news' => 'news',
+
+                '<language:(en|ru|am)>/<controller>/<action>' => '<controller>/<action>',
             ],
         ],
     ],

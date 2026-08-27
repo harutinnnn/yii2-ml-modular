@@ -3,9 +3,7 @@
 namespace common\components;
 
 use common\models\FrontendLanguage;
-use common\models\Labels;
 use common\models\Setting;
-use common\models\Settings;
 use yii\base\Component;
 use yii\helpers\ArrayHelper;
 
@@ -13,7 +11,8 @@ class GlobalData extends Component
 {
     public array $labels = [];
     public array $settings = [];
-    private string $lang = 'en';
+    public $lang = 'am';
+
 
     public function init()
     {
@@ -27,9 +26,14 @@ class GlobalData extends Component
         $this->settings = ArrayHelper::map(Setting::find()->all(), 'key', 'value');
     }
 
-    public function setLang(string $lang): void
+    public function setLang($lang)
     {
         $this->lang = $lang;
+    }
+
+    public function getLang()
+    {
+        return $this->lang;
     }
 
 }

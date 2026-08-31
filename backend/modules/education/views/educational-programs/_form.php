@@ -101,6 +101,23 @@ $documentFields = [
                                         ],
                                 ]) ?>
 
+                        <?= $form->field($model, "translations[{$language->code}][imgFile]")
+                                ->label("Image ({$language->name})")
+                                ->fileInput([
+                                        'accept' => '.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp',
+                                ]) ?>
+
+                        <?php $currentImage = $model->getImage($language->code); ?>
+                        <?php if ($currentImage): ?>
+                            <div class="mb-3">
+                                <?= Html::img($currentImage, [
+                                        'alt' => "Current image ({$language->name})",
+                                        'class' => 'img-thumbnail',
+                                        'style' => 'max-width: 240px; max-height: 180px;',
+                                ]) ?>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="row">
 
 

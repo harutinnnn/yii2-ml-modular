@@ -30,7 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                     'attribute' => 'title',
                                     'value' => static fn($model) => $model->getDisplayTitle(),
-                            ], [
+                            ],
+                            [
                                     'attribute' => 'title',
                                     'value' => static fn($model) => Html::img($model->getTranslation('en')->img, ['class' => 'img-thumbnail', 'style' => 'height:150px']),
                                     'format' => 'html',

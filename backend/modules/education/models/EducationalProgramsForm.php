@@ -30,6 +30,7 @@ class EducationalProgramsForm extends Model
 
     private ?array $_languages = null;
     private array $_documents = [];
+    private array $_images = [];
 
     public function __construct(?EducationalPrograms $education_programs = null, $config = [])
     {
@@ -46,6 +47,7 @@ class EducationalProgramsForm extends Model
                     'title' => $translation->title,
                     'desc' => $translation->desc,
                 ];
+                $this->_images[$translation->lang] = $translation->img;
                 foreach (self::DOCUMENT_UPLOAD_FIELDS as $documentAttribute) {
                     $this->_documents[$translation->lang][$documentAttribute] = $translation->$documentAttribute;
                 }
@@ -101,6 +103,20 @@ class EducationalProgramsForm extends Model
                 $this->addError("translations[{$language->code}][desc]", "Description is required for {$language->name}.");
             }
 
+            $image = $data['imgFile'] ?? null;
+            if ($image instanceof UploadedFile) {
+                $imageModel = DynamicModel::validateData(['file' => $image], [
+                    [['file'], 'file', 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
+                ]);
+
+                if ($imageModel->hasErrors('file')) {
+                    $this->addError(
+                        "translations[{$language->code}][imgFile]",
+                        $imageModel->getFirstError('file')
+                    );
+                }
+            }
+
             foreach (self::DOCUMENT_UPLOAD_FIELDS as $uploadAttribute => $documentAttribute) {
                 $file = $data[$uploadAttribute] ?? null;
                 if ($file instanceof UploadedFile) {
@@ -122,6 +138,9 @@ class EducationalProgramsForm extends Model
     public function save(): bool
     {
         foreach ($this->getLanguages() as $language) {
+            $imageAttribute = "translations[{$language->code}][imgFile]";
+            $this->translations[$language->code]['imgFile'] = UploadedFile::getInstance($this, $imageAttribute);
+
             foreach (self::DOCUMENT_UPLOAD_FIELDS as $uploadAttribute => $documentAttribute) {
                 $attribute = "translations[{$language->code}][{$uploadAttribute}]";
                 $this->translations[$language->code][$uploadAttribute] = UploadedFile::getInstance($this, $attribute);
@@ -159,6 +178,20 @@ class EducationalProgramsForm extends Model
                 $translation->lang = $language->code;
                 $translation->title = trim((string)$this->translations[$language->code]['title']);
                 $translation->desc = trim((string)$this->translations[$language->code]['desc']);
+
+                $existingImage = $this->_images[$language->code] ?? null;
+                $translation->img = $existingImage;
+
+                $image = $this->translations[$language->code]['imgFile'] ?? null;
+                if ($image instanceof UploadedFile) {
+                    $translation->img = $this->saveImageUpload($image);
+                    $newUploads[] = $translation->img;
+
+                    if ($existingImage !== null) {
+                        $filesToDeleteAfterCommit[] = $existingImage;
+                    }
+                }
+
                 foreach (self::DOCUMENT_UPLOAD_FIELDS as $uploadAttribute => $documentAttribute) {
                     $existingDocument = $this->_documents[$language->code][$documentAttribute] ?? null;
                     $translation->$documentAttribute = $existingDocument;
@@ -223,6 +256,24 @@ class EducationalProgramsForm extends Model
         }
 
         return $this->_documents[$languageCode][$documentAttribute] ?? null;
+    }
+
+    public function getImage(string $languageCode): ?string
+    {
+        return $this->_images[$languageCode] ?? null;
+    }
+
+    protected function saveImageUpload(UploadedFile $file): string
+    {
+        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/educational-programs';
+        FileHelper::createDirectory($basePath);
+        $name = Yii::$app->security->generateRandomString(16) . '.' . $file->extension;
+
+        if (!$file->saveAs($basePath . '/' . $name)) {
+            throw new \RuntimeException('Unable to save the uploaded image.');
+        }
+
+        return '/uploads/educational-programs/' . $name;
     }
 
     protected function saveUpload(UploadedFile $file): string

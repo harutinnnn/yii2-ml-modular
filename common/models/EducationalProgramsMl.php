@@ -10,6 +10,7 @@ use yii\db\ActiveRecord;
  * @property string $lang
  * @property string $title
  * @property string $desc
+ * @property string|null $img
  * @property string|null $doc_about_program
  * @property string|null $doc_educational_program_guide
  * @property string|null $doc_subject_list
@@ -34,6 +35,7 @@ class EducationalProgramsMl extends ActiveRecord
             [['desc'], 'string'],
             [['educational_program_id', 'lang'], 'unique', 'targetAttribute' => ['educational_program_id', 'lang']],
             [['educational_program_id'], 'exist', 'targetClass' => EducationalPrograms::class, 'targetAttribute' => ['educational_program_id' => 'id']],
+            [['img'], 'string', 'max' => 255],
         ];
     }
 
@@ -45,10 +47,12 @@ class EducationalProgramsMl extends ActiveRecord
             'lang' => 'Language',
             'title' => 'Title',
             'desc' => 'Description',
+            'img' => 'Image',
             'doc_about_program' => 'Document about program',
             'doc_educational_program_guide' => 'Document educational program guide',
             'doc_subject_list' => 'Document subject list',
             'doc_subject_list_remote' => 'Document subject list remote',
+
         ];
     }
 

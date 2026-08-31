@@ -13,7 +13,7 @@ class EducationalProgramsSearch extends EducationalPrograms
     public function rules(): array
     {
         return [
-            [['id', 'status','education_level'], 'integer'],
+            [['id', 'status','education_level','education_level'], 'integer'],
             [['title'], 'safe'],
         ];
     }
@@ -47,6 +47,7 @@ class EducationalProgramsSearch extends EducationalPrograms
         $query->andFilterWhere([
             'p.id' => $this->id,
             'p.status' => $this->status,
+            'p.education_level' => $this->education_level,
         ]);
 
         $query->andFilterWhere(['like', 't.title', $this->title]);

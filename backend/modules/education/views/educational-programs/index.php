@@ -38,6 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'value' => static fn($model) => $levels[$model->education_level] ?? '-',
                             ],
                             [
+                                    'attribute' => 'title',
+                                    'value' => static fn($model) => Html::img($model->getTranslation('en')->img, ['class' => 'img-thumbnail', 'style' => 'height:150px']),
+                                    'format' => 'html',
+                            ],
+                            [
                                     'attribute' => 'status',
                                     'filter' => EducationalPrograms::statusOptions(),
                                     'value' => static fn($model) => $model->getStatusLabel(),

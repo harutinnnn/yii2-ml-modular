@@ -99,6 +99,22 @@ $menuItems = [
         ],
 
         [
+                'label' => 'Education',
+                'icon' => 'graduation-cap',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        ['label' => 'Education Levels', 'icon' => 'graduation-cap', 'url' => ['/education/education-levels/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'education-levels'
+                        ],
+                        ['label' => 'Educational programs', 'icon' => 'graduation-cap', 'url' => ['/education/educational-programs/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'educational-programs'
+                        ]
+                ]
+        ],
+
+        [
                 'label' => 'News / Media',
                 'icon' => 'rss-square',
                 'visible' => RbacUtilities::allowRoles(['admin']),

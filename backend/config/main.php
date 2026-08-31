@@ -67,6 +67,9 @@ return [
         'news' => [
             'class' => \backend\modules\news\Module::class,
         ],
+        'education' => [
+            'class' => \backend\modules\education\Module::class,
+        ],
         'journal' => [
             'class' => \backend\modules\journal\Module::class,
         ],

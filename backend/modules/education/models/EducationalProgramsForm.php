@@ -6,12 +6,20 @@ use common\models\EducationalPrograms;
 use common\models\EducationalProgramsMl;
 use common\models\Language;
 use Yii;
+use yii\base\DynamicModel;
 use yii\base\Model;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 class EducationalProgramsForm extends Model
 {
+    private const DOCUMENT_UPLOAD_FIELDS = [
+        'docAboutProgramFile' => 'doc_about_program',
+        'docEducationalProgramGuideFile' => 'doc_educational_program_guide',
+        'docSubjectListFile' => 'doc_subject_list',
+        'docSubjectListRemoteFile' => 'doc_subject_list_remote',
+    ];
+
     public ?EducationalPrograms $education_programs = null;
     public int $status = EducationalPrograms::STATUS_PUBLISHED;
     public int $education_level = 0;
@@ -19,7 +27,9 @@ class EducationalProgramsForm extends Model
     public int $is_remote = 0;
     public array $translations = [];
 
+
     private ?array $_languages = null;
+    private array $_documents = [];
 
     public function __construct(?EducationalPrograms $education_programs = null, $config = [])
     {
@@ -36,6 +46,9 @@ class EducationalProgramsForm extends Model
                     'title' => $translation->title,
                     'desc' => $translation->desc,
                 ];
+                foreach (self::DOCUMENT_UPLOAD_FIELDS as $documentAttribute) {
+                    $this->_documents[$translation->lang][$documentAttribute] = $translation->$documentAttribute;
+                }
             }
         }
 
@@ -66,6 +79,10 @@ class EducationalProgramsForm extends Model
             'duration_by_year' => 'Duration by year',
             'education_level' => 'Education level',
             'is_remote' => 'Is remote',
+            'doc_about_program' => 'Document about program',
+            'doc_educational_program_guide' => 'Document educational program guide',
+            'doc_subject_list' => 'Document subject list',
+            'doc_subject_list_remote' => 'Document subject list remote',
         ];
     }
 
@@ -83,11 +100,33 @@ class EducationalProgramsForm extends Model
             if ($desc === '') {
                 $this->addError("translations[{$language->code}][desc]", "Description is required for {$language->name}.");
             }
+
+            foreach (self::DOCUMENT_UPLOAD_FIELDS as $uploadAttribute => $documentAttribute) {
+                $file = $data[$uploadAttribute] ?? null;
+                if ($file instanceof UploadedFile) {
+                    $fileModel = DynamicModel::validateData(['file' => $file], [
+                        [['file'], 'file', 'extensions' => ['pdf'], 'mimeTypes' => ['application/pdf']],
+                    ]);
+
+                    if ($fileModel->hasErrors('file')) {
+                        $this->addError(
+                            "translations[{$language->code}][{$uploadAttribute}]",
+                            $fileModel->getFirstError('file')
+                        );
+                    }
+                }
+            }
         }
     }
 
     public function save(): bool
     {
+        foreach ($this->getLanguages() as $language) {
+            foreach (self::DOCUMENT_UPLOAD_FIELDS as $uploadAttribute => $documentAttribute) {
+                $attribute = "translations[{$language->code}][{$uploadAttribute}]";
+                $this->translations[$language->code][$uploadAttribute] = UploadedFile::getInstance($this, $attribute);
+            }
+        }
 
         if (!$this->validate()) {
             return false;
@@ -100,6 +139,8 @@ class EducationalProgramsForm extends Model
         $education_programs->education_level = $this->education_level;
         $education_programs->is_remote = $this->is_remote;
 
+        $filesToDeleteAfterCommit = [];
+        $newUploads = [];
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$education_programs->save()) {
@@ -118,10 +159,31 @@ class EducationalProgramsForm extends Model
                 $translation->lang = $language->code;
                 $translation->title = trim((string)$this->translations[$language->code]['title']);
                 $translation->desc = trim((string)$this->translations[$language->code]['desc']);
+                foreach (self::DOCUMENT_UPLOAD_FIELDS as $uploadAttribute => $documentAttribute) {
+                    $existingDocument = $this->_documents[$language->code][$documentAttribute] ?? null;
+                    $translation->$documentAttribute = $existingDocument;
+
+                    $file = $this->translations[$language->code][$uploadAttribute] ?? null;
+                    if ($file instanceof UploadedFile) {
+                        $translation->$documentAttribute = $this->saveUpload($file);
+                        $newUploads[] = $translation->$documentAttribute;
+
+                        if ($existingDocument !== null) {
+                            $filesToDeleteAfterCommit[] = $existingDocument;
+                        }
+                    } elseif (!empty($this->translations[$language->code][$uploadAttribute . 'Remove'])) {
+                        $translation->$documentAttribute = null;
+
+                        if ($existingDocument !== null) {
+                            $filesToDeleteAfterCommit[] = $existingDocument;
+                        }
+                    }
+                }
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());
                     $transaction->rollBack();
+                    $this->deleteUploads($newUploads);
 
                     return false;
                 }
@@ -129,10 +191,12 @@ class EducationalProgramsForm extends Model
 
             $transaction->commit();
             $this->education_programs = $education_programs;
+            $this->deleteUploads(array_unique($filesToDeleteAfterCommit));
 
             return true;
         } catch (\Throwable $e) {
             $transaction->rollBack();
+            $this->deleteUploads($newUploads);
             throw $e;
         }
     }
@@ -152,13 +216,47 @@ class EducationalProgramsForm extends Model
         return $this->_languages;
     }
 
+    public function getDocument(string $languageCode, string $documentAttribute): ?string
+    {
+        if (!in_array($documentAttribute, self::DOCUMENT_UPLOAD_FIELDS, true)) {
+            return null;
+        }
+
+        return $this->_documents[$languageCode][$documentAttribute] ?? null;
+    }
+
     protected function saveUpload(UploadedFile $file): string
     {
-        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/' . EducationalPrograms::tableName();
+        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/educational-programs';
         FileHelper::createDirectory($basePath);
-        $name = Yii::$app->security->generateRandomString(16) . '.' . $file->extension;
-        $file->saveAs($basePath . '/' . $name);
+        $name = Yii::$app->security->generateRandomString(16) . '.pdf';
 
-        return '/uploads/' . EducationalPrograms::tableName() . '/' . $name;
+        if (!$file->saveAs($basePath . '/' . $name)) {
+            throw new \RuntimeException('Unable to save the uploaded PDF.');
+        }
+
+        return '/uploads/educational-programs/' . $name;
+    }
+
+    private function deleteUploads(array $paths): void
+    {
+        $uploadPrefix = '/uploads/educational-programs/';
+        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/educational-programs';
+
+        foreach ($paths as $path) {
+            if (!is_string($path)) {
+                continue;
+            }
+
+            $fileName = basename($path);
+            if ($path !== $uploadPrefix . $fileName) {
+                continue;
+            }
+
+            $filePath = $basePath . '/' . $fileName;
+            if (is_file($filePath)) {
+                @unlink($filePath);
+            }
+        }
     }
 }

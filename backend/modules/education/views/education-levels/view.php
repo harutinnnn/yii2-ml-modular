@@ -23,15 +23,16 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <p><strong>ID:</strong> <?= Html::encode($model->id) ?></p>
             <p><strong>Status:</strong> <?= Html::encode($model->getStatusLabel()) ?></p>
-            <?php if ($model->image): ?>
-                <p><strong>Image:</strong></p>
-                <p><img src="<?= Html::encode($model->image) ?>" alt="" style="max-width: 240px; max-height: 160px;"></p>
-            <?php endif; ?>
+
 
             <?php foreach ($model->translations as $translation): ?>
                 <hr>
                 <h5><?= Html::encode(strtoupper($translation->lang)) ?>: <?= Html::encode($translation->title) ?></h5>
-                <div><?= EditorJsHelper::render($translation->text) ?></div>
+
+                <?php if ($translation->img): ?>
+                    <p><strong>Image:</strong></p>
+                    <p><img src="<?= Html::encode($translation->img) ?>" alt="" style="max-width: 240px; max-height: 160px;"></p>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>

@@ -6,6 +6,7 @@
 
 
 use common\models\EducationLevels;
+use backend\modules\education\widgets\NestedActiveField;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
@@ -16,11 +17,22 @@ $csrfToken = Yii::$app->request->csrfToken;
 ?>
 
 <div class="post-form">
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin([
+            'fieldClass' => NestedActiveField::class,
+            'options' => ['enctype' => 'multipart/form-data'],
+    ]); ?>
 
     <div class="card card-primary">
         <div class="card-body">
-            <?= $form->field($model, 'status')->dropDownList(EducationLevels::statusOptions()) ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'status')->dropDownList(EducationLevels::statusOptions()) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'pos')->textInput() ?>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -60,6 +72,22 @@ $csrfToken = Yii::$app->request->csrfToken;
                                         'placeholder' => "Title in {$language->name}",
                                 ]) ?>
 
+                        <?= $form->field($model, "translations[{$language->code}][imgFile]")
+                                ->label("Image ({$language->name})")
+                                ->fileInput([
+                                        'accept' => '.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp',
+                                ]) ?>
+
+                        <?php $currentImage = $model->getImage($language->code); ?>
+                        <?php if ($currentImage): ?>
+                            <div class="mb-3">
+                                <?= Html::img($currentImage, [
+                                        'alt' => "Current image ({$language->name})",
+                                        'class' => 'img-thumbnail',
+                                        'style' => 'max-width: 240px; max-height: 180px;',
+                                ]) ?>
+                            </div>
+                        <?php endif; ?>
 
                     </div>
                 <?php endforeach; ?>

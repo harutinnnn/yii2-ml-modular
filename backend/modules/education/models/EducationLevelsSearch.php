@@ -29,7 +29,7 @@ class EducationLevelsSearch extends EducationLevels
             ->alias('p')
             ->joinWith('translations t')
             ->groupBy('p.id')
-            ->orderBy(['p.id' => SORT_DESC]);
+            ->orderBy(['p.pos' => SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

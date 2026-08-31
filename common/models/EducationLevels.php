@@ -8,6 +8,7 @@ use yii\db\ActiveRecord;
 /**
  * @property int $id
  * @property int $status
+ * @property int $pos
  * @property int $created_at
  * @property int $updated_at
  *
@@ -33,8 +34,8 @@ class EducationLevels extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['status'], 'required'],
-            [['status'], 'integer'],
+            [['status','pos'], 'required'],
+            [['status','pos'], 'integer'],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
     }
@@ -44,6 +45,7 @@ class EducationLevels extends ActiveRecord
         return [
             'id' => 'ID',
             'status' => 'Status',
+            'pos' => 'Position',
             'date' => 'Date',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

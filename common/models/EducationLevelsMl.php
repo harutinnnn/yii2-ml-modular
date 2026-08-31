@@ -9,6 +9,7 @@ use yii\db\ActiveRecord;
  * @property int $education_level_id
  * @property string $lang
  * @property string $title
+ * @property string|null $img
  *
  * @property EducationLevels $education_levels
  */
@@ -28,6 +29,7 @@ class EducationLevelsMl extends ActiveRecord
             [['title'], 'string', 'max' => 255],
             [['education_level_id', 'lang'], 'unique', 'targetAttribute' => ['education_level_id', 'lang']],
             [['education_level_id'], 'exist', 'targetClass' => EducationLevels::class, 'targetAttribute' => ['education_level_id' => 'id']],
+            [['img'], 'string', 'max' => 255],
         ];
     }
 
@@ -38,6 +40,7 @@ class EducationLevelsMl extends ActiveRecord
             'education_level_id' => 'Education Levels',
             'lang' => 'Language',
             'title' => 'Title',
+            'img' => 'Image',
         ];
     }
 

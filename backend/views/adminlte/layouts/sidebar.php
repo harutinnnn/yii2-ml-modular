@@ -110,6 +110,10 @@ $menuItems = [
                         ['label' => 'Educational programs', 'icon' => 'graduation-cap', 'url' => ['/education/educational-programs/index'],
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
                                 'active' => Yii::$app->controller->id == 'educational-programs'
+                        ],
+                        ['label' => 'Admissions', 'icon' => 'graduation-cap', 'url' => ['/education/admissions/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'admissions'
                         ]
                 ]
         ],

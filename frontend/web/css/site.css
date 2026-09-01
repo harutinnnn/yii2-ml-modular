@@ -1,0 +1,9 @@
+.field-wrapper {
+    display: contents;
+}
+
+.invalid-feedback {
+    font-size: 12px;
+    color:#8e1728;
+    margin-bottom: 5px;
+}

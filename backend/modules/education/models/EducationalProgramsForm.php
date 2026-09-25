@@ -25,6 +25,9 @@ class EducationalProgramsForm extends Model
     public int $education_level = 0;
     public float $duration_by_year = 0;
     public int $is_remote = 0;
+    public int $continuing_education = 0;
+    public $languages = '';
+    public $langs = [];
     public array $translations = [];
 
 
@@ -42,6 +45,13 @@ class EducationalProgramsForm extends Model
             $this->duration_by_year = (float)$this->education_programs->duration_by_year;
             $this->education_level = (int)$this->education_programs->education_level;
             $this->is_remote = (int)$this->education_programs->is_remote;
+            $this->continuing_education = (int)$this->education_programs->continuing_education;
+
+            if (strlen(trim($this->education_programs->languages))) {
+                $this->langs = explode(',', $this->education_programs->languages);
+            } else {
+                $this->langs = [];
+            }
             foreach ($this->education_programs->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
@@ -65,9 +75,12 @@ class EducationalProgramsForm extends Model
     public function rules(): array
     {
         return [
-            [['status','duration_by_year','education_level'], 'required'],
+            [['status', 'duration_by_year', 'education_level'], 'required'],
             [['duration_by_year'], 'number'],
-            [['status','education_level','is_remote'], 'integer'],
+            [['status', 'education_level', 'is_remote', 'continuing_education'], 'integer'],
+            [['langs'], 'each', 'rule' => ['string']],
+            [['languages'], 'string'],
+            [['status'], 'in', 'range' => array_keys(EducationalPrograms::statusOptions())],
             [['status'], 'in', 'range' => array_keys(EducationalPrograms::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
@@ -81,6 +94,8 @@ class EducationalProgramsForm extends Model
             'duration_by_year' => 'Duration by year',
             'education_level' => 'Education level',
             'is_remote' => 'Is remote',
+            'continuing_education' => 'Continuing',
+            'langs' => 'Languages',
             'doc_about_program' => 'Document about program',
             'doc_educational_program_guide' => 'Document educational program guide',
             'doc_subject_list' => 'Document subject list',
@@ -137,6 +152,7 @@ class EducationalProgramsForm extends Model
 
     public function save(): bool
     {
+
         foreach ($this->getLanguages() as $language) {
             $imageAttribute = "translations[{$language->code}][imgFile]";
             $this->translations[$language->code]['imgFile'] = UploadedFile::getInstance($this, $imageAttribute);
@@ -157,6 +173,8 @@ class EducationalProgramsForm extends Model
         $education_programs->duration_by_year = $this->duration_by_year;
         $education_programs->education_level = $this->education_level;
         $education_programs->is_remote = $this->is_remote;
+        $education_programs->continuing_education = $this->continuing_education;
+        $education_programs->languages = implode(',', $this->langs);
 
         $filesToDeleteAfterCommit = [];
         $newUploads = [];

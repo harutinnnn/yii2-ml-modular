@@ -17,6 +17,12 @@ $languages = $model->getLanguages();
     <div class="card card-primary">
         <div class="card-body">
             <?= $form->field($model, 'status')->dropDownList(Content::statusOptions()) ?>
+
+            <?= $form->field($model, 'imageFile')->fileInput() ?>
+            <?php if ($model->image): ?>
+                <p class="mb-0"><img src="<?= Html::encode($model->image) ?>" alt="" style="max-height: 100px;"></p>
+            <?php endif; ?>
+
         </div>
     </div>
 

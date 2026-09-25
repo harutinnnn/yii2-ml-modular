@@ -4,6 +4,15 @@
 
 .invalid-feedback {
     font-size: 12px;
-    color:#8e1728;
+    color: #8e1728;
     margin-bottom: 5px;
+}
+
+.btn-red {
+    cursor: pointer;
+    transition:all .3s
+}
+
+.btn-red:hover {
+    background: #ba1b31;
 }

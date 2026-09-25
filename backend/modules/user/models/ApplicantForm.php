@@ -224,8 +224,6 @@ class ApplicantForm extends \yii\base\Model
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-
-//            dd($this);
             $pass = substr(md5(sha1(microtime())), 0, 8);
 
             $user = new Applicant();

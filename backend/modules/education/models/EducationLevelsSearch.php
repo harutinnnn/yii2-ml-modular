@@ -13,7 +13,7 @@ class EducationLevelsSearch extends EducationLevels
     public function rules(): array
     {
         return [
-            [['id', 'status'], 'integer'],
+            [['id', 'status','as_edu_level'], 'integer'],
             [['title'], 'safe'],
         ];
     }
@@ -47,6 +47,7 @@ class EducationLevelsSearch extends EducationLevels
         $query->andFilterWhere([
             'p.id' => $this->id,
             'p.status' => $this->status,
+            'p.as_edu_level' => $this->as_edu_level,
         ]);
 
         $query->andFilterWhere(['like', 't.title', $this->title]);

@@ -16,6 +16,8 @@ class EducationLevelsForm extends Model
     public ?EducationLevels $education_levels = null;
     public int $status = EducationLevels::STATUS_PUBLISHED;
     public int $pos = 0;
+    public int $as_edu_level = 0;
+    public int $m_id = 0;
     public array $translations = [];
 
     private ?array $_languages = null;
@@ -29,9 +31,12 @@ class EducationLevelsForm extends Model
         if ($this->education_levels !== null) {
             $this->status = (int) $this->education_levels->status;
             $this->pos = (int) $this->education_levels->pos;
+            $this->as_edu_level = (int) $this->education_levels->as_edu_level;
+            $this->m_id = (int) $this->education_levels->m_id;
             foreach ($this->education_levels->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
+                    'text' => $translation->text,
                 ];
                 $this->_images[$translation->lang] = $translation->img;
             }
@@ -39,7 +44,7 @@ class EducationLevelsForm extends Model
 
         foreach ($this->getLanguages() as $language) {
             $this->translations[$language->code] = array_merge(
-                ['title' => ''],
+                ['title' => '','text' => ''],
                 $this->translations[$language->code] ?? []
             );
         }
@@ -48,8 +53,8 @@ class EducationLevelsForm extends Model
     public function rules(): array
     {
         return [
-            [['status','pos'], 'required'],
-            [['status','pos'], 'integer'],
+            [['status','pos','as_edu_level'], 'required'],
+            [['status','pos','as_edu_level','m_id'], 'integer'],
             [['status'], 'in', 'range' => array_keys(EducationLevels::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
@@ -61,6 +66,8 @@ class EducationLevelsForm extends Model
         return [
             'status' => 'Status',
             'pos' => 'Position',
+            'as_edu_level' => 'As edu level',
+            'm_id' => 'Menu item',
         ];
     }
 
@@ -69,6 +76,7 @@ class EducationLevelsForm extends Model
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
             $title = trim((string) ($data['title'] ?? ''));
+            $text = trim((string) ($data['text'] ?? ''));
 
             if ($title === '') {
                 $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
@@ -105,6 +113,8 @@ class EducationLevelsForm extends Model
         $education_levels = $this->education_levels ?? new EducationLevels();
         $education_levels->status = $this->status;
         $education_levels->pos = $this->pos;
+        $education_levels->as_edu_level = $this->as_edu_level;
+        $education_levels->m_id = $this->m_id;
 
         $filesToDeleteAfterCommit = [];
         $newUploads = [];
@@ -125,6 +135,7 @@ class EducationLevelsForm extends Model
                 $translation->education_level_id = $education_levels->id;
                 $translation->lang = $language->code;
                 $translation->title = trim((string) $this->translations[$language->code]['title']);
+                $translation->text = trim((string) $this->translations[$language->code]['text']);
                 $existingImage = $this->_images[$language->code] ?? null;
                 $translation->img = $existingImage;
 

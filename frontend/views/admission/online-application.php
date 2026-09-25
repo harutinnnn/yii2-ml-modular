@@ -8,6 +8,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $content = $this->context->pageData['content'];
+
 ?>
     <section class="inner-section">
         <div class="wrap inner-grid-2">
@@ -19,6 +20,9 @@ $content = $this->context->pageData['content'];
                 <div class="eyebrow red"><?= I18n::translate('applicant_form') ?></div>
                 <h2 class="display-inner"><?= I18n::translate('start_application') ?></h2>
                 <?php $form = ActiveForm::begin([
+                        'options' => [
+                                'class' => 'form-grid',
+                        ],
                         'fieldConfig' => [
                                 'template' => "{input}\n{hint}\n{error}",
                                 'options' => [
@@ -48,7 +52,7 @@ $content = $this->context->pageData['content'];
 
                 <div class="field">
                     <label for="education_level"><?= I18n::translate('education_level') ?></label>
-                    <?= $form->field($model, 'education_level')->dropDownList($education_levels, ['id' => 'education_level']) ?>
+                    <?= $form->field($model, 'education_level')->dropDownList($education_levels ?? [], ['id' => 'education_level']) ?>
                 </div>
 
                 <div class="field"><label for="educational_programs"><?= I18n::translate('program') ?></label>
@@ -56,10 +60,17 @@ $content = $this->context->pageData['content'];
                 </div>
 
                 <div class="field full">
-                    <?= $form->field($model, 'consent_processing_personal_data')->checkbox(['id' => 'consent_processing_personal_data'])->label(false) ?>
+                    <?=
+                    $form->field(
+                            $model, 'consent_processing_personal_data')
+                            ->checkbox(
+                                    [
+                                            'id' => 'consent_processing_personal_data',
+                                            'label' => I18n::translate('iconsent_processing_personal_data')
+                                    ]
+                            )
+                    ?>
                     <label>
-
-                        <?= I18n::translate('iconsent_processing_personal_data') ?>
 
                     </label>
                 </div>
@@ -70,11 +81,11 @@ $content = $this->context->pageData['content'];
                 <?php ActiveForm::end(); ?>
             </div>
             <aside>
-                <div class="meta-label">Ինչ է պետք</div>
+                <div class="meta-label"><?= I18n::translate('what_is_needed') ?></div>
                 <div class="facts-list">
-                    <div><strong>01</strong><span>Անձը հաստատող փաստաթուղթ</span></div>
-                    <div><strong>02</strong><span>Կրթության մասին փաստաթուղթ</span></div>
-                    <div><strong>03</strong><span>Ընտրված ծրագրին համապատասխան հավելյալ նյութեր</span></div>
+                    <div><strong>01</strong><span><?= I18n::translate('what_is_needed_1') ?></span></div>
+                    <div><strong>02</strong><span><?= I18n::translate('what_is_needed_2') ?></span></div>
+                    <div><strong>03</strong><span><?= I18n::translate('what_is_needed_3') ?></span></div>
                 </div>
             </aside>
         </div>
@@ -82,7 +93,9 @@ $content = $this->context->pageData['content'];
     <section class="rich-photo-section">
         <div class="wrap">
             <div class="photo-feature-split">
-                <div class="visual"><img src="/images/editorial/reading-students.jpg" alt="ՀՊՏՀ ուսանողներ"></div>
+                <?php if (isset($content->image)): ?>
+                    <div class="visual"><img src="<?= $content->image ?>" alt="ՀՊՏՀ ուսանողներ"></div>
+                <?php endif; ?>
                 <div class="photo-feature-copy">
                     <div class="eyebrow red"><?= I18n::translate('educational_environment') ?></div>
                     <h2><?= $content->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?></h2>

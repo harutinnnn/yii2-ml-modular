@@ -50,6 +50,8 @@ return [
             'showScriptName' => false,
             'rules' => [
 
+                '<language:(en|ru|am)>/education/<controller>/program/<id:\d+>' => 'education/program',
+
                 '<language:(en|ru|am)>' => 'site/index',
 
                 '<language:(en|ru|am)>/news' => 'news',

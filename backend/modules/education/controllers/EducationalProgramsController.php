@@ -4,10 +4,15 @@ namespace backend\modules\education\controllers;
 
 use backend\modules\education\models\EducationalProgramsForm;
 use backend\modules\education\models\EducationalProgramsSearch;
+use backend\modules\education\models\EducationPlanForm;
+use backend\modules\education\models\EducationPlanSearch;
 use common\models\EducationalPrograms;
+use common\models\EducationPlan;
+use common\models\Language;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -64,7 +69,8 @@ class EducationalProgramsController extends Controller
             'model' => $form,
             'levels' => \yii\helpers\ArrayHelper::map(\common\models\EducationLevels::find()->all(), 'id', function ($level) {
                 return $level->getDisplayTitle();
-            })
+            }),
+            'langList' => ArrayHelper::map(Language::find()->all(), 'code', 'code')
         ]);
     }
 
@@ -92,7 +98,8 @@ class EducationalProgramsController extends Controller
             'model' => $form,
             'levels' => \yii\helpers\ArrayHelper::map(\common\models\EducationLevels::find()->all(), 'id', function ($level) {
                 return $level->getDisplayTitle();
-            })
+            }),
+            'langList' => ArrayHelper::map(Language::find()->all(), 'code', 'code')
         ]);
     }
 
@@ -114,4 +121,70 @@ class EducationalProgramsController extends Controller
 
         return $model;
     }
+
+
+    public function actionPlans(int $programId): string
+    {
+        $searchModel = new EducationPlanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $programId);
+
+        return $this->render('plans', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'programId' => $programId
+        ]);
+    }
+
+    public function actionPlansCreate(int $programId): string|Response
+    {
+        $form = new EducationPlanForm();
+
+        if ($form->load(Yii::$app->request->post()) && $form->save($programId)) {
+            Yii::$app->session->setFlash('success', 'Education program created.');
+
+            return $this->redirect(['plans', 'programId' => $programId]);
+        }
+
+        return $this->render('plans-create', [
+            'model' => $form,
+            'programId' => $programId
+        ]);
+    }
+
+    public function actionPlansUpdate(int $id, int $programId): string|Response
+    {
+        $form = new EducationPlanForm($this->findPlanModel($id));
+
+        if ($form->load(Yii::$app->request->post()) && $form->save($programId)) {
+            Yii::$app->session->setFlash('success', 'Education program updated.');
+
+            return $this->redirect(['plans', 'programId' => $programId]);
+        }
+
+        return $this->render('plans-update', [
+            'model' => $form,
+            'programId' => $programId
+        ]);
+    }
+
+    public function actionPlansDelete(int $id, int $programId): Response
+    {
+        $this->findPlanModel($id)->delete();
+        Yii::$app->session->setFlash('success', 'Education program deleted.');
+
+        return $this->redirect(['plans', 'programId' => $programId]);
+    }
+
+    protected function findPlanModel(int $id): EducationPlan
+    {
+        $model = EducationPlan::find()->with('translations')->where(['id' => $id])->one();
+
+
+        if ($model === null) {
+            throw new NotFoundHttpException('The requested Education program does not exist.');
+        }
+
+        return $model;
+    }
+
 }

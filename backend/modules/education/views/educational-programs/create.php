@@ -8,4 +8,4 @@ $this->params['breadcrumbs'][] = ['label' => 'Educational Programs', 'url' => ['
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('_form', ['model' => $model,'levels' => $levels ?? []]) ?>
+<?= $this->render('_form', ['model' => $model,'levels' => $levels ?? [],'langList' => $langList ?? []]) ?>

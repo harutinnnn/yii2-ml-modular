@@ -8,24 +8,21 @@ use yii\db\ActiveRecord;
 /**
  * @property int $id
  * @property int $status
- * @property float $duration_by_year
- * @property int $education_level
- * @property int $is_remote
- * @property int $continuing_education
- * @property $languages
+ * @property int $pos
+ * @property int $educational_program_id
  * @property int $created_at
  * @property int $updated_at
  *
- * @property EducationalProgramsMl[] $translations
+ * @property EducationPlanMl[] $translations
  */
-class EducationalPrograms extends ActiveRecord
+class EducationPlan extends ActiveRecord
 {
     public const STATUS_PENDING = 0;
     public const STATUS_PUBLISHED = 1;
 
     public static function tableName(): string
     {
-        return '{{%educational_programs}}';
+        return '{{%education_plan}}';
     }
 
     public function behaviors(): array
@@ -38,10 +35,8 @@ class EducationalPrograms extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['status', 'education_level', 'duration_by_year', 'is_remote'], 'required'],
-            [['status', 'education_level', 'is_remote', 'continuing_education'], 'integer'],
-            [['languages'], 'string'],
-            [['duration_by_year'], 'number'],
+            [['status','pos','educational_program_id'], 'required'],
+            [['status','pos','educational_program_id'], 'integer'],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
     }
@@ -51,11 +46,8 @@ class EducationalPrograms extends ActiveRecord
         return [
             'id' => 'ID',
             'status' => 'Status',
-            'duration_by_year' => 'Duration by year',
-            'education_level' => 'Education level',
-            'is_remote' => 'Is remote',
-            'continuing_education' => 'Continuing',
-            'languages' => 'Languages',
+            'pos' => 'Position',
+            'educational_program_id' => 'Educational program',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -71,10 +63,10 @@ class EducationalPrograms extends ActiveRecord
 
     public function getTranslations()
     {
-        return $this->hasMany(EducationalProgramsMl::class, ['educational_program_id' => 'id'])->indexBy('lang');
+        return $this->hasMany(EducationPlanMl::class, ['educational_plan_id' => 'id'])->indexBy('lang');
     }
 
-    public function getTranslation(string $lang): ?EducationalProgramsMl
+    public function getTranslation(string $lang): ?EducationPlanMl
     {
         $translations = $this->translations;
 
@@ -84,8 +76,10 @@ class EducationalPrograms extends ActiveRecord
     public function getDisplayTitle(): string
     {
         $defaultLanguage = Language::find()->where(['is_default' => 1])->select('code')->scalar();
+
         if ($defaultLanguage) {
             $translation = $this->getTranslation($defaultLanguage);
+
             if ($translation !== null && $translation->title !== '') {
                 return $translation->title;
             }
@@ -105,10 +99,12 @@ class EducationalPrograms extends ActiveRecord
         return self::statusOptions()[$this->status] ?? 'Unknown';
     }
 
-    public function getEducationalLevel()
+    /**
+     * Gets query for [[EducationalPrograms]].
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEducationPlan()
     {
-        return $this->hasOne(EducationLevels::class, ['education_level' => 'id']);
+        return $this->hasMany(EducationPlan::class, ['education_plan' => 'id']);
     }
-
-
 }

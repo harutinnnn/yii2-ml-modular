@@ -27,6 +27,7 @@ class EducationLevelsMl extends ActiveRecord
             [['education_level_id'], 'integer'],
             [['lang'], 'string', 'max' => 8],
             [['title'], 'string', 'max' => 255],
+            [['text'], 'string'],
             [['education_level_id', 'lang'], 'unique', 'targetAttribute' => ['education_level_id', 'lang']],
             [['education_level_id'], 'exist', 'targetClass' => EducationLevels::class, 'targetAttribute' => ['education_level_id' => 'id']],
             [['img'], 'string', 'max' => 255],
@@ -40,6 +41,7 @@ class EducationLevelsMl extends ActiveRecord
             'education_level_id' => 'Education Levels',
             'lang' => 'Language',
             'title' => 'Title',
+            'text' => 'Text',
             'img' => 'Image',
         ];
     }

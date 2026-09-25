@@ -3,10 +3,13 @@ namespace backend\modules\education\controllers;
 
 use backend\modules\education\models\EducationLevelsForm;
 use backend\modules\education\models\EducationLevelsSearch;
+use backend\modules\menu\models\MenuForm;
 use common\models\EducationLevels;
+use common\models\Menu;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -56,15 +59,24 @@ class EducationLevelsController extends Controller
             return $this->redirect(['index']);
         }
 
+        $menuModel = new MenuForm();
+        $menuItem = $menuModel::parentOptions($menuModel->menu?->id);
+
         return $this->render('create', [
             'model' => $form,
+            'menuItem' => $menuItem
         ]);
     }
 
     public function actionView(int $id): string
     {
+
+        $menuModel = new MenuForm();
+        $menuItem = $menuModel::parentOptions($menuModel->menu?->id);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'menuItem' =>$menuItem
         ]);
     }
 
@@ -78,8 +90,12 @@ class EducationLevelsController extends Controller
             return $this->redirect(['index']);
         }
 
+        $menuModel = new MenuForm();
+        $menuItem = $menuModel::parentOptions($menuModel->menu?->id);
+
         return $this->render('update', [
             'model' => $form,
+            'menuItem' => $menuItem
         ]);
     }
 

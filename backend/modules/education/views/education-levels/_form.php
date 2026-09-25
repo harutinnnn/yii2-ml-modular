@@ -7,6 +7,8 @@
 
 use common\models\EducationLevels;
 use backend\modules\education\widgets\NestedActiveField;
+use common\widgets\ckeditor\CkEditor;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
@@ -24,6 +26,22 @@ $csrfToken = Yii::$app->request->csrfToken;
 
     <div class="card card-primary">
         <div class="card-body">
+            <?= $form->field($model, 'as_edu_level')->checkbox() ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <?php
+                    echo $form->field($model, 'm_id')->widget(Select2::class, [
+                            'data' => $menuItem ?? [],
+                            'options' => [
+                                    'placeholder' => 'Select menu item(optional)',
+                            ],
+                            'pluginOptions' => [
+                                    'allowClear' => true,
+                            ],
+                    ]);
+                    ?>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-6">
                     <?= $form->field($model, 'status')->dropDownList(EducationLevels::statusOptions()) ?>
@@ -71,6 +89,21 @@ $csrfToken = Yii::$app->request->csrfToken;
                                         'maxlength' => true,
                                         'placeholder' => "Title in {$language->name}",
                                 ]) ?>
+                        <?= $form->field($model, "translations[{$language->code}][text]")->label("text ({$language->name})")->widget(CkEditor::class, [
+                                'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
+                                'clientOptions' => [
+                                        'height' => 220,
+                                        'toolbar' => [
+                                                ['name' => 'document', 'items' => ['Source']],
+                                                ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
+                                                ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
+                                                ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
+                                                ['name' => 'links', 'items' => ['Link', 'Unlink']],
+                                                ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
+                                                ['name' => 'styles', 'items' => ['Format']],
+                                        ],
+                                ],
+                        ]) ?>
 
                         <?= $form->field($model, "translations[{$language->code}][imgFile]")
                                 ->label("Image ({$language->name})")

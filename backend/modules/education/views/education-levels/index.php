@@ -5,6 +5,7 @@
 
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
+use common\models\EducationLevels;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -32,14 +33,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'value' => static fn($model) => $model->getDisplayTitle(),
                             ],
                             [
-                                    'attribute' => 'title',
+                                    'attribute' => 'img',
                                     'value' => static fn($model) => Html::img($model->getTranslation('en')->img, ['class' => 'img-thumbnail', 'style' => 'height:150px']),
                                     'format' => 'html',
                             ],
+
                             [
                                     'attribute' => 'status',
                                     'filter' => \common\models\EducationLevels::statusOptions(),
                                     'value' => static fn($model) => $model->getStatusLabel(),
+                            ],
+                            [
+                                    'attribute' => 'as_edu_level',
+                                    'value' => static fn($model) => $model->as_edu_level ? 'yes' : 'no',
+                                    'filter' => [0 => 'No', 1 => 'Yes'],
                             ],
                             'pos',
                             [

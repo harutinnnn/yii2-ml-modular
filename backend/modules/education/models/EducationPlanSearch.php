@@ -2,18 +2,18 @@
 
 namespace backend\modules\education\models;
 
-use common\models\EducationalPrograms;
+use common\models\EducationPlan;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class EducationalProgramsSearch extends EducationalPrograms
+class EducationPlanSearch extends EducationPlan
 {
     public $title;
 
     public function rules(): array
     {
         return [
-            [['id', 'status','education_level','education_level','continuing_education'], 'integer'],
+            [['id', 'status'], 'integer'],
             [['title'], 'safe'],
         ];
     }
@@ -23,13 +23,14 @@ class EducationalProgramsSearch extends EducationalPrograms
         return Model::scenarios();
     }
 
-    public function search(array $params): ActiveDataProvider
+    public function search(array $params,int $planId): ActiveDataProvider
     {
-        $query = EducationalPrograms::find()
+        $query = EducationPlan::find()
             ->alias('p')
             ->joinWith('translations t')
+            ->where(['p.educational_program_id' => $planId])
             ->groupBy('p.id')
-            ->orderBy(['p.id' => SORT_DESC]);
+            ->orderBy(['p.pos' => SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -47,8 +48,6 @@ class EducationalProgramsSearch extends EducationalPrograms
         $query->andFilterWhere([
             'p.id' => $this->id,
             'p.status' => $this->status,
-            'p.education_level' => $this->education_level,
-            'p.continuing_education' => $this->continuing_education,
         ]);
 
         $query->andFilterWhere(['like', 't.title', $this->title]);

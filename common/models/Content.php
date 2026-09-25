@@ -8,6 +8,7 @@ use yii\db\ActiveRecord;
 /**
  * @property int $id
  * @property int $status
+ * @property string|null $image
  * @property int $created_at
  * @property int $updated_at
  *
@@ -17,6 +18,7 @@ class Content extends ActiveRecord
 {
     public const STATUS_PENDING = 0;
     public const STATUS_PUBLISHED = 1;
+    public const UPLOAD_PATH = 'content';
 
     public static function tableName(): string
     {
@@ -35,6 +37,7 @@ class Content extends ActiveRecord
         return [
             [['status'], 'required'],
             [['status'], 'integer'],
+            [['image'], 'string', 'max' => 255],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
     }
@@ -44,6 +47,7 @@ class Content extends ActiveRecord
         return [
             'id' => 'ID',
             'status' => 'Status',
+            'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

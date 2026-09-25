@@ -8,6 +8,7 @@
 use common\models\EducationalPrograms;
 use common\widgets\ckeditor\CkEditor;
 use backend\modules\education\widgets\NestedActiveField;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
@@ -31,14 +32,33 @@ $documentFields = [
 
     <div class="card card-primary">
         <div class="card-body">
-            <?= $form->field($model, 'status')->dropDownList(EducationalPrograms::statusOptions()) ?>
-            <?= $form->field($model, 'is_remote')->dropDownList([
-                    1 => 'Yes',
-                    0 => 'No',
-            ]) ?>
+           <div class="row">
+               <div class="col-md-4">
+                   <?= $form->field($model, 'status')->dropDownList(EducationalPrograms::statusOptions()) ?>
+               </div>
+               <div class="col-md-4">
+                   <?= $form->field($model, 'is_remote')->dropDownList([
+                           1 => 'Yes',
+                           0 => 'No',
+                   ]) ?>
+               </div>
+               <div class="col-md-4">
+                   <?= $form->field($model, 'continuing_education')->dropDownList([
+                           1 => 'Yes',
+                           0 => 'No',
+                   ]) ?>
+               </div>
+           </div>
             <?= $form->field($model, 'duration_by_year')->textInput(['type' => 'number', 'step' => .1]) ?>
 
             <?= $form->field($model, 'education_level')->dropDownList($levels ?? []) ?>
+
+            <?= $form->field($model, 'langs')->widget(Select2::class, [
+                    'data' => $langList ?? [],
+                    'options' => [
+                            'multiple' => true,
+                    ],
+            ]) ?>
         </div>
     </div>
 

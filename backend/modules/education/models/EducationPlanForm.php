@@ -1,34 +1,35 @@
 <?php
 
-namespace backend\modules\content\models;
+namespace backend\modules\education\models;
 
-use common\models\Content;
-use common\models\ContentMl;
+use common\models\EducationPlan;
+use common\models\EducationPlanMl;
 use common\models\Language;
 use Yii;
+use yii\base\DynamicModel;
 use yii\base\Model;
-use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
-class ContentForm extends Model
+class EducationPlanForm extends Model
 {
-    public ?Content $content = null;
-    public int $status = Content::STATUS_PUBLISHED;
-    public ?string $image = null;
+    public ?EducationPlan $education_plan = null;
+    public int $status = EducationPlan::STATUS_PUBLISHED;
+    public int $pos = 0;
+    public int $educational_program_id = 0;
     public array $translations = [];
-    public $imageFile = null;
 
     private ?array $_languages = null;
 
-    public function __construct(?Content $content = null, $config = [])
+    public function __construct(?EducationPlan $education_plan = null, $config = [])
     {
-        $this->content = $content;
+        $this->education_plan = $education_plan;
         parent::__construct($config);
 
-        if ($this->content !== null) {
-            $this->status = (int)$this->content->status;
-            $this->image = $this->content->image;
-            foreach ($this->content->translations as $translation) {
+        if ($this->education_plan !== null) {
+            $this->status = (int)$this->education_plan->status;
+            $this->pos = (int)$this->education_plan->pos;
+            $this->educational_program_id = (int)$this->education_plan->educational_program_id;
+            foreach ($this->education_plan->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
                     'text' => $translation->text,
@@ -47,12 +48,11 @@ class ContentForm extends Model
     public function rules(): array
     {
         return [
-            [['status'], 'required'],
-            [['status'], 'integer'],
-            [['status'], 'in', 'range' => array_keys(Content::statusOptions())],
+            [['status', 'pos'], 'required'],
+            [['status', 'pos','educational_program_id'], 'integer'],
+            [['status'], 'in', 'range' => array_keys(EducationPlan::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
     }
 
@@ -60,7 +60,7 @@ class ContentForm extends Model
     {
         return [
             'status' => 'Status',
-            'imageFile' => 'Image',
+            'pos' => 'Position',
         ];
     }
 
@@ -81,35 +81,33 @@ class ContentForm extends Model
         }
     }
 
-    public function save(): bool
+    public function save(int $programId): bool
     {
-        $this->imageFile = UploadedFile::getInstance($this, 'imageFile');
-
         if (!$this->validate()) {
             return false;
         }
 
-        $content = $this->content ?? new Content();
-        $content->status = $this->status;
 
-        if ($this->imageFile !== null) {
-            $content->image = $this->saveUpload($this->imageFile);
-        }
+        $education_plan = $this->education_plan ?? new EducationPlan();
+        $education_plan->status = $this->status;
+        $education_plan->pos = $this->pos;
+        $education_plan->educational_program_id = $programId;
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            if (!$content->save()) {
-                $this->addErrors($content->getErrors());
+            if (!$education_plan->save()) {
+                $this->addErrors($education_plan->getErrors());
                 $transaction->rollBack();
 
                 return false;
             }
 
-            ContentMl::deleteAll(['content_id' => $content->id]);
+
+            EducationPlanMl::deleteAll(['educational_plan_id' => $education_plan->id]);
 
             foreach ($this->getLanguages() as $language) {
-                $translation = new ContentMl();
-                $translation->content_id = $content->id;
+                $translation = new EducationPlanMl();
+                $translation->educational_plan_id = $education_plan->id;
                 $translation->lang = $language->code;
                 $translation->title = trim((string)$this->translations[$language->code]['title']);
                 $translation->text = trim((string)$this->translations[$language->code]['text']);
@@ -120,10 +118,11 @@ class ContentForm extends Model
 
                     return false;
                 }
+
             }
 
             $transaction->commit();
-            $this->content = $content;
+            $this->education_plan = $education_plan;
 
             return true;
         } catch (\Throwable $e) {
@@ -145,15 +144,5 @@ class ContentForm extends Model
         }
 
         return $this->_languages;
-    }
-
-    protected function saveUpload(UploadedFile $file): string
-    {
-        $basePath = dirname(__DIR__, 4) . '/frontend/web/uploads/' . Content::UPLOAD_PATH;
-        FileHelper::createDirectory($basePath);
-        $name = Yii::$app->security->generateRandomString(16) . '.' . $file->extension;
-        $file->saveAs($basePath . '/' . $name);
-
-        return '/uploads/' . Content::UPLOAD_PATH . '/' . $name;
     }
 }

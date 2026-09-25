@@ -5,25 +5,11 @@ namespace frontend\controllers;
 use backend\modules\user\models\ApplicantForm;
 use common\helpers\I18n;
 use common\models\Admissions;
-use common\models\Chairs;
 use common\models\EducationalPrograms;
 use common\models\EducationLevels;
-use common\models\Faculties;
-use common\models\Menu;
 use frontend\models\AdmissionForm;
-use frontend\models\ResendVerificationEmailForm;
-use frontend\models\VerifyEmailForm;
 use Yii;
-use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
-use yii\web\BadRequestHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 use yii\web\Response;
 
 /**
@@ -41,7 +27,6 @@ class AdmissionController extends MyController
     {
 
         $admissionForm = new AdmissionForm();
-
 
         if ($admissionForm->load(Yii::$app->request->post()) && $admissionForm->validate()) {
 
@@ -61,14 +46,12 @@ class AdmissionController extends MyController
                 //TODO send email...?
 
 
-                Yii::$app->session->setFlash('admission_successfully_sent','Yor admission successfully sent!');
 
+                Yii::$app->session->setFlash('admission_successfully_sent', 'Yor admission successfully sent!');
 
-                $this->redirect(['admission/online-application']);
+                $this->redirect([Yii::$app->globalData->lang . '/admission/online-application']);
 
             }
-
-
         }
 
 

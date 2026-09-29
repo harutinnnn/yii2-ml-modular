@@ -1,11 +1,10 @@
 <?php
 
-use common\models\ActionLogs;
-use common\models\UserAdditionalData;
+use common\components\EntityTypes;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\jui\DatePicker;
 
 /** @var yii\web\View $this */
 /** @var backend\models\ActionLogsSearch $searchModel */
@@ -33,17 +32,39 @@ $this->params['breadcrumbs'][] = $this->title;
                                         return ($userData->first_name ?? '-') . ' ' . ($userData->last_name ?? '-');
                                     },
                             ],
-                            'action',
-                            'entity_type',
-//                            'entity_id',
+                            [
+                                    'attribute' => 'action',
+                                    'filter' => \common\models\ActionLogs::getActions(),
+                                    'filterInputOptions' => [
+                                            'class' => 'form-control',
+                                            'prompt' => 'All',
+                                    ],
+                            ],
+                            [
+                                    'attribute' => 'entity_type',
+                                    'filter' => EntityTypes::getEntityTypes(),
+                                    'filterInputOptions' => [
+                                            'class' => 'form-control',
+                                            'prompt' => 'All',
+                                    ],
+                            ],
                             'description',
-                        //'old_values',
-                        //'new_values',
-                        //'ip_address',
-                        //'user_agent',
-                        //'request_method',
-                        //'request_url:url',
-                            'created_at',
+                            'ip_address',
+                            'request_method',
+                            [
+                                    'attribute' => 'created_at',
+                                    'format' => ['datetime', 'php:Y-m-d H:i:s'],
+                                    'filter' => DatePicker::widget([
+                                            'model' => $searchModel,
+                                            'attribute' => 'created_at',
+                                            'dateFormat' => 'yyyy-MM-dd',
+                                            'options' => [
+                                                    'class' => 'form-control',
+                                                    'autocomplete' => 'off',
+                                                    'placeholder' => 'Select date',
+                                            ],
+                                    ]),
+                            ],
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Actions',

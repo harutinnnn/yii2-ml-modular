@@ -5,6 +5,7 @@ namespace backend\modules\user\controllers;
 use backend\modules\user\models\AdmissionSearch;
 use backend\modules\user\models\ApplicantForm;
 use backend\modules\user\models\User;
+use common\components\EntityTypes;
 use common\models\ActionLogs;
 use common\models\Applicant;
 use common\models\EducationalPrograms;
@@ -92,7 +93,7 @@ class ApplicantController extends Controller
 
                 ActionLogs::log(
                     ActionLogs::ACTION_CREATE,
-                    "APPLICANT",
+                    EntityTypes::APPLICANT,
                     $model->id,
                     [],
                     $model->attributes,
@@ -129,7 +130,7 @@ class ApplicantController extends Controller
 
             ActionLogs::log(
                 ActionLogs::ACTION_UPDATE,
-                "APPLICANT",
+                EntityTypes::APPLICANT,
                 $model->id,
                 $changedValues,
                 $model->attributes,

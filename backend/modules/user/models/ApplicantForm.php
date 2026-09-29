@@ -291,12 +291,46 @@ class ApplicantForm extends \yii\base\Model
                     $userAdmissionData->education_level = $this->education_level ?? 0;
                     $userAdmissionData->educational_programs = $this->educational_programs ?? 0;
                     $userAdmissionData->user_id = $user->id;
-                    $userAdmissionData->save();
+
+                    if (!$userAdmissionData->save()) {
+                        foreach ($userAdmissionData->getErrors() as $attribute => $errors) {
+                            foreach ($errors as $error) {
+                                $this->addError($attribute, $error);
+                            }
+                        }
+
+                        $transaction->rollBack();
+
+                        return false;
+                    }
+
+                } else {
+
+                    foreach ($userAdditionalData->getErrors() as $attribute => $errors) {
+                        foreach ($errors as $error) {
+                            $this->addError($attribute, $error);
+                        }
+                    }
+
+                    $transaction->rollBack();
+
+                    return false;
 
                 }
 
 
                 $this->sendEmail($user);
+
+            } else {
+                foreach ($user->getErrors() as $attribute => $errors) {
+                    foreach ($errors as $error) {
+                        $this->addError($attribute, $error);
+                    }
+                }
+
+                $transaction->rollBack();
+
+                return false;
             }
 
 
@@ -325,7 +359,7 @@ class ApplicantForm extends \yii\base\Model
 
 
             $pass = substr(md5(sha1(microtime())), 0, 8);
-            $passHash  = Yii::$app->security->generatePasswordHash($pass);
+            $passHash = Yii::$app->security->generatePasswordHash($pass);
 
 
             $user = $this->user ?? new Applicant();
@@ -353,8 +387,30 @@ class ApplicantForm extends \yii\base\Model
                     $userAdmissionData->education_level = $this->education_level ?? 0;
                     $userAdmissionData->educational_programs = $this->educational_programs ?? 0;
                     $userAdmissionData->user_id = $user->id;
-                    $userAdmissionData->save();
 
+                    if (!$userAdmissionData->save()) {
+                        foreach ($userAdmissionData->getErrors() as $attribute => $errors) {
+                            foreach ($errors as $error) {
+                                $this->addError($attribute, $error);
+                            }
+                        }
+
+                        $transaction->rollBack();
+
+                        return false;
+                    }
+
+                } else {
+
+                    foreach ($userAdditionalData->getErrors() as $attribute => $errors) {
+                        foreach ($errors as $error) {
+                            $this->addError($attribute, $error);
+                        }
+                    }
+
+                    $transaction->rollBack();
+
+                    return false;
                 }
 
                 if ($this->status == Applicant::STATUS_ACTIVE) {

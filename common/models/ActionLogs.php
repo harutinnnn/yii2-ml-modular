@@ -27,12 +27,25 @@ class ActionLogs extends \yii\db\ActiveRecord
 {
 
 
-    public const ACTION_CREATE = 'create';
-    public const ACTION_UPDATE = 'update';
-    public const ACTION_DELETE = 'delete';
-    public const ACTION_LOGIN = 'login';
-    public const ACTION_LOGOUT = 'logout';
-    public const ACTION_STATUS_CHANGE = 'status_change';
+    public const ACTION_CREATE = 'CREATE';
+    public const ACTION_UPDATE = 'UPDATE';
+    public const ACTION_DELETE = 'DELETE';
+    public const ACTION_LOGIN = 'LOGIN';
+    public const ACTION_LOGOUT = 'LOGOUT';
+    public const ACTION_STATUS_CHANGE = 'STATUS_CHANGE';
+
+
+    public static function getActions(): array
+    {
+        return [
+            self::ACTION_CREATE => self::ACTION_CREATE,
+            self::ACTION_UPDATE => self::ACTION_UPDATE,
+            self::ACTION_DELETE => self::ACTION_DELETE,
+            self::ACTION_LOGIN => self::ACTION_LOGIN,
+            self::ACTION_LOGOUT => self::ACTION_LOGOUT,
+            self::ACTION_STATUS_CHANGE => self::ACTION_STATUS_CHANGE,
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -85,13 +98,14 @@ class ActionLogs extends \yii\db\ActiveRecord
 
 
     public static function log(
-        string $action,
+        string  $action,
         ?string $entityType = null,
-        ?int $entityId = null,
-        array $oldValues = [],
-        array $newValues = [],
+        ?int    $entityId = null,
+        array   $oldValues = [],
+        array   $newValues = [],
         ?string $description = null
-    ): bool {
+    ): bool
+    {
         $model = new self();
 
         $model->user_id = Yii::$app->user->isGuest

@@ -6,8 +6,10 @@ namespace backend\modules\user\controllers;
 use backend\modules\user\models\ApplicantForm;
 use backend\modules\user\models\StudentForm;
 use backend\modules\user\models\StudentSearch;
+use backend\modules\user\models\User;
+use common\components\EntityTypes;
+use common\models\ActionLogs;
 use common\models\Chairs;
-use common\models\Student;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -85,7 +87,16 @@ class StudentController extends Controller
         $model = new StudentForm($this->findModel($id));
         $model->scenario = StudentForm::SCENARIO_UPDATE;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->updateApplicant()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->updateStudent()) {
+
+            ActionLogs::log(
+                ActionLogs::ACTION_UPDATE,
+                EntityTypes::STUDENT,
+                $model->id,
+                [],
+                $model->attributes,
+            );
+
             Yii::$app->session->setFlash('success', 'Student updated.');
             return $this->redirect(['index']);
         }
@@ -110,32 +121,16 @@ class StudentController extends Controller
     }
 
     /**
-     * @return array
-     * @throws \yii\web\BadRequestHttpException
-     */
-    public function actionGetChairs(): array
-    {
-
-        if (!Yii::$app->request->isAjax) {
-            throw new \yii\web\BadRequestHttpException('Invalid request.');
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        return Chairs::getFalcultiesKeyVal(intval($this->request->get('faculty_id')));
-    }
-
-    /**
      * Finds the Student model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id
-     * @return Student the loaded model
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id): Student
+    protected function findModel($id): User
     {
-        $model = Student::find()
-            ->with(['additional', 'faculty'])
+        $model = User::find()
+            ->with(['additional',])
             ->where(['id' => $id])
             ->one();
 

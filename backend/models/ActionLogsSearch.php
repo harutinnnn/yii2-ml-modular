@@ -62,8 +62,16 @@ class ActionLogsSearch extends ActionLogs
             'id' => $this->id,
             'user_id' => $this->user_id,
             'entity_id' => $this->entity_id,
-            'created_at' => $this->created_at,
         ]);
+
+        if ($this->created_at) {
+            $from = $this->created_at . ' 00:00:00';
+            $to = date('Y-m-d H:i:s', strtotime($this->created_at . ' +1 day'));
+
+            $query
+                ->andWhere(['>=', 'action_logs.created_at', $from])
+                ->andWhere(['<', 'action_logs.created_at', $to]);
+        }
 
         $query->andFilterWhere(['like', 'action', $this->action])
             ->andFilterWhere(['like', 'entity_type', $this->entity_type])

@@ -3,6 +3,7 @@
 namespace backend\modules\user\controllers;
 
 use backend\modules\user\models\AdminUser;
+use common\components\EntityTypes;
 use common\components\UserRoles;
 use backend\modules\user\models\AdminUserSearch;
 use common\models\ActionLogs;
@@ -95,7 +96,7 @@ class AdminController extends Controller
 
                 ActionLogs::log(
                     ActionLogs::ACTION_CREATE,
-                    "APPLICANT",
+                    EntityTypes::ADMIN,
                     $model->id,
                     [],
                     $model->attributes,
@@ -129,7 +130,7 @@ class AdminController extends Controller
 
             ActionLogs::log(
                 ActionLogs::ACTION_UPDATE,
-                "APPLICANT",
+                EntityTypes::ADMIN,
                 $model->id,
                 $changedValues,
                 $model->attributes,

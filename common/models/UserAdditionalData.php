@@ -16,11 +16,13 @@ use Yii;
  * @property string|null $passport_details
  * @property string|null $phone
  * @property string|null $faculty
- * @property string|null $ambione
+ * @property string|null $chair
  * @property string|null $profession
  * @property string|null $course
  * @property string|null $group
  * @property int|null $student_status
+ * @property string|null $teacher_academic_degree
+ * @property string|null $teacher_position
  *
  * @property Statuses $studentStatus
  * @property User $user
@@ -43,13 +45,13 @@ class UserAdditionalData extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['middle_name', 'dob', 'passport_details', 'phone', 'faculty', 'ambione', 'profession', 'course', 'group', 'student_status'], 'default', 'value' => null],
+            [['middle_name', 'dob', 'passport_details', 'phone', 'faculty', 'chair', 'profession', 'course', 'group', 'student_status','teacher_academic_degree','teacher_position'], 'default', 'value' => null],
             [['user_id', 'first_name', 'last_name'], 'required'],
             [['user_id', 'student_status'], 'integer'],
             [['dob'], 'safe'],
             [['first_name', 'last_name', 'middle_name', 'passport_details', 'faculty', 'course'], 'string', 'max' => 100],
             [['phone'], 'string', 'max' => 25],
-            [['ambione', 'profession'], 'string', 'max' => 150],
+            [['chair', 'profession'], 'string', 'max' => 150],
             [['group'], 'string', 'max' => 255],
             [['student_status'], 'exist', 'skipOnError' => true, 'targetClass' => Statuses::class, 'targetAttribute' => ['student_status' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
@@ -71,11 +73,13 @@ class UserAdditionalData extends \yii\db\ActiveRecord
             'passport_details' => 'Passport Details',
             'phone' => 'Phone',
             'faculty' => 'Faculty',
-            'ambione' => 'Ambione',
+            'chair' => 'Chair',
             'profession' => 'Profession',
             'course' => 'Course',
             'group' => 'Group',
             'student_status' => 'Student Status',
+            'teacher_academic_degree' => 'Academic degree',
+            'teacher_position' => 'Position',
         ];
     }
 

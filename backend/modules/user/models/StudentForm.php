@@ -2,7 +2,6 @@
 
 namespace backend\modules\user\models;
 
-use common\components\UserRoles;
 use common\models\EducationalPrograms;
 use common\models\EducationLevels;
 use common\models\Student;

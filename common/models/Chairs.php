@@ -109,6 +109,7 @@ class Chairs extends ActiveRecord
             ->where(['ec.faculty_id' => $id])
             ->all();
 
+
         $facultiesTmp = [];
         foreach ($faculties as $faculty) {
             $facultiesTmp[$faculty->id] = $faculty->translations[$defaultLanguage]->title;

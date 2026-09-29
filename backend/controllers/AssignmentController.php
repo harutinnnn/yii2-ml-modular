@@ -24,4 +24,18 @@ class AssignmentController extends BaseAssignmentController
 
         return $behaviors;
     }
+
+    protected function findModel($id)
+    {
+        $class = $this->userClassName;
+        $user = $class::findOne([$this->idField => $id]);
+
+        if ($user === null) {
+            throw new \yii\web\NotFoundHttpException(
+                'The requested page does not exist.'
+            );
+        }
+
+        return new \mdm\admin\models\Assignment($id, $user);
+    }
 }

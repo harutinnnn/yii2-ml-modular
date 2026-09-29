@@ -1,17 +1,15 @@
 <?php
 
-namespace backend\modules\user\models;
+namespace backend\models;
 
-use common\components\UserRoles;
-use common\models\Applicant;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-
+use common\models\ActionLogs;
 
 /**
- * UserSearch represents the model behind the search form of `common\models\User`.
+ * ActionLogsSearch represents the model behind the search form of `common\models\ActionLogs`.
  */
-class ApplicantSearch extends User
+class ActionLogsSearch extends ActionLogs
 {
     /**
      * {@inheritdoc}
@@ -19,8 +17,8 @@ class ApplicantSearch extends User
     public function rules()
     {
         return [
-            [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['email', 'first_name', 'last_name', 'phone'], 'safe'],
+            [['id', 'user_id', 'entity_id'], 'integer'],
+            [['action', 'entity_type', 'description', 'old_values', 'new_values', 'ip_address', 'user_agent', 'request_method', 'request_url', 'created_at'], 'safe'],
         ];
     }
 
@@ -43,9 +41,8 @@ class ApplicantSearch extends User
      */
     public function search($params, $formName = null)
     {
-        $query = User::find()
-            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::APPLICANT])
-            ->joinWith('additional add');
+        $query = ActionLogs::find()->joinWith(['user'])->orderBy(['created_at' => SORT_DESC]);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -63,26 +60,20 @@ class ApplicantSearch extends User
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'status' => $this->status,
+            'user_id' => $this->user_id,
+            'entity_id' => $this->entity_id,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
-        $query
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere([
-                'like',
-                'add.first_name',
-                $this->first_name
-            ])->andFilterWhere([
-                'like',
-                'add.last_name',
-                $this->last_name
-            ])->andFilterWhere([
-                'like',
-                'add.phone',
-                $this->phone
-            ]);
+        $query->andFilterWhere(['like', 'action', $this->action])
+            ->andFilterWhere(['like', 'entity_type', $this->entity_type])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'old_values', $this->old_values])
+            ->andFilterWhere(['like', 'new_values', $this->new_values])
+            ->andFilterWhere(['like', 'ip_address', $this->ip_address])
+            ->andFilterWhere(['like', 'user_agent', $this->user_agent])
+            ->andFilterWhere(['like', 'request_method', $this->request_method])
+            ->andFilterWhere(['like', 'request_url', $this->request_url]);
 
         return $dataProvider;
     }

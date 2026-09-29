@@ -3,6 +3,7 @@
 namespace backend\modules\user\models;
 
 use common\models\UserAdditionalData;
+use common\models\UserAdmissionData;
 use common\models\UserFacultyChairLcp;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -143,4 +144,10 @@ class User extends \yii\db\ActiveRecord
         return self::statusOptions()[$this->status] ?? 'Unknown';
     }
 
+
+
+    public function getUserAdmissionData()
+    {
+        return $this->hasOne(UserAdmissionData::class, ['user_id' => 'id'])->indexBy('user_id');
+    }
 }

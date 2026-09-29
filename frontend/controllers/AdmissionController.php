@@ -3,12 +3,17 @@
 namespace frontend\controllers;
 
 use backend\modules\user\models\ApplicantForm;
+use common\components\UserRoles;
 use common\helpers\I18n;
 use common\models\Admissions;
 use common\models\EducationalPrograms;
 use common\models\EducationLevels;
+use common\models\User;
+use common\models\UserAdditionalData;
+use common\models\UserAdmissionData;
 use frontend\models\AdmissionForm;
 use Yii;
+use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 
@@ -30,28 +35,63 @@ class AdmissionController extends MyController
 
         if ($admissionForm->load(Yii::$app->request->post()) && $admissionForm->validate()) {
 
+            $transaction = Yii::$app->db->beginTransaction();
+            $isError = false;
 
-            $admissions = new Admissions();
-            $admissions->name = $admissionForm->name;
-            $admissions->surname = $admissionForm->surname;
-            $admissions->email = $admissionForm->email;
-            $admissions->phone = $admissionForm->phone;
-            $admissions->education_level = $admissionForm->education_level;
-            $admissions->educational_programs = $admissionForm->educational_programs;
-            $admissions->created_at = time();
-            $admissions->updated_at = time();
+            try {
 
-            if ($admissions->save()) {
+                $user = new User();
+                $user->status = User::STATUS_PENDING;
+                $user->email = $admissionForm->email;
+                $user->generateAuthKey();
+
+                $password = Yii::$app->security->generateRandomString(12);
+
+                $user->setPassword($password);
+                $user->save();
+
+                $auth = Yii::$app->authManager;
+
+                $role = $auth->getRole(UserRoles::APPLICANT);
+                $auth->assign($role, $user->id);
+
+                $userAdditionalData = new UserAdditionalData();
+                $userAdditionalData->first_name = $admissionForm->name;
+                $userAdditionalData->last_name = $admissionForm->surname;
+                $userAdditionalData->phone = $admissionForm->phone;
+                $userAdditionalData->user_id = $user->id;
+
+                if (!$userAdditionalData->save()) {
+                    throw new Exception("Some thong get wrong [UserAdditionalData]");
+                } else {
+
+                    $userAdmissionData = new UserAdmissionData();
+                    $userAdmissionData->user_id = $user->id;
+                    $userAdmissionData->education_level = $admissionForm->education_level;
+                    $userAdmissionData->educational_programs = $admissionForm->educational_programs;
+                    $userAdmissionData->created_at = time();
+                    $userAdmissionData->updated_at = time();
+
+                    if (!$userAdmissionData->save()) {
+                        throw new Exception("Some thong get wrong [UserAdmissionData]");
+                    }
+
+                    $transaction->commit();
+                }
+
 
                 //TODO send email...?
-
-
-
                 Yii::$app->session->setFlash('admission_successfully_sent', 'Yor admission successfully sent!');
 
-                $this->redirect([Yii::$app->globalData->lang . '/admission/online-application']);
+                return $this->redirect([Yii::$app->globalData->lang . '/admission/online-application']);
 
+            } catch (\Throwable $e) {
+
+                $transaction->rollBack();
+                throw $e; // or handle the error appropriately
             }
+
+
         }
 
 
@@ -65,6 +105,7 @@ class AdmissionController extends MyController
                     }),
             ]);
     }
+
 
     public function actionEducationPrograms()
     {

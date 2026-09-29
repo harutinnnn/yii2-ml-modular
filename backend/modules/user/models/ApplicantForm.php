@@ -5,9 +5,13 @@ namespace backend\modules\user\models;
 use common\components\UserRoles;
 use common\models\Applicant;
 use common\models\Chairs;
+use common\models\EducationalPrograms;
+use common\models\EducationLevels;
 use common\models\Faculties;
 use common\models\UserAdditionalData;
+use common\models\UserAdmissionData;
 use common\models\UserFacultyChairLcp;
+use PHPUnit\Framework\Error;
 use Yii;
 use yii\base\Model;
 
@@ -26,35 +30,35 @@ class ApplicantForm extends \yii\base\Model
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
 
-    public ?Applicant $user = null;
+    public ?User $user = null;
     public ?UserAdditionalData $userAdditionalData = null;
     public ?UserFacultyChairLcp $userFacultyChairLcp = null;
 
     public $id;
     public $status;
     public $email;
+    public $university_email;
     public $phone;
-    public $faculty_id;
-    public $chair_id;
+    public $education_level;
+    public $educational_programs;
     public $first_name;
     public $last_name;
     public $created_at;
     public $updated_at;
     public $verification_token;
 
-    public $faculty_title;
-    public $chair_title;
+    public $education_level_titile;
+    public $educational_programs_title;
 
     public const STATUS_INACTIVE = 9;
     public const STATUS_ACTIVE = 10;
 
 
-    public function __construct(?Applicant $user = null, $config = [])
+    public function __construct(?User $user = null, $config = [])
     {
 
         $this->user = $user;
         parent::__construct($config);
-
 
 
         if ($this->user !== null) {
@@ -64,20 +68,21 @@ class ApplicantForm extends \yii\base\Model
             $this->last_name = (string)$user->additional->last_name ?? "";
             $this->phone = (string)$user->additional->phone ?? "";
             $this->email = (string)$user->email;
+            $this->university_email = (string)$user->university_email;
             $this->created_at = $user->created_at;
 
-            if ($user->faculty) {
-                $this->faculty_id = (int)$user->faculty->faculty_id ?? 0;
-                $this->chair_id = (int)$user->faculty->chair_id ?? 0;
+            if ($user->userAdmissionData) {
+                $this->education_level = (int)$user->userAdmissionData->education_level ?? 0;
+                $this->educational_programs = (int)$user->userAdmissionData->educational_programs ?? 0;
 
-                $faculty = Faculties::find()->where(['id' => $this->faculty_id])->one();
-                $this->faculty_title = $faculty->getDisplayTitle();
+                $educationLevels = EducationLevels::find()->where(['id' => $this->education_level])->one();
+                $this->education_level_titile = $educationLevels->getDisplayTitle();
 
-                $chair = Chairs::find()->where(['id' => $this->chair_id])->one();
-                $this->chair_title = $chair->getDisplayTitle();
+                $educationalPrograms = EducationalPrograms::find()->where(['id' => $this->educational_programs])->one();
+                $this->educational_programs_title = $educationalPrograms->getDisplayTitle();
             } else {
-                $this->faculty_id = 0;
-                $this->chair_id = 0;
+                $this->education_level = 0;
+                $this->educational_programs = 0;
             }
 
 
@@ -92,12 +97,13 @@ class ApplicantForm extends \yii\base\Model
 
         $scenarios[self::SCENARIO_CREATE] = [
             'email',
+            'university_email',
             'phone',
             'status',
             'first_name',
             'last_name',
-            'faculty_id',
-            'chair_id',
+            'education_level',
+            'educational_programs',
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
@@ -105,8 +111,9 @@ class ApplicantForm extends \yii\base\Model
             'phone',
             'first_name',
             'last_name',
-            'faculty_id',
-            'chair_id',
+            'education_level',
+            'educational_programs',
+            'university_email',
         ];
 
         return $scenarios;
@@ -124,13 +131,14 @@ class ApplicantForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'last_name', 'faculty_id', 'chair_id', 'phone'], 'required'],
-            [['first_name', 'last_name', 'phone'], 'string'],
-            [['status', 'faculty_id', 'chair_id', 'created_at', 'updated_at'], 'integer'],
+            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'university_email'], 'required'],
+            [['first_name', 'last_name', 'phone', 'university_email'], 'string'],
+            [['status', 'education_level', 'educational_programs', 'created_at', 'updated_at'], 'integer'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
             [['email'], 'required', 'on' => self::SCENARIO_CREATE],
             ['email', 'email', 'on' => self::SCENARIO_CREATE],
+            ['university_email', 'email'],
 
             [
                 'email',
@@ -139,6 +147,19 @@ class ApplicantForm extends \yii\base\Model
                 'targetAttribute' => 'email',
                 'message' => 'This email has already been taken.',
                 'on' => self::SCENARIO_CREATE
+            ],
+
+            [
+                'university_email',
+                'unique',
+                'targetClass' => Applicant::class,
+                'targetAttribute' => 'university_email',
+                'filter' => function ($query) {
+                    if ($this->id) {
+                        $query->andWhere(['<>', 'id', $this->id]);
+                    }
+                },
+                'message' => 'This email has already been taken.',
             ],
         ];
     }
@@ -150,9 +171,10 @@ class ApplicantForm extends \yii\base\Model
     {
         return [
             'id' => 'ID',
-            'faculty_id' => 'Faculty',
-            'chair_id' => 'Chair',
+            'education_level' => 'Education level',
+            'educational_programs' => 'Educational_program',
             'email' => 'Email',
+            'university_email' => 'University email',
             'phone' => 'Phone',
             'status' => 'Status',
             'first_name' => 'First name',
@@ -212,8 +234,22 @@ class ApplicantForm extends \yii\base\Model
             ->send();
     }
 
+    public function applicantActivationEmail($user, $userAdditionalData, $pass): bool
+    {
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'applicantActivateEmail-html', 'text' => 'applicantActivateEmail-text'],
+                ['user' => $user, 'userAdditionalData' => $userAdditionalData, 'pass' => $pass]
+            )
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setTo($this->email)
+            ->setSubject('Account registration at ' . Yii::$app->name)
+            ->send();
+    }
 
-    public function registerApplicant()
+
+    public function registerApplicant(): ?bool
     {
 
         if (!$this->validate()) {
@@ -224,15 +260,15 @@ class ApplicantForm extends \yii\base\Model
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
+
             $pass = substr(md5(sha1(microtime())), 0, 8);
 
-            $user = new Applicant();
-            $user->email = $this->email;
-            $user->password = $pass;
+            $user = $this->user ?? new Applicant();
             $user->status = $this->status;
-            $user->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
-            $user->created_at = time();
-            $user->updated_at = time();
+            $user->email = $this->email;
+            $user->university_email = $this->university_email;
+            $user->password = $pass;
+            $user->auth_key = Yii::$app->security->generateRandomString();
 
             if ($user->save()) {
 
@@ -241,20 +277,24 @@ class ApplicantForm extends \yii\base\Model
                 $role = $auth->getRole(UserRoles::APPLICANT);
                 $auth->assign($role, $user->id);
 
+
                 $userAdditionalData = new UserAdditionalData();
                 $userAdditionalData->first_name = $this->first_name;
                 $userAdditionalData->last_name = $this->last_name;
                 $userAdditionalData->phone = $this->phone;
                 $userAdditionalData->user_id = $user->id;
 
+
                 if ($userAdditionalData->save()) {
 
-                    $userFacultyChairLcp = new UserFacultyChairLcp();
-                    $userFacultyChairLcp->chair_id = $this->chair_id ?? 0;
-                    $userFacultyChairLcp->user_id = $user->id;
-                    $userFacultyChairLcp->faculty_id = $this->faculty_id ?? 0;
-                    $userFacultyChairLcp->save();
+                    $userAdmissionData = new UserAdmissionData();
+                    $userAdmissionData->education_level = $this->education_level ?? 0;
+                    $userAdmissionData->educational_programs = $this->educational_programs ?? 0;
+                    $userAdmissionData->user_id = $user->id;
+                    $userAdmissionData->save();
+
                 }
+
 
                 $this->sendEmail($user);
             }
@@ -262,9 +302,11 @@ class ApplicantForm extends \yii\base\Model
 
             $this->id = $user->id;
             $transaction->commit();
+
             return true;
 
         } catch (\Throwable $e) {
+
             $transaction->rollBack();
             throw $e; // or handle the error appropriately
         }
@@ -283,15 +325,17 @@ class ApplicantForm extends \yii\base\Model
 
 
             $pass = substr(md5(sha1(microtime())), 0, 8);
+            $passHash  = Yii::$app->security->generatePasswordHash($pass);
 
 
             $user = $this->user ?? new Applicant();
-            $user->password = $pass;
+            $user->password_hash = $passHash;
+            $user->password = $passHash;
+            $user->university_email = $this->university_email;
             $user->status = $this->status;
             $user->updated_at = time();
 
             if ($user->save()) {
-
 
                 $userAdditionalData = $this->userAdditionalData ?? new UserAdditionalData();
                 $userAdditionalData->first_name = $this->first_name;
@@ -301,15 +345,20 @@ class ApplicantForm extends \yii\base\Model
 
                 if ($userAdditionalData->save()) {
 
+                    $userAdmissionData = UserAdmissionData::find()->where(['user_id' => $user->id])->one();
+                    if (!$userAdmissionData) {
+                        $userAdmissionData = new UserAdmissionData();
+                    }
 
-                    $userFacultyChairLcp = $this->userFacultyChairLcp ?? new UserFacultyChairLcp();
-                    $userFacultyChairLcp->chair_id = $this->chair_id ?? 0;
-                    $userFacultyChairLcp->user_id = $user->id;
-                    $userFacultyChairLcp->faculty_id = $this->faculty_id ?? 0;
-                    $userFacultyChairLcp->save();
+                    $userAdmissionData->education_level = $this->education_level ?? 0;
+                    $userAdmissionData->educational_programs = $this->educational_programs ?? 0;
+                    $userAdmissionData->user_id = $user->id;
+                    $userAdmissionData->save();
+
                 }
 
                 if ($this->status == Applicant::STATUS_ACTIVE) {
+
 
                     $auth = Yii::$app->authManager;
                     $auth->revokeAll($user->id);
@@ -317,13 +366,20 @@ class ApplicantForm extends \yii\base\Model
                     $role = $auth->getRole(UserRoles::STUDENT);
                     $auth->assign($role, $user->id);
 
-                    $this->sendApproveEmail($user, $userAdditionalData, $pass);
 
-                } else if ($this->status == Applicant::STATUS_REJECTED) {
-
-                    $this->sendRejectEmail($user, $userAdditionalData);
+                    $this->applicantActivationEmail($user, $userAdditionalData, $pass);
 
                 }
+            } else {
+                foreach ($user->getErrors() as $attribute => $errors) {
+                    foreach ($errors as $error) {
+                        $this->addError($attribute, $error);
+                    }
+                }
+
+                $transaction->rollBack();
+
+                return false;
             }
 
 

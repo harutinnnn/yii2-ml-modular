@@ -3,7 +3,7 @@
 namespace backend\modules\user\models;
 
 use common\components\UserRoles;
-use common\models\Applicant;
+use common\models\Student;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -11,7 +11,7 @@ use yii\data\ActiveDataProvider;
 /**
  * UserSearch represents the model behind the search form of `common\models\User`.
  */
-class ApplicantSearch extends User
+class AdmissionSearch extends Student
 {
     /**
      * {@inheritdoc}

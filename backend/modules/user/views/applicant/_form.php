@@ -14,6 +14,11 @@ use yii\widgets\ActiveForm;
 
     <div class="card card-primary">
         <div class="card-body">
+
+            <div class="row">
+                <?= $form->errorSummary($model) ?>
+            </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <?= $form->field($model, 'status')->dropDownList(
@@ -25,16 +30,16 @@ use yii\widgets\ActiveForm;
 
             <div class="row">
                 <div class="col-md-6">
-                    <?= $form->field($model, 'faculty_id')->dropDownList(
-                            \common\models\Faculties::getFalcultiesKeyVal(),
-                            ['id' => 'faculty_id']
+                    <?= $form->field($model, 'education_level')->dropDownList(
+                            \common\models\EducationLevels::getFalcultiesKeyVal(),
+                            ['id' => 'education_level']
                     ) ?>
                 </div>
 
                 <div class="col-md-6">
-                    <?= $form->field($model, 'chair_id')->dropDownList(
+                    <?= $form->field($model, 'educational_programs')->dropDownList(
                             [],
-                            ['id' => 'chair_id']
+                            ['id' => 'educational_programs']
                     ) ?>
 
                 </div>
@@ -61,6 +66,14 @@ use yii\widgets\ActiveForm;
 
             <div class="row">
 
+
+                <div class="col-md-6">
+                    <?= $form->field($model, "university_email")
+                            ->textInput([
+                                    'maxlength' => true,
+                                    'placeholder' => "Email",
+                            ]) ?>
+                </div>
 
                 <div class="col-md-6">
                     <?= $form->field($model, "email")
@@ -98,39 +111,39 @@ use yii\widgets\ActiveForm;
 
 $this->registerJs(<<<JS
 
-    let chair_id = {$model->chair_id};
+    let educational_programs = {$model->educational_programs};
     
-    let faculty = $('#faculty_id');
+    let faculty = $('#education_level');
     
-    $('#faculty_id').change(function (){
+    $('#education_level').change(function (){
         getChairsByFaculty($(this).val())    
     })
     
-    function getChairsByFaculty(faculty_id) {
+    function getChairsByFaculty(education_level) {
         $.ajax({
             type: 'GET',
             url: '/admin/user/applicant/get-chairs',
-            data: {faculty_id: faculty_id},
+            data: {education_level: education_level},
             dataType: 'json',
             beforeSend: function (data) {
-                $('#faculty_id').attr('disabled',true)
-                $('#chair_id').html('')
+                $('#education_level').attr('disabled',true)
+                $('#educational_programs').html('')
             },
             success: function (data) {
                 if(data){
-                    $('#chair_id').html('')
+                    $('#educational_programs').html('')
                     
                     $.each(data,function (i,v){
                     
-                        let selected = (i.toString() === chair_id.toString()) ? 'selected' : '' 
-                        $('#chair_id').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
+                        let selected = (i.toString() === educational_programs.toString()) ? 'selected' : '' 
+                        $('#educational_programs').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
                         
                     })
                 }
-                $('#faculty_id').attr('disabled',false)
+                $('#education_level').attr('disabled',false)
             },
             error: function (data) {
-                $('#faculty_id').attr('disabled',false)
+                $('#education_level').attr('disabled',false)
             }
         })    
     }

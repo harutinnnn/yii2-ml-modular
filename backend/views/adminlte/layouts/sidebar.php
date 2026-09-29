@@ -26,9 +26,9 @@ $menuItems = [
                                 'visible' => RbacUtilities::allowRoles(['admin']),
                                 'active' => Yii::$app->controller->id == 'student'
                         ],
-                        ['label' => 'Teachers', 'icon' => 'chalkboard-teacher', 'url' => ['/user/teacher/index'],
+                        ['label' => 'Teachers', 'icon' => 'chalkboard-teacher', 'url' => ['/user/teachers/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
-                                'active' => Yii::$app->controller->id == 'teacher'
+                                'active' => Yii::$app->controller->id == 'teachers'
                         ],
                         ['label' => 'Admins', 'icon' => 'users-cog', 'url' => ['/user/admin/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
@@ -118,6 +118,10 @@ $menuItems = [
                 ]
         ],
 
+        ['label' => 'Actions/Logs', 'icon' => 'boxes', 'url' => ['/action-logs/index'],
+                'visible' => RbacUtilities::allowRoles(['admin'])
+        ],
+
         [
                 'label' => 'News / Media',
                 'icon' => 'rss-square',
@@ -141,9 +145,6 @@ $menuItems = [
                         ],
                 ]
         ],
-
-
-
 
 
         ['label' => 'Posts', 'icon' => 'file-alt', 'url' => ['/posts/post/index'],

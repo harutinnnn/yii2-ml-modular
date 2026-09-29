@@ -110,5 +110,22 @@ class EducationalPrograms extends ActiveRecord
         return $this->hasOne(EducationLevels::class, ['education_level' => 'id']);
     }
 
+    public static function getFalcultiesKeyVal($id)
+    {
+
+        $defaultLanguage = Language::find()->where(['is_default' => 1])->select('code')->scalar();
+        $faculties = EducationalPrograms::find()
+            ->alias('ec')
+            ->joinWith('translations ect')
+            ->groupBy('ec.id')
+            ->where(['ec.education_level' => $id])
+            ->all();
+
+        $facultiesTmp = [];
+        foreach ($faculties as $faculty) {
+            $facultiesTmp[$faculty->id] = $faculty->translations[$defaultLanguage]->title;
+        }
+        return $facultiesTmp;
+    }
 
 }

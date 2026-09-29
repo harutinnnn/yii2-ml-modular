@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\ActionLogs;
 use common\models\LoginForm;
 use Yii;
 use yii\filters\VerbFilter;
@@ -80,6 +81,12 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+
+            ActionLogs::log(
+                ActionLogs::ACTION_LOGIN,
+                null
+            );
+
             return $this->goBack();
         }
 
@@ -97,6 +104,12 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
+        ActionLogs::log(
+            ActionLogs::ACTION_LOGOUT,
+            null
+        );
+
+
         Yii::$app->user->logout();
 
         return $this->goHome();

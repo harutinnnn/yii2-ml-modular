@@ -2,10 +2,12 @@
 
 namespace backend\modules\user\controllers;
 
+use backend\modules\user\models\AdmissionSearch;
 use backend\modules\user\models\ApplicantForm;
-use backend\modules\user\models\ApplicantSearch;
+use backend\modules\user\models\User;
+use common\models\ActionLogs;
 use common\models\Applicant;
-use common\models\Chairs;
+use common\models\EducationalPrograms;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -49,7 +51,7 @@ class ApplicantController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ApplicantSearch();
+        $searchModel = new AdmissionSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -80,16 +82,26 @@ class ApplicantController extends Controller
     {
         $model = new ApplicantForm();
         $model->scenario = ApplicantForm::SCENARIO_CREATE;
-        $model->chair_id =0;
+        $model->education_level = 0;
+        $model->educational_programs = 0;
 
 
         if ($this->request->isPost) {
 
             if ($model->load($this->request->post()) && $model->registerApplicant()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+
+                ActionLogs::log(
+                    ActionLogs::ACTION_CREATE,
+                    "APPLICANT",
+                    $model->id,
+                    [],
+                    $model->attributes,
+                );
+
+                Yii::$app->session->setFlash('success', 'Applicant updated.');
+                return $this->redirect(['index']);
             }
-        } else {
-//            $model->loadDefaultValues();
+
         }
 
         return $this->render('create', [
@@ -109,8 +121,20 @@ class ApplicantController extends Controller
         $model = new ApplicantForm($this->findModel($id));
         $model->scenario = ApplicantForm::SCENARIO_UPDATE;
 
+        $changedValues = $model->attributes;
+
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->updateApplicant()) {
             Yii::$app->session->setFlash('success', 'Applicant updated.');
+
+            ActionLogs::log(
+                ActionLogs::ACTION_UPDATE,
+                "APPLICANT",
+                $model->id,
+                $changedValues,
+                $model->attributes,
+            );
+
             return $this->redirect(['index']);
         }
 
@@ -146,7 +170,7 @@ class ApplicantController extends Controller
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        return Chairs::getFalcultiesKeyVal(intval($this->request->get('faculty_id')));
+        return EducationalPrograms::getFalcultiesKeyVal(intval($this->request->get('education_level')));
     }
 
     /**
@@ -156,10 +180,10 @@ class ApplicantController extends Controller
      * @return Applicant the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id): Applicant
+    protected function findModel($id): User
     {
-        $model = Applicant::find()
-            ->with(['additional', 'faculty'])
+        $model = User::find()
+            ->with(['additional',])
             ->where(['id' => $id])
             ->one();
 

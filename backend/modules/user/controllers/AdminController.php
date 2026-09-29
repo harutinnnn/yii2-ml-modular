@@ -5,6 +5,7 @@ namespace backend\modules\user\controllers;
 use backend\modules\user\models\AdminUser;
 use common\components\UserRoles;
 use backend\modules\user\models\AdminUserSearch;
+use common\models\ActionLogs;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -92,6 +93,14 @@ class AdminController extends Controller
 
                 $model->sendEmail($model);
 
+                ActionLogs::log(
+                    ActionLogs::ACTION_CREATE,
+                    "APPLICANT",
+                    $model->id,
+                    [],
+                    $model->attributes,
+                );
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -114,7 +123,18 @@ class AdminController extends Controller
     {
         $model = $this->findModel($id);
 
+        $changedValues = $model->attributes;
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+
+            ActionLogs::log(
+                ActionLogs::ACTION_UPDATE,
+                "APPLICANT",
+                $model->id,
+                $changedValues,
+                $model->attributes,
+            );
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

@@ -30,7 +30,7 @@ class AdmissionForm extends Model
             [['education_level', 'educational_programs'], 'integer', 'min' => 1],
             ['email', 'email'],
             ['email', 'unique',
-                'targetClass' => \common\models\Admissions::class,
+                'targetClass' => \common\models\User::class,
                 'targetAttribute' => 'email',
                 'message' => 'This email is already registered.',
             ],

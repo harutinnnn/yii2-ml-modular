@@ -16,6 +16,7 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $verification_token
  * @property string $email
+ * @property string $university_email
  * @property string $auth_key
  * @property int $status
  * @property int $created_at
@@ -27,6 +28,8 @@ class User extends ActiveRecord implements IdentityInterface
     public const STATUS_DELETED = 0;
     public const STATUS_INACTIVE = 9;
     public const STATUS_ACTIVE = 10;
+    public const STATUS_PENDING = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -52,7 +55,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED, self::STATUS_PENDING]],
         ];
     }
 
@@ -127,7 +130,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
@@ -215,5 +218,15 @@ class User extends ActiveRecord implements IdentityInterface
             self::STATUS_INACTIVE => 'Pending',
             self::STATUS_ACTIVE => 'Published',
         ];
+    }
+
+    public function getUserAdditionalDatas()
+    {
+        return $this->hasMany(UserAdditionalData::class, ['user_id' => 'id']);
+    }
+
+    public function getUserAdditionalData()
+    {
+        return $this->hasOne(UserAdditionalData::class, ['user_id' => 'id']);
     }
 }

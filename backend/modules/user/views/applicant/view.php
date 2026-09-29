@@ -35,8 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'last_name',
                         'email',
                         'phone',
-                        'faculty_title',
-                        'chair_title',
+                        'education_level_titile',
+                        'educational_programs_title',
 
                         [
                                 'attribute' => 'created_at',

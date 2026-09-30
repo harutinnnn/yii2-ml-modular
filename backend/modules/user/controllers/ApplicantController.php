@@ -6,6 +6,7 @@ use backend\modules\user\models\AdmissionSearch;
 use backend\modules\user\models\ApplicantForm;
 use backend\modules\user\models\User;
 use common\components\EntityTypes;
+use common\components\StatusList;
 use common\models\ActionLogs;
 use common\models\Applicant;
 use common\models\EducationalPrograms;
@@ -154,6 +155,19 @@ class ApplicantController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionReject($id)
+    {
+
+        $model = $this->findModel($id);
+        $model->setAttribute('status', StatusList::STATUS_REJECTED);
+        $model->update();
+
+        $applicantForm = new ApplicantForm($model);
+        $applicantForm->sendRejectEmail($model,$model->additional);
 
         return $this->redirect(['index']);
     }

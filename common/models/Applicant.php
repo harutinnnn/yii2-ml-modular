@@ -83,7 +83,6 @@ class Applicant extends \yii\db\ActiveRecord
         return [
             StatusList::STATUS_ACTIVE => 'Published',
             StatusList::STATUS_PENDING => 'Pending',
-            StatusList::STATUS_REJECTED => 'Rejected',
         ];
     }
 

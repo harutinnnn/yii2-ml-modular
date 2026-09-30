@@ -314,7 +314,6 @@ class ApplicantForm extends \yii\base\Model
                 $userAdditionalData->dob = $this->dob;
 
 
-
                 if ($userAdditionalData->save()) {
 
                     $userAdmissionData = new UserAdmissionData();
@@ -455,12 +454,7 @@ class ApplicantForm extends \yii\base\Model
                     $role = $auth->getRole(UserRoles::STUDENT);
                     $auth->assign($role, $user->id);
 
-
                     $this->applicantActivationEmail($user, $userAdditionalData, $pass);
-
-                }else if($this->status == StatusList::STATUS_REJECTED){
-
-                    $this->sendRejectEmail($user, $userAdditionalData, $pass);
                 }
 
             } else {

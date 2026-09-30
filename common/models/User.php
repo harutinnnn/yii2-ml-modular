@@ -228,5 +228,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function getUserAdditionalData()
     {
         return $this->hasOne(UserAdditionalData::class, ['user_id' => 'id']);
+    }    public function getAdditional()
+    {
+        return $this->hasOne(UserAdditionalData::class, ['user_id' => 'id']);
     }
 }

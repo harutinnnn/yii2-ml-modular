@@ -12,5 +12,22 @@ class StatusList
     const STATUS_REJECTED = 20;
 
 
+    public static function getStatusLabel($status = null): string
+    {
+        $statuses = [
+            self::STATUS_DELETED => 'Deleted',
+            self::STATUS_INACTIVE => 'Inactive',
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_REJECTED => 'Rejected',
+        ];
+
+        if ($status === null) {
+            return $statuses;
+        }
+
+        return $statuses[$status] ?? 'Unknown';
+    }
+
 
 }

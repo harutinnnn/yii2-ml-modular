@@ -43,12 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                     'attribute' => 'status',
                                     'filter' => \common\models\Applicant::statusOptions(),
-                                    'value' => static fn($model) => $model->getStatusLabel(),
+                                    'value' => static fn($model) => \common\components\StatusList::getStatusLabel($model->status),
                             ],
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Actions',
-                                    'template' => '{view} {update} {delete}',
+                                    'template' => '{view} {update} {reject} {delete}',
                                     'contentOptions' => ['class' => 'text-nowrap'],
                                     'buttons' => [
                                             'view' => static fn($url, $model) => Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-info btn-sm mr-1']),
@@ -56,7 +56,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'delete' => static fn($url, $model) => Html::a('Remove', ['delete', 'id' => $model->id], [
                                                     'class' => 'btn btn-danger btn-sm',
                                                     'data-method' => 'post',
-                                                    'data-confirm' => 'Are you sure you want to delete this item?',
+                                                    'data-confirm' => 'Are you sure you want to delete this applicant?',
+                                            ]),
+                                            'reject' => static fn($url, $model) => Html::a('Reject', ['reject', 'id' => $model->id], [
+                                                    'class' => 'btn btn-warning btn-sm',
+                                                    'data-method' => 'post',
+                                                    'data-confirm' => 'Are you sure you want to reject this applicant?',
                                             ]),
                                     ],
                             ],

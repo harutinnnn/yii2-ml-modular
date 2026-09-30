@@ -51,6 +51,15 @@ $content = $this->context->pageData['content'];
                 </div>
 
                 <div class="field">
+                    <label for="phone"><?= I18n::translate('dob') ?></label>
+                    <?= $form->field($model, 'dob')->textInput(['id' => 'dob','type' => 'date'])->label(false) ?>
+                </div>
+
+                <div class="field">
+
+                </div>
+
+                <div class="field">
                     <label for="education_level"><?= I18n::translate('education_level') ?></label>
                     <?= $form->field($model, 'education_level')->dropDownList($education_levels ?? [], ['id' => 'education_level']) ?>
                 </div>

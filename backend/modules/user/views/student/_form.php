@@ -20,6 +20,17 @@ use yii\widgets\ActiveForm;
             </div>
 
             <div class="row">
+
+
+                <div class="col-md-6">
+                    <?= $form->field($model, "dob")
+                            ->textInput([
+                                    'maxlength' => true,
+                                    'placeholder' => "Date of Birth",
+                                    'type' => 'date',
+                            ]) ?>
+                </div>
+
                 <div class="col-md-6">
                     <?= $form->field($model, 'status')->dropDownList(
                             \common\models\Student::statusOptions()
@@ -40,6 +51,23 @@ use yii\widgets\ActiveForm;
                     <?= $form->field($model, 'educational_programs')->dropDownList(
                             [],
                             ['id' => 'educational_programs']
+                    ) ?>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'faculty')->dropDownList(
+                            \common\models\Faculties::getFalcultiesKeyVal(),
+                            ['id' => 'faculty']
+                    ) ?>
+                </div>
+
+                <div class="col-md-6">
+                    <?= $form->field($model, 'chair')->dropDownList(
+                            [],
+                            ['id' => 'chair']
                     ) ?>
 
                 </div>
@@ -113,13 +141,13 @@ $this->registerJs(<<<JS
 
     let educational_programs = {$model->educational_programs};
     
-    let faculty = $('#education_level');
+    let education_level = $('#education_level');
     
     $('#education_level').change(function (){
-        getChairsByFaculty($(this).val())    
+        getChairsByEducationLevel($(this).val())    
     })
     
-    function getChairsByFaculty(education_level) {
+    function getChairsByEducationLevel(education_level) {
         $.ajax({
             type: 'GET',
             url: '/admin/user/applicant/get-chairs',
@@ -144,6 +172,45 @@ $this->registerJs(<<<JS
             },
             error: function (data) {
                 $('#education_level').attr('disabled',false)
+            }
+        })    
+    }
+    getChairsByEducationLevel(education_level.val())
+    
+    
+    let chair = {$model->chair};
+    
+    let faculty = $('#faculty');
+    
+    $('#faculty').change(function (){
+        getChairsByFaculty($(this).val())    
+    })
+    
+    function getChairsByFaculty(faculty) {
+        $.ajax({
+            type: 'GET',
+            url: '/admin/user/teacher/get-chairs',
+            data: {faculty_id: faculty},
+            dataType: 'json',
+            beforeSend: function (data) {
+                $('#faculty').attr('disabled',true)
+                $('#chair').html('')
+            },
+            success: function (data) {
+                if(data){
+                    $('#chair').html('')
+                    
+                    $.each(data,function (i,v){
+                    
+                        let selected = (i.toString() === chair.toString()) ? 'selected' : '' 
+                        $('#chair').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
+                        
+                    })
+                }
+                $('#faculty').attr('disabled',false)
+            },
+            error: function (data) {
+                $('#faculty').attr('disabled',false)
             }
         })    
     }

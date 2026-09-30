@@ -50,7 +50,12 @@ return [
             'showScriptName' => false,
             'rules' => [
 
+                '<language:(en|ru|am)>/student/student-login' => 'student/login',
+                '<language:(en|ru|am)>/student/dashboard' => 'student/dashboard',
+
                 '<language:(en|ru|am)>/education/<controller>/program/<id:\d+>' => 'education/program',
+
+                '<language:(en|ru|am)>/logout' => 'site/logout',
 
                 '<language:(en|ru|am)>' => 'site/index',
 

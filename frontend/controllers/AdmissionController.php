@@ -48,42 +48,51 @@ class AdmissionController extends MyController
                 $password = Yii::$app->security->generateRandomString(12);
 
                 $user->setPassword($password);
-                $user->save();
 
-                $auth = Yii::$app->authManager;
+                if ($user->save()) {
 
-                $role = $auth->getRole(UserRoles::APPLICANT);
-                $auth->assign($role, $user->id);
 
-                $userAdditionalData = new UserAdditionalData();
-                $userAdditionalData->first_name = $admissionForm->name;
-                $userAdditionalData->last_name = $admissionForm->surname;
-                $userAdditionalData->phone = $admissionForm->phone;
-                $userAdditionalData->user_id = $user->id;
+                    $auth = Yii::$app->authManager;
 
-                if (!$userAdditionalData->save()) {
-                    throw new Exception("Some thong get wrong [UserAdditionalData]");
-                } else {
+                    $role = $auth->getRole(UserRoles::APPLICANT);
+                    $auth->assign($role, $user->id);
 
-                    $userAdmissionData = new UserAdmissionData();
-                    $userAdmissionData->user_id = $user->id;
-                    $userAdmissionData->education_level = $admissionForm->education_level;
-                    $userAdmissionData->educational_programs = $admissionForm->educational_programs;
-                    $userAdmissionData->created_at = time();
-                    $userAdmissionData->updated_at = time();
+                    $userAdditionalData = new UserAdditionalData();
+                    $userAdditionalData->first_name = $admissionForm->name;
+                    $userAdditionalData->dob = $admissionForm->dob;
+                    $userAdditionalData->last_name = $admissionForm->surname;
+                    $userAdditionalData->phone = $admissionForm->phone;
+                    $userAdditionalData->user_id = $user->id;
 
-                    if (!$userAdmissionData->save()) {
-                        throw new Exception("Some thong get wrong [UserAdmissionData]");
+                    if (!$userAdditionalData->save()) {
+                        $transaction->rollBack();
+                        throw new Exception("Some thong get wrong [UserAdditionalData]");
+                    } else {
+                        $userAdmissionData = new UserAdmissionData();
+                        $userAdmissionData->user_id = $user->id;
+                        $userAdmissionData->education_level = $admissionForm->education_level;
+                        $userAdmissionData->educational_programs = $admissionForm->educational_programs;
+                        $userAdmissionData->created_at = time();
+                        $userAdmissionData->updated_at = time();
+
+                        if (!$userAdmissionData->save()) {
+                            $transaction->rollBack();
+                            throw new Exception("Some thong get wrong [UserAdmissionData]");
+                        }
+
+                        $transaction->commit();
+
+
+                        //TODO send email...?
+                        Yii::$app->session->setFlash('admission_successfully_sent', 'Yor admission successfully sent!');
+
+                        return $this->redirect([Yii::$app->globalData->lang . '/admission/online-application']);
                     }
 
-                    $transaction->commit();
+                } else {
+                    $transaction->rollBack();
+                    throw new Exception("Some thong get wrong [User]");
                 }
-
-
-                //TODO send email...?
-                Yii::$app->session->setFlash('admission_successfully_sent', 'Yor admission successfully sent!');
-
-                return $this->redirect([Yii::$app->globalData->lang . '/admission/online-application']);
 
             } catch (\Throwable $e) {
 

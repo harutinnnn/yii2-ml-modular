@@ -20,6 +20,17 @@ use yii\widgets\ActiveForm;
             </div>
 
             <div class="row">
+
+                <div class="col-md-6">
+                    <?= $form->field($model, "dob")
+                            ->textInput([
+                                    'maxlength' => true,
+                                    'placeholder' => "Date of Birth",
+                                    'type' => 'date',
+                            ]) ?>
+                </div>
+
+
                 <div class="col-md-6">
                     <?= $form->field($model, 'status')->dropDownList(
                             \common\models\Applicant::statusOptions()
@@ -45,6 +56,24 @@ use yii\widgets\ActiveForm;
                 </div>
             </div>
 
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'faculty')->dropDownList(
+                            \common\models\Faculties::getFalcultiesKeyVal(),
+                            ['id' => 'faculty']
+                    ) ?>
+                </div>
+
+                <div class="col-md-6">
+                    <?= $form->field($model, 'chair')->dropDownList(
+                            [],
+                            ['id' => 'chair']
+                    ) ?>
+
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <?= $form->field($model, "first_name")
@@ -54,6 +83,7 @@ use yii\widgets\ActiveForm;
                                     'placeholder' => "First name",
                             ]) ?>
                 </div>
+
                 <div class="col-md-6">
                     <?= $form->field($model, "last_name")
                             ->label("First name")
@@ -108,47 +138,85 @@ use yii\widgets\ActiveForm;
 <?php $this->registerJsFile('/admin/js/scripts.js'); ?>
 
 <?php
-
 $this->registerJs(<<<JS
 
-    let educational_programs = {$model->educational_programs};
-    
-    let faculty = $('#education_level');
-    
+        let educational_programs = {$model->educational_programs};
+
+    let education_level = $('#education_level');
+
     $('#education_level').change(function (){
-        getChairsByFaculty($(this).val())    
+    getChairsByEducationLevel($(this).val())
     })
-    
-    function getChairsByFaculty(education_level) {
-        $.ajax({
-            type: 'GET',
-            url: '/admin/user/applicant/get-chairs',
-            data: {education_level: education_level},
-            dataType: 'json',
-            beforeSend: function (data) {
-                $('#education_level').attr('disabled',true)
-                $('#educational_programs').html('')
-            },
-            success: function (data) {
-                if(data){
-                    $('#educational_programs').html('')
-                    
-                    $.each(data,function (i,v){
-                    
-                        let selected = (i.toString() === educational_programs.toString()) ? 'selected' : '' 
-                        $('#educational_programs').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
-                        
-                    })
-                }
-                $('#education_level').attr('disabled',false)
-            },
-            error: function (data) {
-                $('#education_level').attr('disabled',false)
-            }
-        })    
+
+    function getChairsByEducationLevel(education_level) {
+    $.ajax({
+    type: 'GET',
+    url: '/admin/user/applicant/get-chairs',
+    data: {education_level: education_level},
+    dataType: 'json',
+    beforeSend: function (data) {
+    $('#education_level').attr('disabled',true)
+    $('#educational_programs').html('')
+    },
+    success: function (data) {
+    if(data){
+    $('#educational_programs').html('')
+
+    $.each(data,function (i,v){
+
+    let selected = (i.toString() === educational_programs.toString()) ? 'selected' : ''
+    $('#educational_programs').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
+
+    })
+    }
+    $('#education_level').attr('disabled',false)
+    },
+    error: function (data) {
+    $('#education_level').attr('disabled',false)
+    }
+    })
+    }
+    getChairsByEducationLevel(education_level.val())
+
+
+    let chair = {$model->chair};
+
+    let faculty = $('#faculty');
+
+    $('#faculty').change(function (){
+    getChairsByFaculty($(this).val())
+    })
+
+    function getChairsByFaculty(faculty) {
+    $.ajax({
+    type: 'GET',
+    url: '/admin/user/teacher/get-chairs',
+    data: {faculty_id: faculty},
+    dataType: 'json',
+    beforeSend: function (data) {
+    $('#faculty').attr('disabled',true)
+    $('#chair').html('')
+    },
+    success: function (data) {
+    if(data){
+    $('#chair').html('')
+
+    $.each(data,function (i,v){
+
+    let selected = (i.toString() === chair.toString()) ? 'selected' : ''
+    $('#chair').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
+
+    })
+    }
+    $('#faculty').attr('disabled',false)
+    },
+    error: function (data) {
+    $('#faculty').attr('disabled',false)
+    }
+    })
     }
     getChairsByFaculty(faculty.val())
-    
-    
-JS, \yii\web\View::POS_END);
+
+
+    JS, \yii\web\View::POS_END);
 ?>

@@ -6,8 +6,8 @@
 
 $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'token' => $user->verification_token]);
 ?>
-Hello <?= $user->email ?>,
+Dear <?= $userAdditionalData->first_name ?? "" ?> <?= $userAdditionalData->last_name ?? "" ?> your request has been approved
 
-Dear <?= $userAdditionalData->first_name ?? "" ?> <?= $userAdditionalData->last_name ?? "" ?> your request has been rejected
+Congratulations you are now student in ASUE
 
 <?= $verifyLink ?>

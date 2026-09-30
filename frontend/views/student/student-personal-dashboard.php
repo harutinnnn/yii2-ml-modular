@@ -1,17 +1,9 @@
-<!doctype html>
-<html lang="hy">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Ուսանողի անձնական գրասենյակ — ՀՊՏՀ</title>
-    <link rel="stylesheet" href="spec-modules.css">
-</head>
-<body class="module-body">
-<header class="module-header"><a href="index.html"><img src="assets/logo_am.svg" alt="ՀՊՏՀ"></a>
-    <nav><a href="#profile">Անձնական տվյալներ</a><a href="#card">Ուսանողական տոմս</a><a href="#requests">Դիմումներ</a><a
-            href="communications.html">Նամակագրություն</a><a href="notifications.html">Ծանուցումներ</a><a
-            href="#portfolio">Պորտֆոլիո</a></nav>
-    <span class="module-user">Աննա Մանուկյան · Ելք</span></header>
+<?php
+
+$facultyTitle = $faculty?->getTranslation(Yii::$app->globalData->lang)->title ?? "-";
+$chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-";
+
+?>
 <main class="module-main">
     <section class="module-hero">
         <div>
@@ -22,19 +14,39 @@
         <div class="status-box"><strong>Գործող ուսանող</strong><span>Կառավարման ֆակուլտետ · 3-րդ կուրս · K-301</span>
         </div>
     </section>
-    <section id="profile" class="module-section"><h2>Անձնական տվյալներ</h2>
-        <div class="form-grid"><label class="field">Անուն, ազգանուն<input value="Աննա Մանուկյան" disabled></label><label
-                class="field">Ծննդյան տարեթիվ<input value="2004-05-12" disabled></label><label class="field">Անձնագրային
-            տվյալներ<input value="••••••••" disabled></label><label class="field">Հեռախոս<input value="+374 00 000000"></label><label
-                class="field">Էլ. փոստ<input value="anna@asue.am"></label><label class="field">Ֆակուլտետ /
-            մասնագիտություն<input value="Կառավարում / Բիզնես կառավարում" disabled></label></div>
+    <section id="profile" class="module-section">
+        <h2>Անձնական տվյալներ</h2>
+        <div class="form-grid">
+            <label class="field">Անուն
+                <input value="<?= $user->userAdditionalData->first_name ?>" disabled>
+            </label>
+            <label class="field">Ազգանուն
+                <input value="<?= $user->userAdditionalData->last_name ?>" disabled>
+            </label>
+            <label class="field">Ծննդյան տարեթիվ
+                <input value="<?= $user->userAdditionalData->dob ?>" disabled>
+            </label>
+            <label class="field">Անձնագրային տվյալներ
+                <input value="••••••••" disabled>
+            </label>
+            <label class="field">Հեռախոս
+                <input value="<?= $user->userAdditionalData->phone ?>">
+            </label>
+            <label class="field">Էլ. փոստ
+                <input value="<?= $user->email ?>">
+            </label>
+            <label class="field">Ֆակուլտետ / մասնագիտություն
+                <input value="<?= $facultyTitle ?> / <?= $chairTitle ?>" disabled>
+            </label>
+        </div>
+
         <button class="btn">Պահպանել թույլատրելի փոփոխությունները</button>
     </section>
     <section id="card" class="module-section"><h2>Էլեկտրոնային ուսանողական տոմս</h2>
         <div class="panel"><span class="badge">ACTIVE</span>
-            <h3>ԱՆՆԱ ՄԱՆՈՒԿՅԱՆ</h3>
+            <h3><?= $user->userAdditionalData->first_name ?> <?= $user->userAdditionalData->last_name ?></h3>
             <p>ID: ASUE-2023-00481</p>
-            <p>Կառավարման ֆակուլտետ · Բիզնես կառավարում</p>
+            <p> <?= $facultyTitle ?> · <?= $chairTitle ?></p>
             <p class="meta">Կարգավիճակը թարմացվում է ավտոմատ և կարող է կիրառվել գրադարանի ու անցագրային
                 համակարգերում։</p></div>
     </section>
@@ -42,8 +54,8 @@
         <div class="module-tabs">
             <button class="btn">Նոր դիմում</button>
             <span class="pill">Տեղեկանք</span><span class="pill">Արձակուրդ</span><span
-                class="pill">Տեղափոխություն</span><span class="pill">IT / Moodle / email</span><span
-                class="pill">Բողոք</span><span class="pill">Առաջարկ</span></div>
+                    class="pill">Տեղափոխություն</span><span class="pill">IT / Moodle / email</span><span
+                    class="pill">Բողոք</span><span class="pill">Առաջարկ</span></div>
         <table class="data-table">
             <thead>
             <tr>
@@ -75,16 +87,12 @@
     <section id="portfolio" class="module-section"><h2>Գիտական պորտֆոլիո</h2>
         <form data-demo-form>
             <div class="form-grid"><label class="field">Աշխատանքի անվանում<input required></label><label class="field">Տեսակ<select>
-                <option>Հոդված</option>
-                <option>Զեկույց</option>
-                <option>Հետազոտություն</option>
-            </select></label><label class="field">Ֆայլ կամ URL<input></label></div>
+                        <option>Հոդված</option>
+                        <option>Զեկույց</option>
+                        <option>Հետազոտություն</option>
+                    </select></label><label class="field">Ֆայլ կամ URL<input></label></div>
             <button class="btn" type="submit">Ավելացնել</button>
             <div class="notice hidden" data-confirmation>Գիտական աշխատանքն ավելացվել է պորտֆոլիոյում։</div>
         </form>
     </section>
 </main>
-<footer class="module-footer">Հիմնական տվյալները կարող է փոփոխել միայն լիազորված ադմինիստրատորը։</footer>
-<script src="spec-modules.js"></script>
-</body>
-</html>

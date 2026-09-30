@@ -10,9 +10,13 @@
 
 .btn-red {
     cursor: pointer;
-    transition:all .3s
+    transition: all .3s
 }
 
 .btn-red:hover {
     background: #ba1b31;
+}
+
+.login-visual {
+    background: url('/images/home/campus-night.jpg') center/cover
 }

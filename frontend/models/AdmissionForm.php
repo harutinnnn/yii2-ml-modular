@@ -17,6 +17,7 @@ class AdmissionForm extends Model
     public $education_level;
     public $educational_programs;
     public $consent_processing_personal_data;
+    public $dob;
 
 
     /**
@@ -25,7 +26,8 @@ class AdmissionForm extends Model
     public function rules()
     {
         return [
-            [['name', 'surname', 'email', 'phone', 'education_level', 'educational_programs'], 'required'],
+            [['name', 'surname', 'email', 'phone', 'education_level', 'educational_programs','dob'], 'required'],
+            [['dob'], 'date', 'format' => 'php:Y-m-d'],
             ['consent_processing_personal_data', 'required', 'requiredValue' => 1, 'message' => 'The field is required.'],
             [['education_level', 'educational_programs'], 'integer', 'min' => 1],
             ['email', 'email'],

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\StatusList;
 use Symfony\Component\VarDumper\Cloner\Data;
 use Yii;
 
@@ -23,12 +24,6 @@ use Yii;
  */
 class Applicant extends \yii\db\ActiveRecord
 {
-
-    public const STATUS_DELETED = 0;
-    public const STATUS_INACTIVE = 9;
-    public const STATUS_ACTIVE = 10;
-    public const STATUS_REJECTED = 2;
-
 
 //    public $password;
     public $first_name;
@@ -86,9 +81,9 @@ class Applicant extends \yii\db\ActiveRecord
     public static function statusOptions(): array
     {
         return [
-            self::STATUS_INACTIVE => 'Pending',
-            self::STATUS_ACTIVE => 'Published',
-            self::STATUS_REJECTED => 'Rejected',
+            StatusList::STATUS_ACTIVE => 'Published',
+            StatusList::STATUS_PENDING => 'Pending',
+            StatusList::STATUS_REJECTED => 'Rejected',
         ];
     }
 

@@ -2,8 +2,10 @@
 
 namespace backend\modules\user\models;
 
+use common\models\Chairs;
 use common\models\EducationalPrograms;
 use common\models\EducationLevels;
+use common\models\Faculties;
 use common\models\Student;
 use common\models\UserAdditionalData;
 use common\models\UserAdmissionData;
@@ -37,8 +39,11 @@ class StudentForm extends \yii\base\Model
     public $phone;
     public $education_level;
     public $educational_programs;
+    public $faculty;
+    public $chair;
     public $first_name;
     public $last_name;
+    public $dob;
     public $created_at;
     public $updated_at;
     public $verification_token;
@@ -80,11 +85,35 @@ class StudentForm extends \yii\base\Model
 
                 $educationalPrograms = EducationalPrograms::find()->where(['id' => $this->educational_programs])->one();
                 $this->educational_programs_title = $educationalPrograms->getDisplayTitle();
+
+
+                $this->faculty = (int)$user->additional->faculty ?? 0;
+                $this->chair = (int)$user->additional->chair ?? 0;
+
+                $faculty = Faculties::find()->where(['id' => $this->faculty])->one();
+                if ($faculty) {
+                    $this->faculty_title = $faculty->getDisplayTitle();
+                }
+
+                $chair = Chairs::find()->where(['id' => $this->chair])->one();
+                if ($chair) {
+                    $this->chair_title = $chair->getDisplayTitle();
+                }
+
             } else {
                 $this->education_level = 0;
                 $this->educational_programs = 0;
+
+                $this->faculty = 0;
+                $this->chair = 0;
+
             }
 
+            if ($user->additional) {
+                $this->dob = $user->additional->dob;
+            } else {
+                $this->dob = date("Y-m-d");
+            }
 
             $this->userAdditionalData = $user->additional;
             $this->userFacultyChairLcp = $user->faculty;
@@ -104,6 +133,9 @@ class StudentForm extends \yii\base\Model
             'last_name',
             'education_level',
             'educational_programs',
+            'faculty',
+            'chair',
+            'dob'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
@@ -113,6 +145,9 @@ class StudentForm extends \yii\base\Model
             'last_name',
             'education_level',
             'educational_programs',
+            'faculty',
+            'chair',
+            'dob'
         ];
 
         return $scenarios;
@@ -130,9 +165,10 @@ class StudentForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'university_email',], 'required'],
+            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'university_email', 'faculty', 'chair','dob'], 'required'],
             [['first_name', 'last_name', 'phone', 'university_email',], 'string'],
-            [['status', 'education_level', 'educational_programs', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'education_level', 'educational_programs', 'faculty', 'chair', 'created_at', 'updated_at'], 'integer'],
+            [['dob'], 'date', 'format' => 'php:Y-m-d'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
             [['email'], 'required', 'on' => self::SCENARIO_CREATE],
@@ -169,14 +205,17 @@ class StudentForm extends \yii\base\Model
     {
         return [
             'id' => 'ID',
-            'education_level' => 'Faculty',
-            'educational_programs' => 'Chair',
+            'education_level' => 'Educational level',
+            'educational_programs' => 'Educational program',
+            'faculty' => 'Faculty',
+            'chair' => 'Chair',
             'email' => 'Email',
             'university_email' => 'University email',
             'phone' => 'Phone',
             'status' => 'Status',
             'first_name' => 'First name',
             'last_name' => 'Last name',
+            'dob' => 'Date of birth',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -219,6 +258,9 @@ class StudentForm extends \yii\base\Model
                 $userAdditionalData->last_name = $this->last_name;
                 $userAdditionalData->phone = $this->phone;
                 $userAdditionalData->user_id = $user->id;
+                $userAdditionalData->faculty = $this->faculty;
+                $userAdditionalData->chair = $this->chair;
+                $userAdditionalData->dob = $this->dob;
 
                 if ($userAdditionalData->save()) {
 

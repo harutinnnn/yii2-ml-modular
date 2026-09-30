@@ -29,7 +29,7 @@ class StudentForm extends \yii\base\Model
     const SCENARIO_UPDATE = 'update';
 
     public ?User $user = null;
-    public ?UserAdditionalData $userAdditionalData = null;
+    public ?UserAdditionalData $additional = null;
     public ?UserFacultyChairLcp $userFacultyChairLcp = null;
 
     public $id;
@@ -115,7 +115,7 @@ class StudentForm extends \yii\base\Model
                 $this->dob = date("Y-m-d");
             }
 
-            $this->userAdditionalData = $user->additional;
+            $this->additional = $user->additional;
             $this->userFacultyChairLcp = $user->faculty;
         }
     }
@@ -253,16 +253,16 @@ class StudentForm extends \yii\base\Model
             if ($user->save()) {
 
 
-                $userAdditionalData = $this->userAdditionalData ?? new UserAdditionalData();
-                $userAdditionalData->first_name = $this->first_name;
-                $userAdditionalData->last_name = $this->last_name;
-                $userAdditionalData->phone = $this->phone;
-                $userAdditionalData->user_id = $user->id;
-                $userAdditionalData->faculty = $this->faculty;
-                $userAdditionalData->chair = $this->chair;
-                $userAdditionalData->dob = $this->dob;
+                $additional = $this->additional ?? new UserAdditionalData();
+                $additional->first_name = $this->first_name;
+                $additional->last_name = $this->last_name;
+                $additional->phone = $this->phone;
+                $additional->user_id = $user->id;
+                $additional->faculty = $this->faculty;
+                $additional->chair = $this->chair;
+                $additional->dob = $this->dob;
 
-                if ($userAdditionalData->save()) {
+                if ($additional->save()) {
 
 
                     $userAdmissionData = UserAdmissionData::find()->where(['user_id' => $user->id])->one();
@@ -292,7 +292,7 @@ class StudentForm extends \yii\base\Model
 
                 } else {
 
-                    foreach ($userAdditionalData->getErrors() as $attribute => $errors) {
+                    foreach ($additional->getErrors() as $attribute => $errors) {
                         foreach ($errors as $error) {
                             $this->addError($attribute, $error);
                         }

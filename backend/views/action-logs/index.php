@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'attribute' => 'user_id',
                                     'label' => 'User made changes',
                                     'value' => static function ($model) {
-                                        $userData = $model->user->userAdditionalData ?? null;
+                                        $userData = $model->user->additional ?? null;
                                         return ($userData->first_name ?? '-') . ' ' . ($userData->last_name ?? '-');
                                     },
                             ],

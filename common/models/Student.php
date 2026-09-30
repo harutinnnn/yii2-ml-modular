@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\StatusList;
 use Symfony\Component\VarDumper\Cloner\Data;
 use Yii;
 
@@ -84,9 +85,8 @@ class Student extends \yii\db\ActiveRecord
     public static function statusOptions(): array
     {
         return [
-            self::STATUS_INACTIVE => 'Pending',
-            self::STATUS_ACTIVE => 'Published',
-            self::STATUS_REJECTED => 'Rejected',
+            StatusList::STATUS_ACTIVE => 'Published',
+            StatusList::STATUS_PENDING => 'Pending',
         ];
     }
 

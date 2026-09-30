@@ -18,19 +18,19 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
         <h2>Անձնական տվյալներ</h2>
         <div class="form-grid">
             <label class="field">Անուն
-                <input value="<?= $user->userAdditionalData->first_name ?>" disabled>
+                <input value="<?= $user->additional->first_name ?>" disabled>
             </label>
             <label class="field">Ազգանուն
-                <input value="<?= $user->userAdditionalData->last_name ?>" disabled>
+                <input value="<?= $user->additional->last_name ?>" disabled>
             </label>
             <label class="field">Ծննդյան տարեթիվ
-                <input value="<?= $user->userAdditionalData->dob ?>" disabled>
+                <input value="<?= $user->additional->dob ?>" disabled>
             </label>
             <label class="field">Անձնագրային տվյալներ
                 <input value="••••••••" disabled>
             </label>
             <label class="field">Հեռախոս
-                <input value="<?= $user->userAdditionalData->phone ?>">
+                <input value="<?= $user->additional->phone ?>">
             </label>
             <label class="field">Էլ. փոստ
                 <input value="<?= $user->email ?>">
@@ -44,7 +44,7 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
     </section>
     <section id="card" class="module-section"><h2>Էլեկտրոնային ուսանողական տոմս</h2>
         <div class="panel"><span class="badge">ACTIVE</span>
-            <h3><?= $user->userAdditionalData->first_name ?> <?= $user->userAdditionalData->last_name ?></h3>
+            <h3><?= $user->additional->first_name ?> <?= $user->additional->last_name ?></h3>
             <p>ID: ASUE-2023-00481</p>
             <p> <?= $facultyTitle ?> · <?= $chairTitle ?></p>
             <p class="meta">Կարգավիճակը թարմացվում է ավտոմատ և կարող է կիրառվել գրադարանի ու անցագրային

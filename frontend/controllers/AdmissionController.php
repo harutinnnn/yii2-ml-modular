@@ -57,14 +57,14 @@ class AdmissionController extends MyController
                     $role = $auth->getRole(UserRoles::APPLICANT);
                     $auth->assign($role, $user->id);
 
-                    $userAdditionalData = new UserAdditionalData();
-                    $userAdditionalData->first_name = $admissionForm->name;
-                    $userAdditionalData->dob = $admissionForm->dob;
-                    $userAdditionalData->last_name = $admissionForm->surname;
-                    $userAdditionalData->phone = $admissionForm->phone;
-                    $userAdditionalData->user_id = $user->id;
+                    $additional = new UserAdditionalData();
+                    $additional->first_name = $admissionForm->name;
+                    $additional->dob = $admissionForm->dob;
+                    $additional->last_name = $admissionForm->surname;
+                    $additional->phone = $admissionForm->phone;
+                    $additional->user_id = $user->id;
 
-                    if (!$userAdditionalData->save()) {
+                    if (!$additional->save()) {
                         $transaction->rollBack();
                         throw new Exception("Some thong get wrong [UserAdditionalData]");
                     } else {

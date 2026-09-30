@@ -5,7 +5,7 @@ use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var common\models\User $user */
-/** @var common\models\UserAdditionalData $userAdditionalData */
+/** @var common\models\UserAdditionalData $additional */
 
 $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'token' => $user->verification_token]);
 ?>
@@ -24,7 +24,7 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'to
     <tr>
         <td class="inset" style="padding:12px 40px 28px;">
 
-            <p>Dear <?= $userAdditionalData->first_name ?? "" ?> <?= $userAdditionalData->last_name ?? "" ?> your request has
+            <p>Dear <?= $additional->first_name ?? "" ?> <?= $additional->last_name ?? "" ?> your request has
                 been approved</p>
             <p>
                 Congratulations you are now student in ASUE

@@ -2,8 +2,8 @@
 
 /** @var yii\web\View $this */
 /** @var common\models\User $user */
-/** @var common\models\UserAdditionalData $userAdditionalData */
+/** @var common\models\UserAdditionalData $additional */
 
 ?>
-Dear <?= $userAdditionalData->first_name . ' ' . $userAdditionalData->last_name ?>
+Dear <?= $additional->first_name . ' ' . $additional->last_name ?>
 Your request was rejected!!!

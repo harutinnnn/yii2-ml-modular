@@ -100,6 +100,10 @@ $badge = $actionColors[$model->action] ?? 'dark';
                             $oldValue = $oldValues[$field] ?? null;
                             $newValue = $newValues[$field] ?? null;
 
+                            if($oldValue == $newValue){
+                                continue;
+                            }
+
                             if (is_array($oldValue)) {
                                 $oldValue = json_encode(
                                         $oldValue,
@@ -133,11 +137,16 @@ $badge = $actionColors[$model->action] ?? 'dark';
                                             </div>
 
                                             <div class="value-content">
-                                                <?= nl2br(Html::encode(
-                                                        $oldValue !== null && $oldValue !== ''
-                                                                ? (string)$oldValue
-                                                                : '—'
-                                                )) ?>
+                                                <?php if ($field == 'status'): ?>
+                                                    <?= \common\components\StatusList::getStatusLabel($oldValue) ?>
+                                                <?php else: ?>
+                                                    <?= nl2br(Html::encode(
+                                                            $oldValue !== null && $oldValue !== ''
+                                                                    ? (string)$oldValue
+                                                                    : '—'
+                                                    )) ?>
+                                                <?php endif; ?>
+
                                             </div>
 
                                         </div>
@@ -151,11 +160,17 @@ $badge = $actionColors[$model->action] ?? 'dark';
                                             </div>
 
                                             <div class="value-content">
-                                                <?= nl2br(Html::encode(
-                                                        $newValue !== null && $newValue !== ''
-                                                                ? (string)$newValue
-                                                                : '—'
-                                                )) ?>
+                                                <?php if ($field == 'status'): ?>
+                                                    <?= \common\components\StatusList::getStatusLabel($newValue) ?>
+                                                <?php else: ?>
+                                                    <?= nl2br(Html::encode(
+                                                            $newValue !== null && $newValue !== ''
+                                                                    ? (string)$newValue
+                                                                    : '—'
+                                                    )) ?>
+                                                <?php endif; ?>
+
+
                                             </div>
 
                                         </div>
@@ -195,7 +210,7 @@ $badge = $actionColors[$model->action] ?? 'dark';
                     <div class="detail-row">
                         <span>User</span>
                         <strong>
-                            <?php $userData = $model->user->userAdditionalData ?? null; ?>
+                            <?php $userData = $model->user->additional ?? null; ?>
                             <?= Html::encode(
                                     ($userData->first_name ?? '-') . ' ' . ($userData->last_name ?? '-')
                             ) ?>

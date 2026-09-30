@@ -166,8 +166,20 @@ class ApplicantController extends Controller
         $model->setAttribute('status', StatusList::STATUS_REJECTED);
         $model->update();
 
+
+        $changedValues = $model->attributes;
+        ActionLogs::log(
+            ActionLogs::ACTION_UPDATE,
+            EntityTypes::APPLICANT,
+            $model->id,
+            $changedValues,
+            $model->attributes,
+        );
+
         $applicantForm = new ApplicantForm($model);
         $applicantForm->sendRejectEmail($model,$model->additional);
+
+
 
         return $this->redirect(['index']);
     }

@@ -11,7 +11,7 @@ use Yii;
  * @property int $status
  *
  * @property StatusesMl[] $statusesMls
- * @property UserAdditionalData[] $userAdditionalDatas
+ * @property UserAdditionalData[] $additionals
  *
  * @property StatusesMl[] $translations
  */

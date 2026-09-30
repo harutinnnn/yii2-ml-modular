@@ -36,7 +36,7 @@ class TeacherForm extends \yii\base\Model
     const SCENARIO_UPDATE = 'update';
 
     public ?Teacher $user = null;
-    public ?UserAdditionalData $userAdditionalData = null;
+    public ?UserAdditionalData $additional = null;
     public ?UserFacultyChairLcp $userFacultyChairLcp = null;
 
     public $id;
@@ -101,7 +101,7 @@ class TeacherForm extends \yii\base\Model
                 $this->chair = 0;
             }
 
-            $this->userAdditionalData = $user->additional;
+            $this->additional = $user->additional;
         }
     }
 
@@ -246,20 +246,20 @@ class TeacherForm extends \yii\base\Model
                 $auth->assign($role, $user->id);
 
 
-                $userAdditionalData = new UserAdditionalData();
-                $userAdditionalData->first_name = $this->first_name;
-                $userAdditionalData->middle_name = $this->middle_name;
-                $userAdditionalData->last_name = $this->last_name;
-                $userAdditionalData->teacher_academic_degree = $this->teacher_academic_degree;
-                $userAdditionalData->teacher_position = $this->teacher_position;
-                $userAdditionalData->faculty = $this->faculty;
-                $userAdditionalData->chair = $this->chair;
-                $userAdditionalData->phone = $this->phone;
-                $userAdditionalData->user_id = $user->id;
+                $additional = new UserAdditionalData();
+                $additional->first_name = $this->first_name;
+                $additional->middle_name = $this->middle_name;
+                $additional->last_name = $this->last_name;
+                $additional->teacher_academic_degree = $this->teacher_academic_degree;
+                $additional->teacher_position = $this->teacher_position;
+                $additional->faculty = $this->faculty;
+                $additional->chair = $this->chair;
+                $additional->phone = $this->phone;
+                $additional->user_id = $user->id;
 
-                if (!$userAdditionalData->save()) {
+                if (!$additional->save()) {
 
-                    foreach ($userAdditionalData->getErrors() as $attribute => $errors) {
+                    foreach ($additional->getErrors() as $attribute => $errors) {
                         foreach ($errors as $error) {
                             $this->addError($attribute, $error);
                         }
@@ -316,23 +316,23 @@ class TeacherForm extends \yii\base\Model
 
             if ($user->save()) {
 
-                $userAdditionalData = $this->userAdditionalData ?? new UserAdditionalData();
-                $userAdditionalData->first_name = $this->first_name;
-                $userAdditionalData->middle_name = $this->middle_name;
-                $userAdditionalData->last_name = $this->last_name;
-                $userAdditionalData->teacher_academic_degree = $this->teacher_academic_degree;
-                $userAdditionalData->teacher_position = $this->teacher_position;
-                $userAdditionalData->faculty = $this->faculty;
-                $userAdditionalData->chair = $this->chair;
-                $userAdditionalData->phone = $this->phone;
-                $userAdditionalData->user_id = $user->id;
+                $additional = $this->additional ?? new UserAdditionalData();
+                $additional->first_name = $this->first_name;
+                $additional->middle_name = $this->middle_name;
+                $additional->last_name = $this->last_name;
+                $additional->teacher_academic_degree = $this->teacher_academic_degree;
+                $additional->teacher_position = $this->teacher_position;
+                $additional->faculty = $this->faculty;
+                $additional->chair = $this->chair;
+                $additional->phone = $this->phone;
+                $additional->user_id = $user->id;
 
 
-                if (!$userAdditionalData->save()) {
+                if (!$additional->save()) {
 
 
 
-                    foreach ($userAdditionalData->getErrors() as $attribute => $errors) {
+                    foreach ($additional->getErrors() as $attribute => $errors) {
                         foreach ($errors as $error) {
                             $this->addError($attribute, $error);
                         }

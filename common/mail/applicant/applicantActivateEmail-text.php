@@ -2,11 +2,11 @@
 
 /** @var yii\web\View $this */
 /** @var common\models\User $user */
-/** @var common\models\UserAdditionalData $userAdditionalData */
+/** @var common\models\UserAdditionalData $additional */
 
 $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'token' => $user->verification_token]);
 ?>
-Dear <?= $userAdditionalData->first_name ?? "" ?> <?= $userAdditionalData->last_name ?? "" ?> your request has been approved
+Dear <?= $additional->first_name ?? "" ?> <?= $additional->last_name ?? "" ?> your request has been approved
 
 Congratulations you are now student in ASUE
 

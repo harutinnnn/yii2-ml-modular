@@ -2,8 +2,10 @@
 
 namespace backend\controllers;
 
+use common\components\UserRoles;
 use common\models\ActionLogs;
 use backend\models\ActionLogsSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,6 +23,15 @@ class ActionLogsController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => [UserRoles::ADMIN, UserRoles::SUPER_ADMIN],
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [

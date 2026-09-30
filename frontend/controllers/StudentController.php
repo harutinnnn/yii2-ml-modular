@@ -93,8 +93,8 @@ class StudentController extends MyController
         }
 
 
-        $faculty = Faculties::findOne($user->userAdditionalData->faculty);
-        $chair = Chairs::findOne($user->userAdditionalData->chair);
+        $faculty = Faculties::findOne($user->additional->faculty);
+        $chair = Chairs::findOne($user->additional->chair);
 
         $this->layout = 'student';
 

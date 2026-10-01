@@ -14,6 +14,9 @@ class MyController extends Controller
     public $pageData = [];
     public $lang = 'am';
 
+    public $userType = null;
+    public $user = null;
+
 
     public function __construct($id, $module, $config = [])
     {
@@ -109,7 +112,6 @@ class MyController extends Controller
         $this->pageData['preParentMenuObj'] = $preParentMenuObj;
 
         $this->pageData['content'] = $content;
-
 
 
     }

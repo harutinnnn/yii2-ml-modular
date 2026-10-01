@@ -101,4 +101,23 @@ class FrontendLanguage extends ActiveRecord
     {
         return self::typeOptions()[$this->type] ?? 'Unknown';
     }
+
+    public function getDisplayTitle(): string
+    {
+        $defaultLanguage = Language::find()->where(['is_default' => 1])->select('code')->scalar();
+        if ($defaultLanguage) {
+            $translation = $this->getTranslation($defaultLanguage);
+            if ($translation !== null && $translation->text !== '') {
+                return $translation->text;
+            }
+        }
+
+        foreach ($this->translations as $translation) {
+            if ($translation->text !== '') {
+                return $translation->text;
+            }
+        }
+
+        return 'Untitled';
+    }
 }

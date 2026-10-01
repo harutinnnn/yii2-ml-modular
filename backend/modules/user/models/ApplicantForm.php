@@ -230,7 +230,7 @@ class ApplicantForm extends \yii\base\Model
     {
         return [
             self::STATUS_INACTIVE => 'Pending',
-            self::STATUS_ACTIVE => 'Published',
+            self::STATUS_ACTIVE => 'Published/Student',
         ];
     }
 
@@ -458,6 +458,7 @@ class ApplicantForm extends \yii\base\Model
                     $studentNumber = str_pad(PasswordHelper::generateStudentNumber($year), 5, '0', STR_PAD_LEFT);
 
                     $additional->studnet_number = $studentNumber;
+                    $additional->course = 1;
                     $additional->student_id = PasswordHelper::generateStudentId($studentNumber, $year);
                     $additional->year = $year;
                     $additional->save();

@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 
+$user = Yii::$app->user->identity;
+$userAdditional = $user?->additional ?? null;
+
 ?>
 <header class="module-header">
     <a href="index.html">
@@ -16,10 +19,12 @@ use yii\helpers\Html;
         <a href="#portfolio">Պորտֆոլիո</a>
     </nav>
     <span class="module-user">
-        <?= Html::beginForm(['/' . Yii::$app->globalData->lang . '/logout'], 'post',['id'=>'logoutForm']) ?>
+        <?= Html::beginForm(['/' . Yii::$app->globalData->lang . '/logout'], 'post', ['id' => 'logoutForm']) ?>
 
 <!--        --><?php //= Html::submitButton('Աննա Մանուկյան · Ելք') ?>
-        <a href="javascript:void(0)" onclick="$('#logoutForm').submit()">Աննա Մանուկյան · Ելք</a>
+        <a href="javascript:void(0)" onclick="$('#logoutForm').submit()">
+            <?= $userAdditional->first_name ?> <?= $userAdditional->first_name ?> · <?= \common\components\I18n::translate('sign_out') ?>
+        </a>
 
         <?= Html::endForm() ?>
     </span>

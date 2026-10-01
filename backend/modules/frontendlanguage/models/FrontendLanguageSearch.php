@@ -8,11 +8,13 @@ use yii\data\ActiveDataProvider;
 
 class FrontendLanguageSearch extends FrontendLanguage
 {
+
+    public $text;
     public function rules(): array
     {
         return [
             [['id', 'status'], 'integer'],
-            [['type', 'key'], 'safe'],
+            [['type', 'key','text'], 'safe'],
         ];
     }
 
@@ -50,6 +52,8 @@ class FrontendLanguageSearch extends FrontendLanguage
         $query
             ->andFilterWhere(['fl.type' => $this->type])
             ->andFilterWhere(['like', 'fl.key', $this->key]);
+
+        $query->andFilterWhere(['like', 'flm.text', $this->text]);
 
         return $dataProvider;
     }

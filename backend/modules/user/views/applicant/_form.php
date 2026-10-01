@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
 
                 <div class="col-md-6">
                     <?= $form->field($model, 'status')->dropDownList(
-                            \common\models\Applicant::statusOptions()
+                            \backend\modules\user\models\ApplicantForm::statusOptions()
                     ) ?>
 
                 </div>

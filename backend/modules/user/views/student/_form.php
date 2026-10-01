@@ -23,6 +23,14 @@ use yii\widgets\ActiveForm;
 
 
                 <div class="col-md-6">
+                    <?= $form->field($model, "course")
+                            ->textInput([
+                                    'maxlength' => true,
+                                    'type' => 'number',
+                            ]) ?>
+                </div>
+
+                <div class="col-md-6">
                     <?= $form->field($model, "dob")
                             ->textInput([
                                     'maxlength' => true,

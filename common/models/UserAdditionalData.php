@@ -18,11 +18,14 @@ use Yii;
  * @property string|null $faculty
  * @property string|null $chair
  * @property string|null $profession
- * @property string|null $course
+ * @property int|null $course
  * @property string|null $group
  * @property int|null $student_status
  * @property string|null $teacher_academic_degree
  * @property string|null $teacher_position
+ * @property string|null $student_id
+ * @property int|null $student_number
+ * @property int|null $year
  *
  * @property Statuses $studentStatus
  * @property User $user
@@ -45,11 +48,11 @@ class UserAdditionalData extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['middle_name', 'dob', 'passport_details', 'phone', 'faculty', 'chair', 'profession', 'course', 'group', 'student_status','teacher_academic_degree','teacher_position'], 'default', 'value' => null],
+            [['middle_name', 'dob', 'passport_details', 'phone', 'faculty', 'chair', 'profession', 'course', 'group', 'student_status','teacher_academic_degree','teacher_position','student_id'], 'default', 'value' => null],
             [['user_id', 'first_name', 'last_name'], 'required'],
-            [['user_id', 'student_status'], 'integer'],
+            [['user_id', 'student_status','course'], 'integer'],
             [['dob'], 'safe'],
-            [['first_name', 'last_name', 'middle_name', 'passport_details', 'faculty', 'course'], 'string', 'max' => 100],
+            [['first_name', 'last_name', 'middle_name', 'passport_details', 'faculty'], 'string', 'max' => 100],
             [['phone'], 'string', 'max' => 25],
             [['chair', 'profession'], 'string', 'max' => 150],
             [['group'], 'string', 'max' => 255],
@@ -80,6 +83,9 @@ class UserAdditionalData extends \yii\db\ActiveRecord
             'student_status' => 'Student Status',
             'teacher_academic_degree' => 'Academic degree',
             'teacher_position' => 'Position',
+            'student_id' => 'Student ID',
+            'student_number' => 'Student Number',
+            'year' => 'Year',
         ];
     }
 

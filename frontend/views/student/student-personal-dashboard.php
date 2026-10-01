@@ -8,10 +8,14 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
     <section class="module-hero">
         <div>
             <div class="eyebrow">Ուսանողի անձնական գրասենյակ</div>
-            <h1>Բարի գալուստ, Աննա</h1>
+            <h1>Բարի գալուստ, <?= $user->additional->first_name ?></h1>
             <p>Կենտրոնացված հասանելիություն անձնական տվյալներին, դիմումներին, նամակագրությանը և գիտական
                 պորտֆոլիոյին։</p></div>
-        <div class="status-box"><strong>Գործող ուսանող</strong><span>Կառավարման ֆակուլտետ · 3-րդ կուրս · K-301</span>
+        <div class="status-box">
+            <strong>Գործող ուսանող</strong>
+            <span>
+                <?= $facultyTitle ?> · <?= $user->additional->course ?>-<?= $user->additional->course == 1 ? 'ին' : 'րդ' ?> կուրս · K-301
+            </span>
         </div>
     </section>
     <section id="profile" class="module-section">

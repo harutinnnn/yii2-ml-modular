@@ -41,6 +41,7 @@ class StudentForm extends \yii\base\Model
     public $educational_programs;
     public $faculty;
     public $chair;
+    public $course;
     public $first_name;
     public $last_name;
     public $dob;
@@ -89,6 +90,7 @@ class StudentForm extends \yii\base\Model
 
                 $this->faculty = (int)$user->additional->faculty ?? 0;
                 $this->chair = (int)$user->additional->chair ?? 0;
+                $this->course = (int)$user->additional->course ?? 1;
 
                 $faculty = Faculties::find()->where(['id' => $this->faculty])->one();
                 if ($faculty) {
@@ -106,6 +108,7 @@ class StudentForm extends \yii\base\Model
 
                 $this->faculty = 0;
                 $this->chair = 0;
+                $this->course = 1;
 
             }
 
@@ -135,6 +138,7 @@ class StudentForm extends \yii\base\Model
             'educational_programs',
             'faculty',
             'chair',
+            'course',
             'dob'
         ];
 
@@ -147,6 +151,7 @@ class StudentForm extends \yii\base\Model
             'educational_programs',
             'faculty',
             'chair',
+            'course',
             'dob'
         ];
 
@@ -165,9 +170,9 @@ class StudentForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'university_email', 'faculty', 'chair','dob'], 'required'],
+            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'university_email', 'faculty', 'chair','dob','course'], 'required'],
             [['first_name', 'last_name', 'phone', 'university_email',], 'string'],
-            [['status', 'education_level', 'educational_programs', 'faculty', 'chair', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'education_level', 'educational_programs', 'faculty', 'chair', 'created_at', 'updated_at','course'], 'integer'],
             [['dob'], 'date', 'format' => 'php:Y-m-d'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
@@ -209,6 +214,7 @@ class StudentForm extends \yii\base\Model
             'educational_programs' => 'Educational program',
             'faculty' => 'Faculty',
             'chair' => 'Chair',
+            'course' => 'Course',
             'email' => 'Email',
             'university_email' => 'University email',
             'phone' => 'Phone',
@@ -260,6 +266,7 @@ class StudentForm extends \yii\base\Model
                 $additional->user_id = $user->id;
                 $additional->faculty = $this->faculty;
                 $additional->chair = $this->chair;
+                $additional->course = $this->course;
                 $additional->dob = $this->dob;
 
                 if ($additional->save()) {

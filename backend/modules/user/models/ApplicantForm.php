@@ -389,8 +389,7 @@ class ApplicantForm extends \yii\base\Model
         try {
 
 
-
-            $pass = PasswordHelper::generate(8,3);
+            $pass = PasswordHelper::generate(8, 3);
             $passHash = Yii::$app->security->generatePasswordHash($pass);
 
 
@@ -448,7 +447,20 @@ class ApplicantForm extends \yii\base\Model
                     return false;
                 }
 
+
+
+
                 if ($this->status == StatusList::STATUS_ACTIVE) {
+
+
+                    $year = date('Y');
+
+                    $studentNumber = str_pad(PasswordHelper::generateStudentNumber($year), 5, '0', STR_PAD_LEFT);
+
+                    $additional->studnet_number = $studentNumber;
+                    $additional->student_id = PasswordHelper::generateStudentId($studentNumber, $year);
+                    $additional->year = $year;
+                    $additional->save();
 
 
                     $auth = Yii::$app->authManager;

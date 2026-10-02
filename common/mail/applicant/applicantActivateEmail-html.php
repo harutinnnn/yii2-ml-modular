@@ -7,7 +7,6 @@ use yii\helpers\Url;
 /** @var common\models\User $user */
 /** @var common\models\UserAdditionalData $additional */
 
-$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'token' => $user->verification_token]);
 ?>
 <table id="email-content" role="presentation" align="center" width="100%" cellpadding="0" cellspacing="0"
        style="width:100%; max-width:600px; background-color:#faf8f3;">

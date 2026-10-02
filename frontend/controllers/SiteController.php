@@ -3,10 +3,10 @@
 namespace frontend\controllers;
 
 use backend\modules\user\models\ApplicantForm;
-use common\helpers\I18n;
+use common\components\UserRoles;
 use common\models\Chairs;
 use common\models\Faculties;
-use common\models\Menu;
+use common\models\User;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -96,13 +96,31 @@ class SiteController extends MyController
      */
     public function actionLogin()
     {
+        $this->layout = 'login';
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+
+
+            $roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
+
+            if (isset($roles[UserRoles::STUDENT])) {
+
+                return $this->redirect('/' . Yii::$app->globalData->lang . '/student/student-personal-dashboard');
+
+            } else if (isset($roles[UserRoles::TEACHER])) {
+
+                return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard');
+
+            } else {
+
+                return $this->goBack();
+            }
         }
 
         $model->password = '';
@@ -182,6 +200,8 @@ class SiteController extends MyController
      */
     public function actionRequestPasswordReset()
     {
+        $this->layout = 'login';
+
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
@@ -207,6 +227,7 @@ class SiteController extends MyController
      */
     public function actionResetPassword($token)
     {
+        $this->layout = 'login';
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidArgumentException $e) {
@@ -233,14 +254,37 @@ class SiteController extends MyController
      */
     public function actionVerifyEmail($token)
     {
+
+        $user = User::find()->where(['verification_token' => $token])->one();
         try {
             $model = new VerifyEmailForm($token);
+
         } catch (InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
+
+
         if ($model->verifyEmail()) {
             Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
-            return $this->goHome();
+            $roles = Yii::$app->authManager->getRolesByUser($user->id);
+
+
+            if (!empty($roles)) {
+
+                if (isset($roles[UserRoles::TEACHER])) {
+
+//                    return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturers/personal-dashboard');
+                    return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturers/teacher-login');
+
+                } else if (isset($roles[UserRoles::STUDENT])) {
+
+                    return $this->redirect('/' . Yii::$app->globalData->lang . '/student/student-personal-dashboard');
+
+                }
+            }
+
+
+//            return $this->goHome();
         }
 
         Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');

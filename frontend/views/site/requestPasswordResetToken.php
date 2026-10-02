@@ -1,31 +1,39 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var \frontend\models\PasswordResetRequestForm $model */
+use common\components\I18n;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-use yii\bootstrap5\Html;
-use yii\bootstrap5\ActiveForm;
+/** @var frontend\models\StudentLoginForm $model */
 
-$this->title = 'Request password reset';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-request-password-reset">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out your email. A link to reset password will be sent there.</p>
+<div class="login-visual"></div>
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'request-password-reset-form']); ?>
+<section class="login-panel"><a class="brand-login" href="/<?= Yii::$app->globalData->lang ?>">
+        <img src="/images/logo_am.svg" alt="ՀՊՏՀ"></a>
+    <div class="eyebrow red">Անձնական համակարգ</div>
+    <h1>Վերականգնել գաղտնաբառը</h1>
+    <?php $form = ActiveForm::begin([
+            'options' => [
+                    'class' => 'login-form',
+            ],
+            'fieldConfig' => [
+                    'template' => "{input}\n{hint}\n{error}",
+                    'options' => [
+                            'class' => 'field-wrapper',
+                    ],
+            ]
+    ]); ?>
 
-                <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Send', ['class' => 'btn btn-primary']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
-        </div>
+    <div class="field">
+        <label>Էլ. փոստ / օգտանուն</label>
+        <?= $form->field($model, 'email')->textInput(['id' => 'email'])->label(false) ?>
     </div>
-</div>
+
+
+    <?= Html::submitButton(I18n::translate('Վերականգնել') . '→', ['class' => 'btn-red']) ?>
+    <a href="/<?= Yii::$app->globalData->lang ?>/forgot-password" style="font-size:12px;color:#8e1728">Մուտք գործել</a></form>
+
+    <?php ActiveForm::end(); ?>
+</section>

@@ -3,10 +3,13 @@
 /** @var yii\web\View $this */
 /** @var common\models\User $user */
 
-$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'token' => $user->verification_token]);
+$verifyLink = Yii::$app->request->hostInfo . '/verify-email?token=' . $user->verification_token;
 ?>
-Hello <?= $user->email ?>,
+Dear <?= $additional->first_name ?? "" ?> <?= $additional->last_name ?? "" ?> your request has
 
 Follow the link below to verify your email:
+
+Login: <?= $user->email ?? "" ?>
+Password: <?= $pass ?? "" ?>
 
 <?= $verifyLink ?>

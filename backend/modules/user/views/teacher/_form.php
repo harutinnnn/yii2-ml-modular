@@ -19,14 +19,17 @@ use yii\widgets\ActiveForm;
                 <?= $form->errorSummary($model) ?>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <?= $form->field($model, 'status')->dropDownList(
-                            \common\models\Student::statusOptions()
-                    ) ?>
+            <?php if (!$model): ?>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'status')->dropDownList(
+                                \common\models\Student::statusOptions()
+                        ) ?>
+
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
             <div class="row">
                 <div class="col-md-6">

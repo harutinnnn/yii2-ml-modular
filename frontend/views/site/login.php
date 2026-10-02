@@ -1,41 +1,43 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var \common\models\LoginForm $model */
+use common\components\I18n;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-use yii\bootstrap5\Html;
-use yii\bootstrap5\ActiveForm;
+/** @var frontend\models\StudentLoginForm $model */
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<div class="login-visual"></div>
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+<section class="login-panel"><a class="brand-login" href="/<?= Yii::$app->globalData->lang ?>">
+        <img src="/images/logo_am.svg" alt="ՀՊՏՀ"></a>
+    <div class="eyebrow red">Անձնական համակարգ</div>
+    <h1>Օգտատիրոջ մուտք</h1>
+    <p class="body-copy">Մուտք գործեք ձեր կենտրոնացված թվային միջավայր։</p>
+    <?php $form = ActiveForm::begin([
+            'options' => [
+                    'class' => 'login-form',
+            ],
+            'fieldConfig' => [
+                    'template' => "{input}\n{hint}\n{error}",
+                    'options' => [
+                            'class' => 'field-wrapper',
+                    ],
+            ]
+    ]); ?>
 
-                <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div class="my-1 mx-0" style="color:#999;">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
-                </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
-        </div>
+    <div class="field">
+        <label>Էլ. փոստ / օգտանուն</label>
+        <?= $form->field($model, 'email')->textInput(['id' => 'email'])->label(false) ?>
     </div>
-</div>
+    <div class="field">
+        <label>Գաղտնաբառ</label>
+        <?= $form->field($model, 'password')->textInput(['id' => 'password', 'type' => 'password'])->label(false) ?>
+    </div>
+
+    <?= Html::submitButton(I18n::translate('Մուտք գործել') . '→', ['class' => 'btn-red']) ?>
+    <a href="/<?= Yii::$app->globalData->lang ?>/forgot-password" style="font-size:12px;color:#8e1728">Մոռացե՞լ եք գաղտնաբառը</a></form>
+
+    <?php ActiveForm::end(); ?>
+</section>

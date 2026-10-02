@@ -2,6 +2,8 @@
 
 namespace backend\modules\user\models;
 
+use common\components\PasswordHelper;
+use common\components\StatusList;
 use common\components\UserRoles;
 use common\models\Chairs;
 use common\models\EducationalPrograms;
@@ -226,10 +228,10 @@ class TeacherForm extends \yii\base\Model
 
         try {
 
-            $pass = substr(md5(sha1(microtime())), 0, 8);
+            $pass = PasswordHelper::generate(8, 3);
 
             $user = $this->user ?? new Teacher();
-            $user->status = $this->status;
+            $user->status = StatusList::STATUS_INACTIVE;
             $user->email = $this->email;
             $user->university_email = $this->university_email;
             $passHash = Yii::$app->security->generatePasswordHash($pass);
@@ -237,6 +239,7 @@ class TeacherForm extends \yii\base\Model
             $user->auth_key = Yii::$app->security->generateRandomString();
             $user->created_at = time();
             $user->updated_at = time();
+            $user->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
 
             if ($user->save()) {
 
@@ -266,9 +269,7 @@ class TeacherForm extends \yii\base\Model
                     }
 
                     $transaction->rollBack();
-
                     return false;
-
                 }
 
             } else {
@@ -279,12 +280,11 @@ class TeacherForm extends \yii\base\Model
                 }
 
                 $transaction->rollBack();
-
                 return false;
             }
 
 
-            $this->sendEmail($user);
+            $this->sendEmail($user,$pass);
             $this->id = $user->id;
             $transaction->commit();
 
@@ -329,8 +329,6 @@ class TeacherForm extends \yii\base\Model
 
 
                 if (!$additional->save()) {
-
-
 
                     foreach ($additional->getErrors() as $attribute => $errors) {
                         foreach ($errors as $error) {
@@ -377,13 +375,13 @@ class TeacherForm extends \yii\base\Model
         }
     }
 
-    public function sendEmail($user): bool
+    public function sendEmail($user,$pass): bool
     {
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
+                ['user' => $user,'pass' => $pass]
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)

@@ -20,23 +20,11 @@ AppAsset::register($this);
         <?php $this->head() ?>
         <link href="/css/homepages.css" rel="stylesheet"/>
     </head>
-    <body class="o1 <?= Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index' ? '' : 'inner-v1' ?>"
-          id="top">
+    <body class="inner-v1">
     <?php $this->beginBody() ?>
 
-    <?= $this->render('//partial/header') ?>
-    <?= $this->render('//partial/menu-popup') ?>
-    <?= $this->render('//partial/search-popup') ?>
-    <main>
 
-        <?php if (Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index'): ?>
-            <?= $this->render('//partial/home-header') ?>
-        <?php elseif (empty($this->params['hideMainHeader'])): ?>
-            <?= $this->render('//partial/main-header') ?>
-        <?php endif; ?>
-
-        <?= $content ?>
-    </main>
+    <?= $content ?>
 
 
     <?php $this->endBody() ?>

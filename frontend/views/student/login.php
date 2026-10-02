@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
     <p class="body-copy">Մուտք գործեք ձեր կենտրոնացված թվային միջավայր։</p>
     <?php $form = ActiveForm::begin([
             'options' => [
-                    'class' => 'form-grid',
+                    'class' => 'login-form',
             ],
             'fieldConfig' => [
                     'template' => "{input}\n{hint}\n{error}",
@@ -37,7 +37,7 @@ use yii\widgets\ActiveForm;
     </div>
 
     <?= Html::submitButton(I18n::translate('Մուտք գործել') . '→', ['class' => 'btn-red']) ?>
-    <a href="inquiries.html" style="font-size:12px;color:#8e1728">Մոռացե՞լ եք գաղտնաբառը</a></form>
+    <a href="/<?= Yii::$app->globalData->lang ?>/forgot-password" style="font-size:12px;color:#8e1728">Մոռացե՞լ եք գաղտնաբառը</a></form>
 
     <?php ActiveForm::end(); ?>
 </section>

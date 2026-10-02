@@ -6,17 +6,17 @@ $user = Yii::$app->user->identity;
 $userAdditional = $user?->additional ?? null;
 
 ?>
+
 <header class="module-header">
     <a href="/<?= Yii::$app->globalData->lang ?>">
         <img src="/images/logo_am.svg" alt="ՀՊՏՀ">
     </a>
     <nav>
         <a href="#profile">Անձնական տվյալներ</a>
-        <a href="#card">Ուսանողական տոմս</a>
-        <a href="#requests">Դիմումներ</a>
+        <a href="#research">Գիտական նյութեր</a>
+        <a href="#requests">Տեղեկանքներ</a>
         <a href="communications.html">Նամակագրություն</a>
         <a href="notifications.html">Ծանուցումներ</a>
-        <a href="#portfolio">Պորտֆոլիո</a>
     </nav>
     <span class="module-user">
         <?= Html::beginForm(['/' . Yii::$app->globalData->lang . '/logout'], 'post', ['id' => 'logoutForm']) ?>
@@ -28,4 +28,3 @@ $userAdditional = $user?->additional ?? null;
         <?= Html::endForm() ?>
     </span>
 </header>
-

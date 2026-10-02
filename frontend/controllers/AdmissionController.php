@@ -2,10 +2,8 @@
 
 namespace frontend\controllers;
 
-use backend\modules\user\models\ApplicantForm;
 use common\components\UserRoles;
 use common\helpers\I18n;
-use common\models\Admissions;
 use common\models\EducationalPrograms;
 use common\models\EducationLevels;
 use common\models\User;
@@ -15,7 +13,6 @@ use frontend\models\AdmissionForm;
 use Yii;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
-use yii\web\Response;
 
 /**
  * Site controller

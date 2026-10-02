@@ -50,8 +50,16 @@ return [
             'showScriptName' => false,
             'rules' => [
 
-                '<language:(en|ru|am)>/student/student-login' => 'student/login',
-                '<language:(en|ru|am)>/student/dashboard' => 'student/dashboard',
+                'verify-email' => 'site/verify-email',
+
+                //login
+                '<language:(en|ru|am)>/lecturers/teacher-login' => 'site/login',
+                '<language:(en|ru|am)>/student/student-login' => 'site/login',
+
+                '<language:(en|ru|am)>/forgot-password' => 'site/request-password-reset',
+
+                '<language:(en|ru|am)>/lecturer/personal-dashboard' => 'lecturers/personal-dashboard',
+                '<language:(en|ru|am)>/student/student-personal-dashboard' => 'student/student-personal-dashboard',
 
                 '<language:(en|ru|am)>/education/<controller>/program/<id:\d+>' => 'education/program',
 

@@ -1,6 +1,8 @@
 <?php
 
 use common\components\I18n;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 $facultyTitle = $faculty?->getTranslation(Yii::$app->globalData->lang)->title ?? "-";
 $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-";
@@ -21,31 +23,52 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
     </section>
     <section id="profile" class="module-section">
         <h2><?= I18n::translate('personal_data') ?></h2>
+
+
+        <?php if (Yii::$app->session->hasFlash('message')): ?>
+            <div class="success-message">
+                <?= Yii::$app->session->getFlash('message') ?>
+            </div>
+        <?php endif; ?>
+        <?php $form = ActiveForm::begin([
+                'options' => [
+//                        'class' => 'form-grid',
+                        'name' => 'user-data-form',
+                ],
+                'fieldConfig' => [
+                        'template' => "{input}\n{hint}\n{error}",
+                        'options' => [
+                                'class' => 'field-wrapper',
+                        ],
+                ]
+        ]); ?>
         <div class="form-grid">
             <label class="field"><?= I18n::translate('name') ?>
-                <input value="<?= $user->additional->first_name ?>" disabled>
+                <?= $form->field($studentDataModel, 'first_name')->textInput(['readonly' => 'readonly'])->label(false) ?>
             </label>
             <label class="field"><?= I18n::translate('surname') ?>
-                <input value="<?= $user->additional->last_name ?>" disabled>
+                <?= $form->field($studentDataModel, 'last_name')->textInput(['readonly' => 'readonly'])->label(false) ?>
             </label>
             <label class="field"><?= I18n::translate('dob') ?>
-                <input value="<?= $user->additional->dob ?>" disabled>
+                <?= $form->field($studentDataModel, 'dob')->textInput(['readonly' => 'readonly', 'type' => 'date'])->label(false) ?>
             </label>
             <label class="field"><?= I18n::translate('passport_details') ?>
-                <input value="••••••••" disabled>
+                <?= $form->field($studentDataModel, 'passport_details')->textInput([])->label(false) ?>
             </label>
             <label class="field"><?= I18n::translate('phone') ?>
-                <input value="<?= $user->additional->phone ?>">
+                <?= $form->field($studentDataModel, 'phone')->textInput([])->label(false) ?>
             </label>
             <label class="field"><?= I18n::translate('email') ?>
-                <input value="<?= $user->email ?>">
+                <?= $form->field($studentDataModel, 'email')->textInput([])->label(false) ?>
             </label>
             <label class="field"><?= I18n::translate('faculty_specialty') ?>
                 <input value="<?= $facultyTitle ?> / <?= $chairTitle ?>" disabled>
             </label>
-        </div>
 
-        <button class="btn"><?= I18n::translate('save_allowed_changes') ?></button>
+        </div>
+        <?= Html::submitButton(I18n::translate('save_allowed_changes'), ['class' => 'btn', 'value' => 1]) ?>
+
+        <?php ActiveForm::end(); ?>
     </section>
     <section id="card" class="module-section"><h2><?= I18n::translate('electronic_student_id') ?></h2>
         <div class="panel">

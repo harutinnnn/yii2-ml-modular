@@ -20,3 +20,7 @@
 .login-visual {
     background: url('/images/home/campus-night.jpg') center/cover
 }
+
+.success-message {
+    color: #19aa19;
+}

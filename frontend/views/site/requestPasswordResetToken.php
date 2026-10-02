@@ -12,8 +12,8 @@ use yii\widgets\ActiveForm;
 
 <section class="login-panel"><a class="brand-login" href="/<?= Yii::$app->globalData->lang ?>">
         <img src="/images/logo_am.svg" alt="ՀՊՏՀ"></a>
-    <div class="eyebrow red">Անձնական համակարգ</div>
-    <h1>Վերականգնել գաղտնաբառը</h1>
+    <div class="eyebrow red"><?= I18n::translate('personal_system') ?></div>
+    <h1><?= I18n::translate('reset_password') ?></h1>
     <?php $form = ActiveForm::begin([
             'options' => [
                     'class' => 'login-form',
@@ -27,13 +27,16 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <div class="field">
-        <label>Էլ. փոստ / օգտանուն</label>
+        <label><?= I18n::translate('email') ?></label>
         <?= $form->field($model, 'email')->textInput(['id' => 'email'])->label(false) ?>
     </div>
 
 
-    <?= Html::submitButton(I18n::translate('Վերականգնել') . '→', ['class' => 'btn-red']) ?>
-    <a href="/<?= Yii::$app->globalData->lang ?>/forgot-password" style="font-size:12px;color:#8e1728">Մուտք գործել</a></form>
+    <?= Html::submitButton(I18n::translate(I18n::translate('restore')) . '→', ['class' => 'btn-red']) ?>
+    <a href="/<?= Yii::$app->globalData->lang ?>/forgot-password" style="font-size:12px;color:#8e1728">
+        <?= I18n::translate('log_in') ?>
+    </a>
+
 
     <?php ActiveForm::end(); ?>
 </section>

@@ -80,8 +80,6 @@ class SiteController extends MyController
      */
     public function actionIndex()
     {
-
-
         return $this->render('index',
             [
                 'facultiesCount' => Faculties::find()->count(),

@@ -17,7 +17,7 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
         <div class="status-box">
             <strong><?= I18n::translate('current_student') ?></strong>
             <span>
-                <?= $facultyTitle ?> · <?= $user->additional->course ?>-<?= $user->additional->course == 1 ? 'ին' : 'րդ' ?> <?= I18n::translate('course') ?> · K-301
+                <?= $facultyTitle ?> · <?= $user->additional->course ?>-<?= $user->additional->course == 1 ? 'ին' : 'րդ' ?> <?= I18n::translate('course') ?> ·  <?= $user->additional->student_id ?>
             </span>
         </div>
     </section>

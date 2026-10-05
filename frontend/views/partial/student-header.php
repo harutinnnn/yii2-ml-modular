@@ -21,8 +21,10 @@ $userAdditional = $user?->additional ?? null;
     <span class="module-user">
         <?= Html::beginForm(['/' . Yii::$app->globalData->lang . '/logout'], 'post', ['id' => 'logoutForm']) ?>
 
+
+        <?= $userAdditional->first_name ?> <?= $userAdditional->first_name ?> ·
         <a href="javascript:void(0)" onclick="$('#logoutForm').submit()">
-            <?= $userAdditional->first_name ?> <?= $userAdditional->first_name ?> · <?= \common\components\I18n::translate('sign_out') ?>
+        <?= \common\components\I18n::translate('sign_out') ?>
         </a>
 
         <?= Html::endForm() ?>

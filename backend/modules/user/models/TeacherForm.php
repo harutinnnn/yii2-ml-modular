@@ -23,7 +23,7 @@ use Yii;
  * @property string $last_name
  * @property string $phone
  * @property string $email
- * @property string $university_email
+ * @property string $contact_email
  * @property string $teacher_academic_degree
  * @property string $teacher_position
  * @property int $faculty
@@ -47,7 +47,7 @@ class TeacherForm extends \yii\base\Model
     public $last_name;
     public $phone;
     public $email;
-    public $university_email;
+    public $contact_email;
     public $teacher_academic_degree;
     public $teacher_position;
     public $faculty;
@@ -79,7 +79,7 @@ class TeacherForm extends \yii\base\Model
             $this->last_name = (string)$user->additional->last_name ?? "";
             $this->phone = (string)$user->additional->phone ?? "";
             $this->email = (string)$user->email;
-            $this->university_email = (string)$user->university_email;
+            $this->contact_email = (string)$user->contact_email;
             $this->teacher_academic_degree = (string)$user->additional->teacher_academic_degree ?? "";
             $this->teacher_position = (string)$user->additional->teacher_position ?? "";
             $this->faculty = (int)$user->additional->faculty;
@@ -117,7 +117,7 @@ class TeacherForm extends \yii\base\Model
             'last_name',
             'phone',
             'email',
-            'university_email',
+            'contact_email',
             'teacher_academic_degree',
             'teacher_position',
             'faculty',
@@ -131,7 +131,7 @@ class TeacherForm extends \yii\base\Model
             'last_name',
             'phone',
             'email',
-            'university_email',
+            'contact_email',
             'teacher_academic_degree',
             'teacher_position',
             'faculty',
@@ -154,14 +154,14 @@ class TeacherForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'faculty', 'chair', 'phone', 'university_email',], 'required'],
-            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'phone', 'university_email',], 'string'],
+            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'faculty', 'chair', 'phone', 'contact_email',], 'required'],
+            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'phone', 'contact_email',], 'string'],
             [['status', 'created_at', 'faculty', 'chair', 'updated_at'], 'integer'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
             [['email'], 'required', 'on' => self::SCENARIO_CREATE],
             ['email', 'email', 'on' => self::SCENARIO_CREATE],
-            ['university_email', 'email'],
+            ['contact_email', 'email'],
 
             [
                 'email',
@@ -172,10 +172,10 @@ class TeacherForm extends \yii\base\Model
                 'on' => self::SCENARIO_CREATE
             ],
             [
-                'university_email',
+                'contact_email',
                 'unique',
                 'targetClass' =>Teacher::class,
-                'targetAttribute' => 'university_email',
+                'targetAttribute' => 'contact_email',
                 'filter' => function ($query) {
                     if ($this->id) {
                         $query->andWhere(['<>', 'id', $this->id]);
@@ -197,7 +197,7 @@ class TeacherForm extends \yii\base\Model
             'last_name' => 'Last name',
             'phone' => 'Phone',
             'email' => 'Email',
-            'university_email' => 'University email',
+            'contact_email' => 'Contact email',
             'teacher_academic_degree' => 'Academic degree',
             'teacher_position' => 'Teacher position',
             'faculty' => 'Faculty',
@@ -233,7 +233,7 @@ class TeacherForm extends \yii\base\Model
             $user = $this->user ?? new Teacher();
             $user->status = StatusList::STATUS_INACTIVE;
             $user->email = $this->email;
-            $user->university_email = $this->university_email;
+            $user->contact_email = $this->contact_email;
             $passHash = Yii::$app->security->generatePasswordHash($pass);
             $user->password_hash = $passHash;
             $user->auth_key = Yii::$app->security->generateRandomString();

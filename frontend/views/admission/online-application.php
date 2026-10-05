@@ -42,7 +42,7 @@ $content = $this->context->pageData['content'];
 
                 <div class="field">
                     <label for="email"><?= I18n::translate('email') ?></label>
-                    <?= $form->field($model, 'email')->textInput(['id' => 'email'])->label(false) ?>
+                    <?= $form->field($model, 'contact_email')->textInput(['id' => 'contact_email'])->label(false) ?>
                 </div>
 
                 <div class="field">

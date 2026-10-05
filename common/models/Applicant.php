@@ -14,7 +14,7 @@ use Yii;
  * @property string $password_hash
  * @property string|null $password_reset_token
  * @property string $email
- * @property string $university_email
+ * @property string $contact_email
  * @property string $first_name
  * @property string $last_name
  * @property int $status
@@ -49,9 +49,9 @@ class Applicant extends \yii\db\ActiveRecord
             [['status'], 'default', 'value' => 10],
             [['email'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['password_reset_token', 'email', 'verification_token','university_email'], 'string', 'max' => 255],
-            [['email','university_email'], 'unique'],
-            [['email','university_email'], 'email'],
+            [['password_reset_token', 'email', 'verification_token','contact_email'], 'string', 'max' => 255],
+            [['email','contact_email'], 'unique'],
+            [['email','contact_email'], 'email'],
             [['password_reset_token'], 'unique'],
         ];
     }
@@ -68,7 +68,7 @@ class Applicant extends \yii\db\ActiveRecord
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',
             'email' => 'Email',
-            'university_email' => 'University email',
+            'contact_email' => 'Contact email',
             'status' => 'Status',
             'first_name' => 'First name',
             'last_name' => 'Last name',

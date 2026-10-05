@@ -35,7 +35,7 @@ class StudentForm extends \yii\base\Model
     public $id;
     public $status;
     public $email;
-    public $university_email;
+    public $contact_email;
     public $phone;
     public $education_level;
     public $educational_programs;
@@ -74,7 +74,7 @@ class StudentForm extends \yii\base\Model
             $this->last_name = (string)$user->additional->last_name ?? "";
             $this->phone = (string)$user->additional->phone ?? "";
             $this->email = (string)$user->email;
-            $this->university_email = (string)$user->university_email;
+            $this->contact_email = (string)$user->contact_email;
             $this->created_at = $user->created_at;
 
             if ($user->userAdmissionData) {
@@ -129,7 +129,7 @@ class StudentForm extends \yii\base\Model
 
         $scenarios[self::SCENARIO_CREATE] = [
             'email',
-            'university_email',
+            'contact_email',
             'phone',
             'status',
             'first_name',
@@ -170,15 +170,15 @@ class StudentForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'university_email', 'faculty', 'chair','dob','course'], 'required'],
-            [['first_name', 'last_name', 'phone', 'university_email',], 'string'],
+            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'contact_email', 'faculty', 'chair','dob','course'], 'required'],
+            [['first_name', 'last_name', 'phone', 'contact_email',], 'string'],
             [['status', 'education_level', 'educational_programs', 'faculty', 'chair', 'created_at', 'updated_at','course'], 'integer'],
             [['dob'], 'date', 'format' => 'php:Y-m-d'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
             [['email'], 'required', 'on' => self::SCENARIO_CREATE],
             ['email', 'email', 'on' => self::SCENARIO_CREATE],
-            ['university_email', 'email'],
+            ['contact_email', 'email'],
 
             [
                 'email',
@@ -189,10 +189,10 @@ class StudentForm extends \yii\base\Model
                 'on' => self::SCENARIO_CREATE
             ],
             [
-                'university_email',
+                'contact_email',
                 'unique',
                 'targetClass' => Student::class,
-                'targetAttribute' => 'university_email',
+                'targetAttribute' => 'contact_email',
                 'filter' => function ($query) {
                     if ($this->id) {
                         $query->andWhere(['<>', 'id', $this->id]);
@@ -216,7 +216,7 @@ class StudentForm extends \yii\base\Model
             'chair' => 'Chair',
             'course' => 'Course',
             'email' => 'Email',
-            'university_email' => 'University email',
+            'contact_email' => 'Contact email',
             'phone' => 'Phone',
             'status' => 'Status',
             'first_name' => 'First name',

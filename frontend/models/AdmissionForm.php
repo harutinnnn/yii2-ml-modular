@@ -12,7 +12,7 @@ class AdmissionForm extends Model
 {
     public $name;
     public $surname;
-    public $email;
+    public $contact_email;
     public $phone;
     public $education_level;
     public $educational_programs;
@@ -26,14 +26,14 @@ class AdmissionForm extends Model
     public function rules()
     {
         return [
-            [['name', 'surname', 'email', 'phone', 'education_level', 'educational_programs','dob'], 'required'],
+            [['name', 'surname', 'contact_email', 'phone', 'education_level', 'educational_programs','dob'], 'required'],
             [['dob'], 'date', 'format' => 'php:Y-m-d'],
             ['consent_processing_personal_data', 'required', 'requiredValue' => 1, 'message' => 'The field is required.'],
             [['education_level', 'educational_programs'], 'integer', 'min' => 1],
-            ['email', 'email'],
-            ['email', 'unique',
+            ['contact_email', 'email'],
+            ['contact_email', 'unique',
                 'targetClass' => \common\models\User::class,
-                'targetAttribute' => 'email',
+                'targetAttribute' => 'contact_email',
                 'message' => 'This email is already registered.',
             ],
         ];

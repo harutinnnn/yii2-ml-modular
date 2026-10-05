@@ -94,7 +94,7 @@ use yii\widgets\ActiveForm;
             <div class="row">
 
                 <div class="col-md-6">
-                    <?= $form->field($model, "university_email")
+                    <?= $form->field($model, "contact_email")
                             ->textInput([
                                     'disabled' => intval($model->id) ? 'disabled' : false,
                                     'maxlength' => true,

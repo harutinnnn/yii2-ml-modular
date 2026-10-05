@@ -39,7 +39,7 @@ class ApplicantForm extends \yii\base\Model
     public $id;
     public $status;
     public $email;
-    public $university_email;
+    public $contact_email;
     public $phone;
     public $education_level;
     public $educational_programs;
@@ -76,7 +76,7 @@ class ApplicantForm extends \yii\base\Model
             $this->last_name = (string)$user->additional->last_name ?? "";
             $this->phone = (string)$user->additional->phone ?? "";
             $this->email = (string)$user->email;
-            $this->university_email = (string)$user->university_email;
+            $this->contact_email = (string)$user->contact_email;
             $this->created_at = $user->created_at;
 
             if ($user->userAdmissionData) {
@@ -129,7 +129,7 @@ class ApplicantForm extends \yii\base\Model
 
         $scenarios[self::SCENARIO_CREATE] = [
             'email',
-            'university_email',
+            'contact_email',
             'phone',
             'status',
             'first_name',
@@ -148,7 +148,8 @@ class ApplicantForm extends \yii\base\Model
             'last_name',
             'education_level',
             'educational_programs',
-            'university_email',
+            'contact_email',
+            'email',
             'faculty',
             'chair',
             'dob'
@@ -169,15 +170,15 @@ class ApplicantForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'university_email', 'dob', 'faculty', 'chair'], 'required'],
-            [['first_name', 'last_name', 'phone', 'university_email'], 'string'],
+            [['first_name', 'last_name', 'education_level', 'educational_programs', 'phone', 'contact_email', 'dob', 'faculty', 'chair'], 'required'],
+            [['first_name', 'last_name', 'phone', 'contact_email'], 'string'],
             [['dob'], 'date', 'format' => 'php:Y-m-d'],
             [['status', 'education_level', 'educational_programs', 'faculty', 'chair', 'created_at', 'updated_at'], 'integer'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
             [['email'], 'required', 'on' => self::SCENARIO_CREATE],
             ['email', 'email', 'on' => self::SCENARIO_CREATE],
-            ['university_email', 'email'],
+            ['contact_email', 'email'],
 
             [
                 'email',
@@ -189,10 +190,10 @@ class ApplicantForm extends \yii\base\Model
             ],
 
             [
-                'university_email',
+                'contact_email',
                 'unique',
                 'targetClass' => Applicant::class,
-                'targetAttribute' => 'university_email',
+                'targetAttribute' => 'contact_email',
                 'filter' => function ($query) {
                     if ($this->id) {
                         $query->andWhere(['<>', 'id', $this->id]);
@@ -215,7 +216,7 @@ class ApplicantForm extends \yii\base\Model
             'faculty' => 'Faculty',
             'chair' => 'Chair',
             'email' => 'Email',
-            'university_email' => 'University email',
+            'contact_email' => 'Contact email',
             'phone' => 'Phone',
             'status' => 'Status',
             'first_name' => 'First name',
@@ -294,7 +295,7 @@ class ApplicantForm extends \yii\base\Model
             $user = $this->user ?? new Applicant();
             $user->status = $this->status;
             $user->email = $this->email;
-            $user->university_email = $this->university_email;
+            $user->contact_email = $this->contact_email;
             $user->password = $pass;
             $user->auth_key = Yii::$app->security->generateRandomString();
 
@@ -396,7 +397,8 @@ class ApplicantForm extends \yii\base\Model
             $user = $this->user ?? new Applicant();
             $user->password_hash = $passHash;
             $user->password = $passHash;
-            $user->university_email = $this->university_email;
+            $user->contact_email = $this->contact_email;
+            $user->email = $this->email;
             $user->status = $this->status;
             $user->updated_at = time();
 

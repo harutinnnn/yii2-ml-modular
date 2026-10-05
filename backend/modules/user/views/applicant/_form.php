@@ -98,7 +98,7 @@ use yii\widgets\ActiveForm;
 
 
                 <div class="col-md-6">
-                    <?= $form->field($model, "university_email")
+                    <?= $form->field($model, "contact_email")
                             ->textInput([
                                     'maxlength' => true,
                                     'placeholder' => "Email",
@@ -106,20 +106,33 @@ use yii\widgets\ActiveForm;
                 </div>
 
                 <div class="col-md-6">
-                    <?= $form->field($model, "email")
-                            ->textInput([
-                                    'disabled' => intval($model->id) ? 'disabled' : false,
-                                    'maxlength' => true,
-                                    'placeholder' => "Email",
-                            ]) ?>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <?= $form->field($model, "email")
+                                    ->textInput([
+//                                    'disabled' => intval($model->id) ? 'disabled' : false,
+                                            'maxlength' => true,
+                                            'placeholder' => "Email",
+                                            'id' => 'email'
+                                    ]) ?>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+
+                                <label class="control-label">&nbsp;</label>
+                                <button type="button" class="btn btn-warning form-control"
+                                        onclick="generateNewEmail(this,<?= $id ?>, $('#email'))"><i class="fas fa-sync"></i>&nbsp;&nbsp;
+                                    Generate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-6">
                     <?= $form->field($model, "phone")
-                            ->textInput([
-                                    'maxlength' => true,
-                                    'placeholder' => "Phone",
-                            ]) ?>
+                    ->textInput(['maxlength' => true,
+                    'placeholder' => "Phone",]) ?>
                 </div>
             </div>
 
@@ -140,42 +153,66 @@ use yii\widgets\ActiveForm;
 <?php
 $this->registerJs(<<<JS
 
-        let educational_programs = {$model->educational_programs};
+    function generateNewEmail(e,id,emailObj){
+        
+    $.ajax({
+            type: 'GET',
+            url: '/admin/user/applicant/get-unique-email',
+            data: {id: id},
+            dataType: 'json',
+            beforeSend: function (data) {
+                $(e).attr('disabled',true)
+            },
+            success: function (data) {
+                if(data.success){
+                    $(emailObj).val(data.email)
+                }
+                $(e).attr('disabled',false)
+            },
+            error: function (data) {
+                $(e).attr('disabled',false)
+            }
+        })
+    
+    } 
+
+    let educational_programs = {$model->educational_programs};
 
     let education_level = $('#education_level');
 
     $('#education_level').change(function (){
-    getChairsByEducationLevel($(this).val())
+        getChairsByEducationLevel($(this).val())
     })
 
     function getChairsByEducationLevel(education_level) {
-    $.ajax({
-    type: 'GET',
-    url: '/admin/user/applicant/get-chairs',
-    data: {education_level: education_level},
-    dataType: 'json',
-    beforeSend: function (data) {
-    $('#education_level').attr('disabled',true)
-    $('#educational_programs').html('')
-    },
-    success: function (data) {
-    if(data){
-    $('#educational_programs').html('')
-
-    $.each(data,function (i,v){
-
-    let selected = (i.toString() === educational_programs.toString()) ? 'selected' : ''
-    $('#educational_programs').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
-
-    })
+        $.ajax({
+            type: 'GET',
+            url: '/admin/user/applicant/get-chairs',
+            data: {education_level: education_level},
+            dataType: 'json',
+            beforeSend: function (data) {
+                $('#education_level').attr('disabled',true)
+                $('#educational_programs').html('')
+            },
+            success: function (data) {
+            if(data){
+                $('#educational_programs').html('')
+        
+                $.each(data,function (i,v){
+        
+                let selected = (i.toString() === educational_programs.toString()) ? 'selected' : ''
+                $('#educational_programs').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
+        
+            })
+            }
+                $('#education_level').attr('disabled',false)
+            },
+            error: function (data) {
+                $('#education_level').attr('disabled',false)
+            }
+        })
     }
-    $('#education_level').attr('disabled',false)
-    },
-    error: function (data) {
-    $('#education_level').attr('disabled',false)
-    }
-    })
-    }
+    
     getChairsByEducationLevel(education_level.val())
 
 
@@ -184,37 +221,38 @@ $this->registerJs(<<<JS
     let faculty = $('#faculty');
 
     $('#faculty').change(function (){
-    getChairsByFaculty($(this).val())
+        getChairsByFaculty($(this).val())
     })
-
+    
     function getChairsByFaculty(faculty) {
-    $.ajax({
-    type: 'GET',
-    url: '/admin/user/teacher/get-chairs',
-    data: {faculty_id: faculty},
-    dataType: 'json',
-    beforeSend: function (data) {
-    $('#faculty').attr('disabled',true)
-    $('#chair').html('')
-    },
-    success: function (data) {
-    if(data){
-    $('#chair').html('')
-
-    $.each(data,function (i,v){
-
-    let selected = (i.toString() === chair.toString()) ? 'selected' : ''
-    $('#chair').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
-
-    })
+        $.ajax({
+            type: 'GET',
+            url: '/admin/user/teacher/get-chairs',
+            data: {faculty_id: faculty},
+            dataType: 'json',
+            beforeSend: function (data) {
+                $('#faculty').attr('disabled',true)
+                $('#chair').html('')
+            },
+            success: function (data) {
+                if(data){
+                    $('#chair').html('')
+                
+                    $.each(data,function (i,v){
+                
+                        let selected = (i.toString() === chair.toString()) ? 'selected' : ''
+                        $('#chair').append('<option value="'+i+'" '+selected+'>'+ v+'</option>');
+                
+                    })
+                }
+                $('#faculty').attr('disabled',false)
+            },
+            error: function (data) {
+                $('#faculty').attr('disabled',false)
+            }
+        })
     }
-    $('#faculty').attr('disabled',false)
-    },
-    error: function (data) {
-    $('#faculty').attr('disabled',false)
-    }
-    })
-    }
+    
     getChairsByFaculty(faculty.val())
 
 

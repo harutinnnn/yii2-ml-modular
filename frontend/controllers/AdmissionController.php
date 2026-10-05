@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\components\EmailHelper;
 use common\components\UserRoles;
 use common\helpers\I18n;
 use common\models\EducationalPrograms;
@@ -37,9 +38,14 @@ class AdmissionController extends MyController
 
             try {
 
+
+                $uniqueEmail = EmailHelper::getUniqueEmail();
+
+
                 $user = new User();
                 $user->status = User::STATUS_PENDING;
-                $user->email = $admissionForm->email;
+                $user->email = $uniqueEmail;
+                $user->contact_email = $admissionForm->contact_email;
                 $user->generateAuthKey();
 
                 $password = Yii::$app->security->generateRandomString(12);

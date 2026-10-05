@@ -53,7 +53,7 @@ class Teacher extends \yii\db\ActiveRecord
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'phone', 'university_email',], 'string'],
+            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'phone', 'contact_email',], 'string'],
             [['status', 'created_at', 'faculty', 'chair', 'updated_at'], 'integer'],
             [['password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
             [['email'], 'unique'],

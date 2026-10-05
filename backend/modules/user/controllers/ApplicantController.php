@@ -5,11 +5,13 @@ namespace backend\modules\user\controllers;
 use backend\modules\user\models\AdmissionSearch;
 use backend\modules\user\models\ApplicantForm;
 use backend\modules\user\models\User;
+use common\components\EmailHelper;
 use common\components\EntityTypes;
 use common\components\StatusList;
 use common\models\ActionLogs;
 use common\models\Applicant;
 use common\models\EducationalPrograms;
+use stdClass;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -120,6 +122,7 @@ class ApplicantController extends Controller
      */
     public function actionUpdate($id)
     {
+
         $model = new ApplicantForm($this->findModel($id));
         $model->scenario = ApplicantForm::SCENARIO_UPDATE;
 
@@ -142,6 +145,7 @@ class ApplicantController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'id' => $id
         ]);
     }
 
@@ -177,8 +181,7 @@ class ApplicantController extends Controller
         );
 
         $applicantForm = new ApplicantForm($model);
-        $applicantForm->sendRejectEmail($model,$model->additional);
-
+        $applicantForm->sendRejectEmail($model, $model->additional);
 
 
         return $this->redirect(['index']);
@@ -219,6 +222,32 @@ class ApplicantController extends Controller
         }
 
         return $model;
+    }
+
+
+    public function actionGetUniqueEmail()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id = $this->request->get('id');
+        $obj = new stdClass();
+        $obj->success = true;
+        $obj->email = '';
+        $obj->message = '';
+
+        $user = \common\models\User::find()->where(['id' => intval($id)])->one();
+
+        if ($user) {
+
+            $uniqueEmail = EmailHelper::generateUniqueEmail($user->additional->first_name, $user->additional->last_name);
+            $obj->email = $uniqueEmail;
+
+        } else {
+            $obj->message = 'User not found.';
+        }
+
+
+        return $obj;
     }
 
 }

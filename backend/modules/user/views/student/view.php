@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var backend\modules\user\models\ApplicantForm $model */
 
-$this->title = 'View user #' . $model->id;
+$this->title = 'View student #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Applicants', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);

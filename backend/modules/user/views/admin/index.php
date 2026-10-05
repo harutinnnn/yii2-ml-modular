@@ -10,13 +10,13 @@ use yii\grid\GridView;
 /** @var backend\modules\user\models\AdminUserSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Users';
+$this->title = 'Admins';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <?= Html::a('Create Applicant', ['create'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Create Admin', ['create'], ['class' => 'btn btn-primary']) ?>
     </div>
 
 

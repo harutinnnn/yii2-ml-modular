@@ -19,6 +19,10 @@ AppAsset::register($this);
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
         <link href="/css/homepages.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="/css/review-changes.css">
+        <script src="/js/site-config.js" defer></script>
+        <script src="/js/prototype.js" defer></script>
+        <link href="/css/site.css" rel="stylesheet"/>
     </head>
     <body class="o1 <?= Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index' ? '' : 'inner-v1' ?>"
           id="top">
@@ -27,6 +31,7 @@ AppAsset::register($this);
     <?= $this->render('//partial/header') ?>
     <?= $this->render('//partial/menu-popup') ?>
     <?= $this->render('//partial/search-popup') ?>
+
     <main>
 
         <?php if (Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index'): ?>
@@ -37,7 +42,7 @@ AppAsset::register($this);
 
         <?= $content ?>
     </main>
-
+    <?= $this->render('//partial/footer') ?>
 
     <?php $this->endBody() ?>
     </body>

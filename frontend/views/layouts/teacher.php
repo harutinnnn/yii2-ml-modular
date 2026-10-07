@@ -19,6 +19,7 @@ AppAsset::register($this);
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
         <link href="/css/spec-modules.css" rel="stylesheet"/>
+        <link href="/css/site.css" rel="stylesheet"/>
     </head>
     <body class="module-body" id="top">
     <?php $this->beginBody() ?>

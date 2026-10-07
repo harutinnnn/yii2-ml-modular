@@ -1,5 +1,12 @@
 (() => {
   const body = document.body;
+  const header = document.querySelector('.site-header');
+  if (header) {
+    const updateHeader = () => document.documentElement.classList.toggle('header-scrolled', window.scrollY > 32);
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    window.addEventListener('pageshow', updateHeader);
+  }
   const menu = document.querySelector('.menu-panel');
   const open = document.querySelector('[data-menu-open]');
   const close = document.querySelector('[data-menu-close]');

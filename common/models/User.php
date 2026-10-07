@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\UserRoles;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -84,6 +85,20 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findByEmail($email)
     {
         return static::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    /**
+     * Finds user by email
+     *
+     * @param string $email
+     * @return static|null
+     */
+    public static function findByEmailRole($email, $role)
+    {
+        return static::find()
+            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')
+//            ->where(['email' => $email, 'status' => self::STATUS_ACTIVE, 'aa.item_name' => $role])->one();
+            ->where(['email' => $email, 'status' => self::STATUS_ACTIVE])->one();
     }
 
     /**
@@ -229,4 +244,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasOne(UserAdditionalData::class, ['user_id' => 'id']);
     }
+
+
+    public function getRoles()
+    {
+        return $this->hasMany(AuthAssignment::class, ['user_id' => 'id']);
+    }
+
+
 }

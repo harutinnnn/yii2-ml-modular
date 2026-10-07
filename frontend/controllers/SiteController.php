@@ -96,8 +96,10 @@ class SiteController extends MyController
     {
         $this->layout = 'login';
 
+
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+
+            return LoginForm::userRoleAndRedirect(Yii::$app->user->identity->id, $this,Yii::$app->session->get('userType'));
         }
 
         $model = new LoginForm();
@@ -105,20 +107,8 @@ class SiteController extends MyController
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 
 
-            $roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
+            LoginForm::userRoleAndRedirect(Yii::$app->user->identity->id, $this,$model->usertype);
 
-            if (isset($roles[UserRoles::STUDENT])) {
-
-                return $this->redirect('/' . Yii::$app->globalData->lang . '/student/student-personal-dashboard');
-
-            } else if (isset($roles[UserRoles::TEACHER])) {
-
-                return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard');
-
-            } else {
-
-                return $this->goBack();
-            }
         }
 
         $model->password = '';

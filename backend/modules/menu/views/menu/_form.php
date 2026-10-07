@@ -28,6 +28,10 @@ $menuIdJson = Json::htmlEncode($menuId);
     <div class="card card-primary">
         <div class="card-body">
             <div class="row">
+                <div class="col-md-3"><?= $form->field($model, 'teacher_menu')->checkbox([]) ?></div>
+                <div class="col-md-3"><?= $form->field($model, 'student_menu')->checkbox([]) ?></div>
+            </div>
+            <div class="row">
                 <div class="col-md-3"><?= $form->field($model, 'status')->dropDownList(Menu::statusOptions()) ?></div>
                 <div class="col-md-3"><?= $form->field($model, 'show_in_menu')->dropDownList(Menu::booleanOptions()) ?></div>
                 <div class="col-md-2"><?= $form->field($model, 'position')->input('number') ?></div>

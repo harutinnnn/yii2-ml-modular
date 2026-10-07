@@ -2,6 +2,8 @@
 
 namespace common\models;
 
+use common\components\I18n;
+use common\components\UserRoles;
 use Yii;
 use yii\base\Model;
 
@@ -10,6 +12,7 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
+    public $usertype;
     public $email;
     public $password;
     public $rememberMe = true;
@@ -24,11 +27,12 @@ class LoginForm extends Model
     {
         return [
             // email and password are both required
-            [['email', 'password'], 'required'],
+            [['email', 'password', 'usertype'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            ['usertype', 'validateUserRole'],
         ];
     }
 
@@ -45,6 +49,27 @@ class LoginForm extends Model
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect email or password.');
+            }
+        }
+    }
+
+    public function validateUserRole($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+
+            if (!$user) {
+                $this->addError($attribute, 'Incorrect email or password.');
+            } else if ($user && $user->roles) {
+                $isRole = false;
+                foreach ($user->roles as $role) {
+                    if ($role->item_name == $this->usertype) {
+                        $isRole = true;
+                    }
+                }
+                if (!$isRole) {
+                    $this->addError($attribute, 'You dont have permission of role ' . I18n::translate($this->usertype));
+                }
             }
         }
     }
@@ -68,12 +93,37 @@ class LoginForm extends Model
      *
      * @return User|null
      */
-    protected function getUser()
+    protected function getUser($userType = null)
     {
         if ($this->_user === null) {
-            $this->_user = User::findByEmail($this->email);
+            $this->_user = User::findByEmailRole($this->email, $this->usertype);
         }
 
         return $this->_user;
     }
+
+
+    public static function userRoleAndRedirect($id, $controller, $usertype = null)
+    {
+
+        Yii::$app->session->set('userType', $usertype);
+
+        if ($usertype == UserRoles::STUDENT) {
+
+            return $controller->redirect('/' . Yii::$app->globalData->lang . '/student/student-personal-dashboard');
+
+        } else if ($usertype == UserRoles::TEACHER) {
+
+            return $controller->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard');
+
+        } else if ($usertype == UserRoles::ADMINISTRATIVE_STAFF) {
+
+            return $controller->redirect('/' . Yii::$app->globalData->lang . '/administrative/personal-dashboard');
+
+        } else {
+
+            return $controller->goHome();
+        }
+    }
+
 }

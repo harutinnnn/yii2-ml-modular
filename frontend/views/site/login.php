@@ -27,6 +27,12 @@ use yii\widgets\ActiveForm;
             ]
     ]); ?>
 
+    <label class="field">Օգտվողի տեսակ
+
+        <?= $form->field($model, 'usertype')->dropDownList(\common\components\UserRoles::getLoginUserTypeOptions())->label(false) ?>
+
+    </label>
+
     <div class="field">
         <label><?= I18n::translate('email_username') ?></label>
         <?= $form->field($model, 'email')->textInput(['id' => 'email'])->label(false) ?>

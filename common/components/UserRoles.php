@@ -11,4 +11,16 @@ class UserRoles
     const STUDENT = 'student';
     const TEACHER = 'teacher';
 
+
+    public static function getLoginUserTypeOptions(): array
+    {
+
+        return [
+            self::STUDENT => I18n::translate(self::STUDENT),
+            self::TEACHER => I18n::translate(self::TEACHER),
+            self::ADMINISTRATIVE_STAFF => I18n::translate(self::ADMINISTRATIVE_STAFF),
+        ];
+
+    }
+
 }

@@ -32,7 +32,6 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
         <?php endif; ?>
         <?php $form = ActiveForm::begin([
                 'options' => [
-//                        'class' => 'form-grid',
                         'name' => 'user-data-form',
                 ],
                 'fieldConfig' => [
@@ -42,6 +41,7 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
                         ],
                 ]
         ]); ?>
+
         <div class="form-grid">
             <label class="field"><?= I18n::translate('name') ?>
                 <?= $form->field($studentDataModel, 'first_name')->textInput(['readonly' => 'readonly'])->label(false) ?>

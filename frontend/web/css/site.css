@@ -24,3 +24,15 @@
 .success-message {
     color: #19aa19;
 }
+
+.o1-hero {
+    background: url(/images/home/graduates-close.jpg) center / cover no-repeat !important;
+}
+
+.program-tile.two {
+    background: url(/images/home/student-discussion.jpg) center/cover !important;
+}
+
+.login-visual {
+    background-image: url(/images/home/campus-night.jpg) !important;
+}

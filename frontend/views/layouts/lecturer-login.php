@@ -19,6 +19,7 @@ AppAsset::register($this);
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
         <link href="/css/homepages.css" rel="stylesheet"/>
+        <link href="/css/site.css" rel="stylesheet"/>
     </head>
     <body class="inner-v1">
     <?php $this->beginBody() ?>

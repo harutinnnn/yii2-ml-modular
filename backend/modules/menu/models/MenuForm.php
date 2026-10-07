@@ -16,6 +16,8 @@ class MenuForm extends Model
 {
     public ?Menu $menu = null;
     public int $status = Menu::STATUS_PUBLISHED;
+    public int $teacher_menu = 0;
+    public int $student_menu = 0;
     public int $show_in_menu = 1;
     public ?int $position = null;
     public ?int $content_id = null;
@@ -37,6 +39,8 @@ class MenuForm extends Model
 
         if ($this->menu !== null) {
             $this->status = (int)$this->menu->status;
+            $this->teacher_menu = (int)$this->menu->teacher_menu;
+            $this->student_menu = (int)$this->menu->student_menu;
             $this->show_in_menu = (int)$this->menu->show_in_menu;
             $this->position = $this->menu->position;
             $this->content_id = $this->menu->content_id;
@@ -71,7 +75,7 @@ class MenuForm extends Model
     {
         return [
             [['status', 'show_in_menu', 'url', 'section_id'], 'required'],
-            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id'], 'integer'],
+            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id','student_menu','teacher_menu'], 'integer'],
             [['status'], 'in', 'range' => array_keys(Menu::statusOptions())],
             [['show_in_menu'], 'in', 'range' => [0, 1]],
             [['url'], 'string', 'max' => 255],
@@ -107,6 +111,8 @@ class MenuForm extends Model
             'url' => 'URL',
             'imageFile' => 'Image',
             'headerImageFile' => 'Header Image',
+            'teacher_menu' => 'Teacher menu',
+            'student_menu' => 'Student menu',
         ];
     }
 
@@ -131,6 +137,8 @@ class MenuForm extends Model
 
         $menu = $this->menu ?? new Menu();
         $menu->status = $this->status;
+        $menu->teacher_menu = $this->teacher_menu;
+        $menu->student_menu = $this->student_menu;
         $menu->show_in_menu = $this->show_in_menu;
         $menu->position = $this->position;
         $menu->content_id = $this->content_id ?: null;

@@ -53,8 +53,9 @@ return [
                 'verify-email' => 'site/verify-email',
 
                 //login
-                '<language:(en|ru|am)>/lecturers/teacher-login' => 'site/login',
-                '<language:(en|ru|am)>/student/student-login' => 'site/login',
+                '<language:(en|ru|am)>/login' => 'site/login',
+//                '<language:(en|ru|am)>/lecturers/teacher-login' => 'site/login',
+//                '<language:(en|ru|am)>/student/student-login' => 'site/login',
 
                 '<language:(en|ru|am)>/forgot-password' => 'site/request-password-reset',
 

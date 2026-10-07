@@ -3,15 +3,18 @@
 namespace frontend\controllers;
 
 use common\components\EntityTypes;
+use common\components\I18n;
 use common\components\UserRoles;
-use common\helpers\I18n;
 use common\models\ActionLogs;
+use common\models\ApplicationsAndInquiries;
 use common\models\Chairs;
 use common\models\Faculties;
+use common\models\ScientificPortfolio;
 use common\models\User;
 use frontend\models\StudentDataForm;
 use frontend\models\StudentLoginForm;
 use Yii;
+use yii\filters\VerbFilter;
 
 /**
  * Site controller
@@ -24,13 +27,11 @@ class StudentController extends MyController
 
         // Your check
         if (Yii::$app->user->isGuest) {
-            return $this->redirect(['/site/student-login']);
+            return $this->redirect(['/site/login']);
         } else {
 
-            $roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
-
-            if (!isset($roles[UserRoles::STUDENT])) {
-                return $this->redirect('/' . Yii::$app->globalData->lang . '/site/student-login');
+            if ($this->userType != UserRoles::STUDENT) {
+                return $this->redirect('/' . Yii::$app->globalData->lang . '/site/login');
             }
 
         }
@@ -71,12 +72,13 @@ class StudentController extends MyController
         $studentDataModel->passport_details = $user->additional->passport_details;
         $studentDataModel->phone = $user->additional->phone;
         $studentDataModel->email = $user->email;
+        $studentDataModel->contact_email = $user->contact_email;
 
         $changedValues = $studentDataModel->attributes;
 
         if ($studentDataModel->load(Yii::$app->request->post()) && $studentDataModel->validate()) {
 
-            $user->email = $studentDataModel->email;
+            $user->contact_email = $studentDataModel->contact_email;
             $user->save(false);
 
             $user->additional->passport_details = $studentDataModel->passport_details;
@@ -85,7 +87,7 @@ class StudentController extends MyController
 
             //TODO set flash message data
 
-            Yii::$app->session->setFlash('message',\common\components\I18n::translate('user_data_successfully_updated'));
+            Yii::$app->session->setFlash('message', I18n::translate('user_data_successfully_updated'));
 
 
             ActionLogs::log(
@@ -95,12 +97,39 @@ class StudentController extends MyController
                 $changedValues,
                 $studentDataModel->attributes,
             );
+            return $this->refresh();
+        }
 
-            return $this->redirect('/'.Yii::$app->globalData->lang.'/student/student-personal-dashboard');
+        $applicationsAndInquiries = new ApplicationsAndInquiries();
+        $applicationsAndInquiries->user_id = $userId;
 
+        if ($applicationsAndInquiries->load(Yii::$app->request->post()) && $applicationsAndInquiries->validate()) {
+            $applicationsAndInquiries->created_at = time();
+            $applicationsAndInquiries->updated_at = time();
+            $applicationsAndInquiries->save();
+
+
+            Yii::$app->session->setFlash('applications_and_inquiries_message', I18n::translate('applications_and_inquiries_message_sent'));
+            return $this->refresh('#requests');
+        }
+
+        $scientificPortfolio = new ScientificPortfolio();
+        $scientificPortfolio->user_id = $userId;
+        if ($scientificPortfolio->load(Yii::$app->request->post()) && $scientificPortfolio->validate()) {
+
+            $scientificPortfolio->created_at = time();
+            $scientificPortfolio->updated_at = time();
+
+
+            $scientificPortfolio->save();
+
+            Yii::$app->session->setFlash('portfolio_message', I18n::translate('the_scientific_work_has_been_added_portfolio'));
+
+            return $this->refresh('#portfolio');
         }
 
 
+        $applicationsAndInquiriesList = ApplicationsAndInquiries::find()->where(['user_id' => $userId])->all();
 
 
         return $this->render('student-personal-dashboard',
@@ -109,6 +138,9 @@ class StudentController extends MyController
                 'user' => $user,
                 'faculty' => $faculty,
                 'chair' => $chair,
+                'applicationsAndInquiries' => $applicationsAndInquiries,
+                'applicationsAndInquiriesList' => $applicationsAndInquiriesList,
+                'scientificPortfolio' => $scientificPortfolio,
             ],
         );
     }

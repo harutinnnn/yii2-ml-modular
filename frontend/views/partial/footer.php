@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="footer-top">
             <div class="footer-brand">
-                <img alt="ՀՊՏՀ" src="assets/logo_am.svg">
+                <img alt="ՀՊՏՀ" src="/images/logo_am.svg">
                 <p>
                     Հայաստանի պետական տնտեսագիտական համալսարան. կրթություն, հետազոտություն և մասնագիտական զարգացում՝
                     տնտեսագիտության և կառավարման ոլորտներում։

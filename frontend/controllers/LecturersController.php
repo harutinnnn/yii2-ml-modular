@@ -23,10 +23,8 @@ class LecturersController extends MyController
             return $this->redirect(['/site/login']);
         } else {
 
-            $roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
-
-            if (!isset($roles[UserRoles::TEACHER])) {
-                return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturers/teacher-login');
+            if ($this->userType != UserRoles::TEACHER) {
+                return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturers/login');
             }
 
         }

@@ -16,6 +16,7 @@ class StudentDataForm extends Model
     public $passport_details;
     public $phone;
     public $email;
+    public $contact_email;
 
 
     /**
@@ -24,7 +25,7 @@ class StudentDataForm extends Model
     public function rules()
     {
         return [
-            [['first_name', 'last_name','dob', 'passport_details','phone','email'], 'required'],
+            [['first_name', 'last_name','dob', 'passport_details','phone','email','contact_email'], 'required'],
 //            [['passport_details', 'phone', 'email'], 'required'],
             [['first_name', 'last_name', 'phone', 'passport_details', 'email'], 'string'],
             [['dob'], 'date', 'format' => 'php:Y-m-d'],
@@ -33,6 +34,17 @@ class StudentDataForm extends Model
                 'targetClass' => \common\models\User::class,
                 'targetAttribute' => 'email',
                 'message' => 'This email is already registered.',
+                'filter' => function ($query) {
+                    if ($this->id) {
+                        $query->andWhere(['<>', 'id', $this->id]);
+                    }
+                },
+            ],
+            ['contact_email', 'email'],
+            ['contact_email', 'unique',
+                'targetClass' => \common\models\User::class,
+                'targetAttribute' => 'contact_email',
+                'message' => 'This contact email is already registered.',
                 'filter' => function ($query) {
                     if ($this->id) {
                         $query->andWhere(['<>', 'id', $this->id]);

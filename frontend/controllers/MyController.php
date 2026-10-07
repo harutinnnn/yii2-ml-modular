@@ -22,6 +22,8 @@ class MyController extends Controller
     {
         parent::__construct($id, $module, $config);
 
+        $this->userType = Yii::$app->session->get('userType') ?? null;
+
         $lang = Yii::$app->request->get('language');
         if (in_array($lang, ['en', 'ru', 'am'])) {
             $this->lang = $lang;

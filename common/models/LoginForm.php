@@ -106,6 +106,22 @@ class LoginForm extends Model
     public static function userRoleAndRedirect($id, $controller, $usertype = null)
     {
 
+
+        if (!$usertype) {
+
+            $auth = Yii::$app->authManager;
+            $roles = $auth->getRolesByUser(Yii::$app->user->id);
+
+            if (!empty($roles)) {
+                $roleKeys = array_keys($roles);
+                $usertype = reset($roleKeys);
+            }else{
+                Yii::$app->user->logout();
+                return $controller->redirect('/' . Yii::$app->globalData->lang . '/login');
+            }
+        }
+
+
         Yii::$app->session->set('userType', $usertype);
 
         if ($usertype == UserRoles::STUDENT) {

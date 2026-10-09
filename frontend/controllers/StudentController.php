@@ -11,10 +11,12 @@ use common\models\Chairs;
 use common\models\Faculties;
 use common\models\ScientificPortfolio;
 use common\models\User;
+use frontend\models\ScientificPortfolioForm;
 use frontend\models\StudentDataForm;
 use frontend\models\StudentLoginForm;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -52,14 +54,8 @@ class StudentController extends MyController
 
         $userId = Yii::$app->user->id;
 
-        $roles = Yii::$app->authManager->getRolesByUser($userId);
 
         $user = User::findOne($userId);
-
-        //Check if user role not student then redirect yo home
-        if (!isset($roles[UserRoles::STUDENT])) {
-            return $this->redirect('/' . Yii::$app->globalData->lang);
-        }
 
         $faculty = Faculties::findOne($user->additional->faculty);
         $chair = Chairs::findOne($user->additional->chair);
@@ -113,15 +109,19 @@ class StudentController extends MyController
             return $this->refresh('#requests');
         }
 
-        $scientificPortfolio = new ScientificPortfolio();
+        $scientificPortfolio = new ScientificPortfolioForm();
         $scientificPortfolio->user_id = $userId;
         if ($scientificPortfolio->load(Yii::$app->request->post()) && $scientificPortfolio->validate()) {
+
+            $scientificPortfolio->file = UploadedFile::getInstance($scientificPortfolio, 'file');
 
             $scientificPortfolio->created_at = time();
             $scientificPortfolio->updated_at = time();
 
 
+
             $scientificPortfolio->save();
+
 
             Yii::$app->session->setFlash('portfolio_message', I18n::translate('the_scientific_work_has_been_added_portfolio'));
 

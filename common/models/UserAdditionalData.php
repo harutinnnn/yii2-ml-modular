@@ -27,6 +27,12 @@ use Yii;
  * @property int|null $student_number
  * @property int|null $year
  *
+ *
+ * @property string|null $teacher_language_proficiency
+ * @property string|null $teacher_work_experience
+ * @property string|null $teacher_certificates
+ * @property string|null $teacher_subjects_taught
+ *
  * @property Statuses $studentStatus
  * @property User $user
  */
@@ -48,11 +54,17 @@ class UserAdditionalData extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['middle_name', 'dob', 'passport_details', 'phone', 'faculty', 'chair', 'profession', 'course', 'group', 'student_status','teacher_academic_degree','teacher_position','student_id'], 'default', 'value' => null],
+            [[
+                'middle_name', 'dob', 'passport_details', 'phone', 'faculty',
+                'chair', 'profession', 'course', 'group', 'student_status', 'teacher_academic_degree',
+                'teacher_position', 'student_id'], 'default', 'value' => null],
             [['user_id', 'first_name', 'last_name'], 'required'],
-            [['user_id', 'student_status','course'], 'integer'],
+            [['user_id', 'student_status', 'course'], 'integer'],
             [['dob'], 'safe'],
-            [['first_name', 'last_name', 'middle_name', 'passport_details', 'faculty'], 'string', 'max' => 100],
+            [[
+                'first_name', 'last_name', 'middle_name', 'passport_details', 'faculty',
+                'teacher_language_proficiency', 'teacher_work_experience', 'teacher_certificates', 'teacher_subjects_taught',
+            ], 'string', 'max' => 100],
             [['phone'], 'string', 'max' => 25],
             [['chair', 'profession'], 'string', 'max' => 150],
             [['group'], 'string', 'max' => 255],

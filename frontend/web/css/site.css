@@ -36,3 +36,11 @@
 .login-visual {
     background-image: url(/images/home/campus-night.jpg) !important;
 }
+
+.d-none{
+    display: none !important;
+}
+
+.field input, .field select{
+    height: 50px;
+}

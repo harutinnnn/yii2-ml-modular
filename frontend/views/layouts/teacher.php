@@ -31,7 +31,10 @@ AppAsset::register($this);
         <?= $content ?>
     </main>
 
-    <footer class="module-footer">Հիմնական տվյալները կարող է փոփոխել միայն լիազորված ադմինիստրատորը։</footer>
+    <footer class="module-footer">Գիտական տվյալները կիրառվում են անհատական, ամբիոնային և համալսարանական
+        հաշվետվություններում։
+    </footer>
+    <noscript>Անձնական համակարգից օգտվելու համար միացրեք JavaScript-ը։</noscript>
     <script src="/js/spec-modules.js"></script>
 
     <?php $this->endBody() ?>

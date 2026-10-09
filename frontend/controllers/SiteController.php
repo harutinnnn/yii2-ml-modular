@@ -101,7 +101,6 @@ class SiteController extends MyController
 
             return LoginForm::userRoleAndRedirect(Yii::$app->user->identity->id, $this,Yii::$app->session->get('userType'));
         }
-
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {

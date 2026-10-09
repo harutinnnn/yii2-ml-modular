@@ -12,6 +12,7 @@ use Yii;
  * @property int $user_id
  * @property string $job_title
  * @property string $type
+ * @property string|null $content_type
  * @property string $file_or_url
  * @property int $created_at
  * @property int $updated_at
@@ -27,7 +28,8 @@ class ScientificPortfolio extends \yii\db\ActiveRecord
     const TYPE_ARTICLE = 'article';
     const TYPE_REPORT = 'report';
     const TYPE_RESEARCH = 'research';
-
+    const CONTENT_TYPE_FILE = 'file';
+    const CONTENT_TYPE_URL = 'url';
     /**
      * {@inheritdoc}
      */
@@ -42,12 +44,14 @@ class ScientificPortfolio extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['content_type'], 'default', 'value' => 'url'],
             [['user_id', 'job_title', 'type', 'file_or_url'], 'required'],
             [['user_id', 'created_at', 'updated_at'], 'integer'],
-            [['type'], 'string'],
+            [['type', 'content_type'], 'string'],
             [['job_title', 'file_or_url'], 'string', 'max' => 255],
             ['type', 'in', 'range' => array_keys(self::optsType())],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            ['content_type', 'in', 'range' => array_keys(self::optsContentType())],
         ];
     }
 
@@ -61,9 +65,22 @@ class ScientificPortfolio extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'job_title' => 'Job Title',
             'type' => 'Type',
+            'content_type' => 'Content Type',
             'file_or_url' => 'File Or Url',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * column content_type ENUM value labels
+     * @return string[]
+     */
+    public static function optsContentType()
+    {
+        return [
+            self::CONTENT_TYPE_URL => I18n::translate(self::CONTENT_TYPE_URL),
+            self::CONTENT_TYPE_FILE => I18n::translate(self::CONTENT_TYPE_FILE),
         ];
     }
 

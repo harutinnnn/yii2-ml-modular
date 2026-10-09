@@ -142,7 +142,8 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
             <div class="field full">
                 <?= Html::submitButton(I18n::translate('submit'), ['class' => 'btn', 'value' => 2]) ?>
                 <?php if (Yii::$app->session->hasFlash('applications_and_inquiries_message')): ?>
-                    <p role="status" data-status><?= Yii::$app->session->getFlash('applications_and_inquiries_message') ?></p>
+                    <p role="status"
+                       data-status><?= Yii::$app->session->getFlash('applications_and_inquiries_message') ?></p>
                 <?php endif; ?>
             </div>
 
@@ -168,14 +169,13 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
 
     <section id="portfolio" class="module-section"><h2><?= I18n::translate('scientific_portfolio') ?></h2>
         <?php $form = ActiveForm::begin([
+                'action' => '#portfolio',
                 'options' => [
                         'name' => 'scientific-portfolio-form',
+                        'enctype' => 'multipart/form-data'
                 ],
                 'fieldConfig' => [
-                        'template' => "{input}\n{hint}\n{error}",
-                        'options' => [
-
-                        ],
+                        'template' => "{input}\n{hint}\n{error}"
                 ]
         ]); ?>
         <div class="form-grid">
@@ -194,10 +194,34 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
                         ->label(false)
                 ?>
             </label>
+
+
+            <div style="clear: both"></div>
+
+
             <label class="field">
+
+                <?= I18n::translate('protfolio_content_type') ?>
+
+                <?=
+                $form->field($scientificPortfolio, 'content_type')
+                        ->dropDownList(ScientificPortfolio::optsContentType(), ['id' => 'content_type'])
+                        ->label(false)
+                ?>
+            </label>
+
+
+
+            <label class="field" id="sc-po-url">
                 <?= I18n::translate('file_or_url') ?>
                 <?= $form->field($scientificPortfolio, 'file_or_url')->textInput([])->label(false) ?>
             </label>
+
+            <label class="field d-none" id="sc-po-file">
+                <?= I18n::translate('file') ?>
+                <?= $form->field($scientificPortfolio, 'file')->fileInput()->label(false) ?>
+            </label>
+
         </div>
         <?= Html::submitButton(I18n::translate('add'), ['class' => 'btn', 'value' => 3]) ?>
 
@@ -207,3 +231,30 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
         <?php ActiveForm::end(); ?>
     </section>
 </main>
+
+
+<?php
+
+$fileType = ScientificPortfolio::CONTENT_TYPE_FILE;
+$urlType = ScientificPortfolio::CONTENT_TYPE_URL;
+
+$this->registerJs(<<<JS
+
+    const TYPE_FILE = "{$fileType}"
+    const TYPE_URL = "{$urlType}"
+
+    $('#content_type').change(function() {
+        
+        if($(this).val() === TYPE_URL) {
+            $('#sc-po-url').removeClass('d-none')
+            $('#sc-po-file').addClass('d-none')
+        }else{
+            $('#sc-po-url').addClass('d-none')
+            $('#sc-po-file').removeClass('d-none')
+        }
+        
+    })
+    
+    
+JS, \yii\web\View::POS_END);
+?>

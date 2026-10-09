@@ -118,6 +118,9 @@ $menuItems = [
                 ]
         ],
 
+        ['label' => 'Conversations/Groups', 'icon' => 'comments', 'url' => ['/conversations/index'],
+                'visible' => RbacUtilities::allowRoles(['admin'])
+        ],
         ['label' => 'Actions/Logs', 'icon' => 'boxes', 'url' => ['/action-logs/index'],
                 'visible' => RbacUtilities::allowRoles(['admin'])
         ],

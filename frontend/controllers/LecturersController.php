@@ -112,8 +112,8 @@ class LecturersController extends MyController
         if (Yii::$app->request->get('request_id')) {
             $articlesAndBooksRequests = ArticlesAndBooksRequests::find()->where(['id' => intval(Yii::$app->request->get('request_id')), 'user_id' => $userId])->one();
 
-            if($articlesAndBooksRequests && $articlesAndBooksRequests->status == StatusList::STATUS_ACTIVE){
-                return $this->redirect('/'.Yii::$app->globalData->lang.'/lecturer/personal-dashboard');
+            if ($articlesAndBooksRequests && $articlesAndBooksRequests->status == StatusList::STATUS_ACTIVE) {
+                return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard');
             }
 
         }
@@ -126,7 +126,15 @@ class LecturersController extends MyController
 
             if ($articlesAndBooksRequests->save()) {
                 Yii::$app->session->setFlash('article_request_message', I18n::translate('article_request_successfully_sent'));
-                return $this->refresh('/'.Yii::$app->globalData->lang.'/lecturer/personal-dashboard'.'#research');
+
+                if (Yii::$app->request->get('request_id')) {
+
+                    return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard' . '#articles-and-books-requests-'.Yii::$app->request->get('request_id'));
+                } else {
+
+                    return $this->refresh('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard' . '#research');
+                }
+
             }
         }
 

@@ -40,9 +40,8 @@ class Conversations extends \yii\db\ActiveRecord
     {
         return [
             [['title'], 'default', 'value' => null],
-            [['type'], 'default', 'value' => 'private'],
+            [['type'], 'default', 'value' => self::TYPE_GROUP],
             [['type'], 'string'],
-            [['created_by'], 'required'],
             [['created_by'], 'integer'],
             [['created_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
@@ -84,7 +83,6 @@ class Conversations extends \yii\db\ActiveRecord
         return $this->hasMany(Messages::class, ['conversation_id' => 'id']);
     }
 
-
     /**
      * column type ENUM value labels
      * @return string[]
@@ -92,8 +90,8 @@ class Conversations extends \yii\db\ActiveRecord
     public static function optsType()
     {
         return [
-            self::TYPE_PRIVATE => 'private',
-            self::TYPE_GROUP => 'group',
+            self::TYPE_GROUP => self::TYPE_GROUP,
+            self::TYPE_PRIVATE => self::TYPE_PRIVATE,
         ];
     }
 
@@ -130,4 +128,5 @@ class Conversations extends \yii\db\ActiveRecord
     {
         $this->type = self::TYPE_GROUP;
     }
+
 }

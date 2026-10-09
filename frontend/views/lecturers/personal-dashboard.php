@@ -193,7 +193,8 @@ $chairTitle = $chair?->getTranslation(Yii::$app->globalData->lang)->title ?? "-"
                 <?php if (isset($articlesAndBooksRequestsList) && !empty($articlesAndBooksRequestsList)): ?>
                     <?php foreach ($articlesAndBooksRequestsList as $articlesAndBooksRequestsItem): ?>
 
-                        <article class="workflow-record"><h3><?= $articlesAndBooksRequestsItem->title ?></h3>
+                        <article class="workflow-record" id="articles-and-books-requests-<?= $articlesAndBooksRequestsItem->id ?>">
+                            <h3><?= $articlesAndBooksRequestsItem->title ?></h3>
                             <p class="status"><?= I18n::translate(\common\components\StatusList::getStatusLabel($articlesAndBooksRequestsItem->status)) ?></p>
 
                             <?php if ($articlesAndBooksRequestsItem->status == \common\components\StatusList::STATUS_PENDING): ?>

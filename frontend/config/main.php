@@ -61,6 +61,9 @@ return [
 
                 '<language:(en|ru|am)>/lecturer/personal-dashboard' => 'lecturers/personal-dashboard',
                 '<language:(en|ru|am)>/student/student-personal-dashboard' => 'student/student-personal-dashboard',
+                '<language:(en|ru|am)>/student/communications' => 'student/communications',
+
+                '<language:(en|ru|am)>/send-message' => 'conversation/send-message',
 
                 '<language:(en|ru|am)>/education/<controller>/program/<id:\d+>' => 'education/program',
 

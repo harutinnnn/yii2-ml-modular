@@ -25,6 +25,10 @@ class Conversations extends \yii\db\ActiveRecord
     const TYPE_PRIVATE = 'private';
     const TYPE_GROUP = 'group';
 
+
+    const ACTION_ASSIGN = 'assign';
+    const ACTION_REMOVE = 'remove';
+
     /**
      * {@inheritdoc}
      */
@@ -81,6 +85,10 @@ class Conversations extends \yii\db\ActiveRecord
     public function getMessages()
     {
         return $this->hasMany(Messages::class, ['conversation_id' => 'id']);
+    }
+
+    public  function getCreator(){
+        return $this->hasOne(User::class, ['id' => 'created_by']);
     }
 
     /**

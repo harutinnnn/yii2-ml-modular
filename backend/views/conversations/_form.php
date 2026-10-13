@@ -11,9 +11,19 @@ use yii\widgets\ActiveForm;
 
 <div class="conversations-form">
 
-    <?php $form = ActiveForm::begin([]); ?>
 
     <div class="card card-primary">
+
+        <?php if($model->id): ?>
+        <div class="card-comments p-2">
+            <a href="/admin/conversations/members?conversation_id=<?= $model->id ?>">
+                <button type="submit" class="btn btn-success">Members <i class="fas fa-users"></i></button>
+            </a>
+        </div>
+        <?php endif; ?>
+
+        <?php $form = ActiveForm::begin([]); ?>
+
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
@@ -29,8 +39,8 @@ use yii\widgets\ActiveForm;
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
             </div>
         </div>
+
+        <?php ActiveForm::end(); ?>
+
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

@@ -79,4 +79,19 @@ class Messages extends \yii\db\ActiveRecord
         return $this->hasMany(MessageReads::class, ['message_id' => 'id']);
     }
 
+    /**
+     * Gets query for [[MessageUser]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'sender_id']);
+    }
+
+    public function getFiles()
+    {
+        return $this->hasMany(MessageFiles::class, ['message_id' => 'id']);
+    }
+
 }

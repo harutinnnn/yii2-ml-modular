@@ -23,6 +23,10 @@ AppAsset::register($this);
         <script src="/js/site-config.js" defer></script>
         <script src="/js/prototype.js" defer></script>
         <link href="/css/site.css" rel="stylesheet"/>
+
+        <script type="text/javascript">
+            const lang = '<?= Yii::$app->globalData->lang ?>'
+        </script>
     </head>
     <body class="o1 <?= Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index' ? '' : 'inner-v1' ?>"
           id="top">

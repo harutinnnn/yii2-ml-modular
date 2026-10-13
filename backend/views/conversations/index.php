@@ -1,8 +1,6 @@
 <?php
 
-use common\models\Conversations;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 

@@ -8,7 +8,9 @@ use common\components\UserRoles;
 use common\models\ActionLogs;
 use common\models\ApplicationsAndInquiries;
 use common\models\Chairs;
+use common\models\Conversations;
 use common\models\Faculties;
+use common\models\Messages;
 use common\models\ScientificPortfolio;
 use common\models\User;
 use frontend\models\ScientificPortfolioForm;
@@ -119,7 +121,6 @@ class StudentController extends MyController
             $scientificPortfolio->updated_at = time();
 
 
-
             $scientificPortfolio->save();
 
 
@@ -142,6 +143,53 @@ class StudentController extends MyController
                 'applicationsAndInquiriesList' => $applicationsAndInquiriesList,
                 'scientificPortfolio' => $scientificPortfolio,
             ],
+        );
+    }
+
+
+    public function actionCommunications()
+    {
+
+        if(Yii::$app->user->isGuest){
+            return $this->redirect(['/site/login']);
+        }
+
+        $this->layout = 'student';
+        $conversationId = Yii::$app->request->get('conversationId');
+
+
+        $currentConversation = Conversations::find()
+            ->innerJoin('conversation_members cm', 'cm.conversation_id = conversations.id')
+            ->where(['conversations.id' => intval($conversationId), 'cm.user_id' => Yii::$app->user->id])
+            ->one();
+
+
+
+        if ($conversationId && empty($currentConversation)) {
+            return $this->redirect('/' . Yii::$app->globalData->lang . '/student/communications');
+        }
+
+        $messages = [];
+
+
+
+        if (isset($currentConversation->id)) {
+            $messages = Messages::find()->where(['conversation_id' => $currentConversation->id])->limit(15)->orderBy(['created_at' => SORT_DESC])->all();
+        }
+
+        $conversations = Conversations::find()
+            ->innerJoin('conversation_members cm', 'cm.user_id = ' . Yii::$app->user->id . ' AND cm.conversation_id = conversations.id')
+            ->orderBy(['title' => SORT_ASC])
+            ->all();
+
+
+        return $this->render('communications',
+            [
+                'conversations' => $conversations,
+                'conversationId' => $conversationId,
+                'currentConversation' => $currentConversation,
+                'messages' => array_reverse($messages)
+            ]
         );
     }
 }

@@ -20,14 +20,21 @@ class LoginForm extends Model
     private $_user;
 
 
+    const SCENARIO_TYPE_REQUIRED = 'type_required';
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
+            [
+                'usertype',
+                'required',
+                'on' => self::SCENARIO_TYPE_REQUIRED,
+            ],
             // email and password are both required
-            [['email', 'password', 'usertype'], 'required'],
+            [['email', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -115,7 +122,7 @@ class LoginForm extends Model
             if (!empty($roles)) {
                 $roleKeys = array_keys($roles);
                 $usertype = reset($roleKeys);
-            }else{
+            } else {
                 Yii::$app->user->logout();
                 return $controller->redirect('/' . Yii::$app->globalData->lang . '/login');
             }

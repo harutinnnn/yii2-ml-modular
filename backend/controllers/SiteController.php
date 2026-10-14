@@ -87,8 +87,10 @@ class SiteController extends Controller
                 null
             );
 
+
             return $this->goBack();
         }
+        dd($model->errors);
 
         $model->password = '';
 

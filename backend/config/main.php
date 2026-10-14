@@ -154,7 +154,7 @@ return [
         ],
         'urlManagerFrontend' => [
             'class' => \yii\web\UrlManager::class,
-            'hostInfo' => 'http://yii2-ml.local',
+            'hostInfo' => 'http://asue.local',
             'baseUrl' => '',
             'enablePrettyUrl' => true,
             'showScriptName' => false,

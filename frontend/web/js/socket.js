@@ -1,4 +1,4 @@
-const socket = io('http://yii2-ml.local:3001', {
+const socket = io('http://asue.local:3001', {
     // transports: ['websocket', 'polling'],
     reconnection: true
 });

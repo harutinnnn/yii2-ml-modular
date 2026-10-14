@@ -99,15 +99,16 @@ class SiteController extends MyController
 
         if (!Yii::$app->user->isGuest) {
 
-            return LoginForm::userRoleAndRedirect(Yii::$app->user->identity->id, $this,Yii::$app->session->get('userType'));
+            return LoginForm::userRoleAndRedirect(Yii::$app->user->identity->id, $this, Yii::$app->session->get('userType'));
         }
+
         $model = new LoginForm();
+
+        $model->scenario = LoginForm::SCENARIO_TYPE_REQUIRED;
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 
-
-            LoginForm::userRoleAndRedirect(Yii::$app->user->identity->id, $this,$model->usertype);
-
+            LoginForm::userRoleAndRedirect(Yii::$app->user->identity->id, $this, $model->usertype);
         }
 
         $model->password = '';

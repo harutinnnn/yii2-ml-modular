@@ -14,12 +14,12 @@ use yii\widgets\ActiveForm;
 
     <div class="card card-primary">
 
-        <?php if($model->id): ?>
-        <div class="card-comments p-2">
-            <a href="/admin/conversations/members?conversation_id=<?= $model->id ?>">
-                <button type="submit" class="btn btn-success">Members <i class="fas fa-users"></i></button>
-            </a>
-        </div>
+        <?php if ($model->id): ?>
+            <div class="card-comments p-2">
+                <a href="/admin/conversations/members?conversation_id=<?= $model->id ?>">
+                    <button type="submit" class="btn btn-success">Members <i class="fas fa-users"></i></button>
+                </a>
+            </div>
         <?php endif; ?>
 
         <?php $form = ActiveForm::begin([]); ?>
@@ -27,8 +27,21 @@ use yii\widgets\ActiveForm;
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
+                    <?= $form->field($model, 'status')->dropDownList(
+                            Conversations::statusOptions()
+                    ) ?>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     <?= $form->field($model, 'type')->dropDownList(
                             Conversations::optsType()
+                    ) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'moderator')->dropDownList(
+                            $moderators ?? []
                     ) ?>
                 </div>
             </div>

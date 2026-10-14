@@ -2,12 +2,15 @@
 
 namespace backend\controllers;
 
+use common\components\UserHelper;
 use common\components\UserRoles;
 use common\models\ConversationMembers;
 use common\models\Conversations;
 use backend\models\ConversationsSearch;
+use common\models\EducationLevels;
 use common\models\User;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -45,9 +48,18 @@ class ConversationsController extends Controller
         $searchModel = new ConversationsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $moderators = UserHelper::getUsersByRoles([UserRoles::ADMIN, UserRoles::TEACHER]);
+
+
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'moderators' => ArrayHelper::map($moderators,
+                'id',
+                function ($moderator) {
+                    return UserHelper::getUserName($moderator);
+                }),
         ]);
     }
 
@@ -82,8 +94,15 @@ class ConversationsController extends Controller
             $model->loadDefaultValues();
         }
 
+        $moderators = UserHelper::getUsersByRoles([UserRoles::ADMIN, UserRoles::TEACHER]);
+
         return $this->render('create', [
             'model' => $model,
+            'moderators' => ArrayHelper::map($moderators,
+                'id',
+                function ($moderator) {
+                    return UserHelper::getUserName($moderator);
+                }),
         ]);
     }
 
@@ -102,8 +121,15 @@ class ConversationsController extends Controller
             return $this->redirect(['index']);
         }
 
+        $moderators = UserHelper::getUsersByRoles([UserRoles::ADMIN, UserRoles::TEACHER]);
+
         return $this->render('update', [
             'model' => $model,
+            'moderators' => ArrayHelper::map($moderators,
+                'id',
+                function ($moderator) {
+                    return UserHelper::getUserName($moderator);
+                }),
         ]);
     }
 

@@ -119,7 +119,7 @@ $menuItems = [
         ],
 
         ['label' => 'Conversations/Groups', 'icon' => 'comments', 'url' => ['/conversations/index'],
-                'visible' => RbacUtilities::allowRoles(['admin'])
+                'visible' => RbacUtilities::allowRoles(['admin']),'active' => Yii::$app->controller->id == 'conversations'
         ],
         ['label' => 'Actions/Logs', 'icon' => 'boxes', 'url' => ['/action-logs/index'],
                 'visible' => RbacUtilities::allowRoles(['admin'])

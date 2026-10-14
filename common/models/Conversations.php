@@ -2,19 +2,24 @@
 
 namespace common\models;
 
+use common\components\StatusList;
 use Yii;
 
 /**
  * This is the model class for table "conversations".
  *
  * @property int $id
+ * @property int $status
  * @property string $type
- * @property string|null $title
+ * @property string $title
+ * @property int $moderator
  * @property int $created_by
  * @property string|null $created_at
  *
  * @property ConversationMembers[] $conversationMembers
  * @property Messages[] $messages
+ * @property User $moderator_
+ * @property User $creator_
  */
 class Conversations extends \yii\db\ActiveRecord
 {
@@ -43,13 +48,15 @@ class Conversations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'default', 'value' => null],
             [['type'], 'default', 'value' => self::TYPE_GROUP],
+            [['moderator'], 'default', 'value' => 0],
             [['type'], 'string'],
-            [['created_by'], 'integer'],
+            [['status','moderator', 'created_by'], 'integer'],
+            [['title', 'created_by'], 'required'],
             [['created_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
             ['type', 'in', 'range' => array_keys(self::optsType())],
+            [['moderator'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['moderator' => 'id']],
         ];
     }
 
@@ -60,8 +67,10 @@ class Conversations extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'status' => 'Status',
             'type' => 'Type',
             'title' => 'Title',
+            'moderator' => 'Moderator',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
         ];
@@ -87,8 +96,14 @@ class Conversations extends \yii\db\ActiveRecord
         return $this->hasMany(Messages::class, ['conversation_id' => 'id']);
     }
 
-    public  function getCreator(){
+    public function getCreator_()
+    {
         return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+
+    public function getModerator_()
+    {
+        return $this->hasOne(User::class, ['id' => 'moderator']);
     }
 
     /**
@@ -137,4 +152,12 @@ class Conversations extends \yii\db\ActiveRecord
         $this->type = self::TYPE_GROUP;
     }
 
+
+    public static function statusOptions(): array
+    {
+        return [
+            StatusList::STATUS_ACTIVE => 'Published',
+            StatusList::STATUS_PENDING => 'Pending',
+        ];
+    }
 }

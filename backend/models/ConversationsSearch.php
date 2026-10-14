@@ -18,7 +18,7 @@ class ConversationsSearch extends Conversations
     {
         return [
             [['id', 'created_by'], 'integer'],
-            [['type', 'title', 'created_at'], 'safe'],
+            [['type', 'title', 'created_at','moderator'], 'safe'],
         ];
     }
 
@@ -60,6 +60,7 @@ class ConversationsSearch extends Conversations
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'moderator' => $this->moderator,
             'created_by' => $this->created_by,
             'created_at' => $this->created_at,
         ]);

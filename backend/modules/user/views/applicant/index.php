@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <?= Html::a('Create Applicant', ['create'], ['class' => 'btn btn-primary']) ?>
+<!--        --><?php //= Html::a('Create Applicant', ['create'], ['class' => 'btn btn-primary']) ?>
     </div>
 
     <div class="card">

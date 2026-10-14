@@ -36,7 +36,7 @@
                 <h2><?= $currentConversation->title ?></h2>
 
                 <p class="meta">
-                    Պատասխանատու՝ <?= $currentConversation->creator->additional->first_name . ' ' . $currentConversation->creator->additional->last_name ?>
+                    Պատասխանատու՝ <?= $currentConversation->creator_->additional->first_name . ' ' . $currentConversation->creator_->additional->last_name ?>
                     · ստեղծվել է <?= date('d.m.Y', strtotime($currentConversation->created_at)) ?>
                 </p>
                 <div class="notice">

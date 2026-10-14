@@ -1,5 +1,6 @@
 <?php
 
+use common\components\UserHelper;
 use yii\helpers\Html;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
@@ -29,6 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             'type',
                             'title',
                             [
+                                    'attribute' => 'moderator',
+                                    'filter' => $moderators,
+                                    'value' => function ($model) {
+                                        return UserHelper::getUserName($model->moderator_);
+                                    },
+                            ],
+                            [
                                     'attribute' => 'created_by',
                                     'value' => function ($model) {
                                         $user = \common\models\User::findOne($model->created_by);
@@ -38,11 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Actions',
-                                    'template' => '{view} {update} {delete}',
+                                    'template' => '{view} {update} {members} {delete}',
                                     'contentOptions' => ['class' => 'text-nowrap'],
                                     'buttons' => [
                                             'view' => static fn($url, $model) => Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-info btn-sm mr-1']),
                                             'update' => static fn($url, $model) => Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
+                                            'members' => static fn($url, $model) => Html::a('Members', ['members', 'conversation_id' => $model->id], ['class' => 'btn btn-warning btn-sm mr-1']),
                                             'delete' => static fn($url, $model) => Html::a('Remove', ['delete', 'id' => $model->id], [
                                                     'class' => 'btn btn-danger btn-sm',
                                                     'data-method' => 'post',

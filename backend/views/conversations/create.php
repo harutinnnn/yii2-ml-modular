@@ -9,6 +9,7 @@ $this->title = 'Create Conversations';
 $this->params['breadcrumbs'][] = ['label' => 'Conversations', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+<?= $this->render('_form', [
+    'model' => $model,
+    'moderators' => $moderators ?? []
+]) ?>

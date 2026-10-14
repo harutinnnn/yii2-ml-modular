@@ -73,7 +73,11 @@ function sendMessage(e, id) {
                                 }
 
                             });
-                            showMessageAlert(message)
+                            showMessageAlert(message);
+                        }
+
+                        if(data.message.length){
+                            showMessageAlert(`<div class="error-msg message">${data.message}</div>`)
                         }
                     }
                 },

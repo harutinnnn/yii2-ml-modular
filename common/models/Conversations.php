@@ -160,4 +160,9 @@ class Conversations extends \yii\db\ActiveRecord
             StatusList::STATUS_PENDING => 'Pending',
         ];
     }
+
+    public function getStatusLabel(): string
+    {
+        return self::statusOptions()[$this->status] ?? 'Unknown';
+    }
 }

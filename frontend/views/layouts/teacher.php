@@ -21,8 +21,15 @@ AppAsset::register($this);
         <link href="/css/spec-modules.css" rel="stylesheet"/>
         <link rel="stylesheet" href="/css/review-changes.css">
         <link href="/css/site.css" rel="stylesheet"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.4.0/socket.io.js"
+                integrity="sha512-Y8KodDCDqst1e8z0EGKiqEQq3T8NszmgW2HvsC6+tlNw7kxYxHTLl5Iw/gqZj/6qhZdBt+jYyOsybgSAiB9OOA=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         <script type="text/javascript">
             const lang = '<?= Yii::$app->globalData->lang ?>'
+            const userId = <?= \yii\helpers\Json::htmlEncode(
+                    Yii::$app->user->id
+            ) ?>;
         </script>
     </head>
     <body class="module-body" id="top">
@@ -39,6 +46,7 @@ AppAsset::register($this);
     </footer>
     <noscript>Անձնական համակարգից օգտվելու համար միացրեք JavaScript-ը։</noscript>
     <script src="/js/spec-modules.js"></script>
+    <script src="/js/socket.js"></script>
 
     <?php $this->endBody() ?>
     </body>

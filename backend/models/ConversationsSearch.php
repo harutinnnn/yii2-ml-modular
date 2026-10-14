@@ -18,7 +18,7 @@ class ConversationsSearch extends Conversations
     {
         return [
             [['id', 'created_by'], 'integer'],
-            [['type', 'title', 'created_at','moderator'], 'safe'],
+            [['type', 'title', 'created_at','moderator','status'], 'safe'],
         ];
     }
 
@@ -61,6 +61,7 @@ class ConversationsSearch extends Conversations
         $query->andFilterWhere([
             'id' => $this->id,
             'moderator' => $this->moderator,
+            'status' => $this->status,
             'created_by' => $this->created_by,
             'created_at' => $this->created_at,
         ]);

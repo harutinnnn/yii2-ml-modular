@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\components\EntityTypes;
 use common\components\I18n;
+use common\components\StatusList;
 use common\components\UserRoles;
 use common\models\ActionLogs;
 use common\models\ApplicationsAndInquiries;
@@ -179,6 +180,7 @@ class StudentController extends MyController
 
         $conversations = Conversations::find()
             ->innerJoin('conversation_members cm', 'cm.user_id = ' . Yii::$app->user->id . ' AND cm.conversation_id = conversations.id')
+            ->where(['status' => StatusList::STATUS_ACTIVE])
             ->orderBy(['title' => SORT_ASC])
             ->all();
 

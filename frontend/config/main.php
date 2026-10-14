@@ -60,6 +60,8 @@ return [
                 '<language:(en|ru|am)>/forgot-password' => 'site/request-password-reset',
 
                 '<language:(en|ru|am)>/lecturer/personal-dashboard' => 'lecturers/personal-dashboard',
+                '<language:(en|ru|am)>/lecturer/communications' => 'lecturers/communications',
+
                 '<language:(en|ru|am)>/student/student-personal-dashboard' => 'student/student-personal-dashboard',
                 '<language:(en|ru|am)>/student/communications' => 'student/communications',
 

@@ -1,6 +1,7 @@
 <?php
 
 use common\components\UserHelper;
+use common\models\Conversations;
 use yii\helpers\Html;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
@@ -42,6 +43,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                         $user = \common\models\User::findOne($model->created_by);
                                         return ($user->additional->first_name ?? "") . ' ' . ($user->additional->last_name ?? "");
                                     },
+                            ],
+                            [
+                                    'attribute' => 'status',
+                                    'filter' => Conversations::statusOptions(),
+                                    'value' => static fn($model) => $model->getStatusLabel(),
                             ],
                             [
                                     'class' => ActionColumn::class,

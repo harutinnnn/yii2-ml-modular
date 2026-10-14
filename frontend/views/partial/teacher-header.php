@@ -15,7 +15,7 @@ $userAdditional = $user?->additional ?? null;
         <a href="#profile">Անձնական տվյալներ</a>
         <a href="#research">Գիտական նյութեր</a>
         <a href="#requests">Տեղեկանքներ</a>
-        <a href="communications.html">Նամակագրություն</a>
+        <a href="/<?= Yii::$app->globalData->lang ?>/lecturer/communications">Նամակագրություն</a>
         <a href="notifications.html">Ծանուցումներ</a>
     </nav>
     <span class="module-user">

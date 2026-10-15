@@ -70,6 +70,9 @@ return [
         'education' => [
             'class' => \backend\modules\education\Module::class,
         ],
+        'library' => [
+            'class' => \backend\modules\library\Module::class,
+        ],
         'journal' => [
             'class' => \backend\modules\journal\Module::class,
         ],

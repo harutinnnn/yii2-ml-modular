@@ -54,9 +54,6 @@ return [
 
                 //login
                 '<language:(en|ru|am)>/login' => 'site/login',
-//                '<language:(en|ru|am)>/lecturers/teacher-login' => 'site/login',
-//                '<language:(en|ru|am)>/student/student-login' => 'site/login',
-
                 '<language:(en|ru|am)>/forgot-password' => 'site/request-password-reset',
 
                 '<language:(en|ru|am)>/lecturer/personal-dashboard' => 'lecturers/personal-dashboard',
@@ -66,6 +63,9 @@ return [
                 '<language:(en|ru|am)>/student/communications' => 'student/communications',
 
                 '<language:(en|ru|am)>/send-message' => 'conversation/send-message',
+
+                '<language:(en|ru|am)>/digital-library' => 'library/index',
+
 
                 '<language:(en|ru|am)>/education/<controller>/program/<id:\d+>' => 'education/program',
 

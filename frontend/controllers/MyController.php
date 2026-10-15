@@ -45,6 +45,7 @@ class MyController extends Controller
                 ->orderBy(['position' => SORT_ASC])
                 ->all();
 
+
             foreach ($mainMenu as $item) {
 
                 $tmpNodes = [];
@@ -78,6 +79,7 @@ class MyController extends Controller
 
                 $mainMenuItems[$item->id] = [
                     'menu' => $item,
+                    'is_flat_menu' => $item->is_flat_menu,
                     'nodes' => $tmpNodes
                 ];
 

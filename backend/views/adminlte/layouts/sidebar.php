@@ -118,6 +118,18 @@ $menuItems = [
                 ]
         ],
 
+        [
+                'label' => 'Library',
+                'icon' => 'book-reader',
+                'visible' => RbacUtilities::allowRoles(['admin']),
+                'items' => [
+                        ['label' => 'Electronic Library', 'icon' => 'book', 'url' => ['/library/library-module/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'library-module'
+                        ],
+                ]
+        ],
+
         ['label' => 'Conversations/Groups', 'icon' => 'comments', 'url' => ['/conversations/index'],
                 'visible' => RbacUtilities::allowRoles(['admin']),'active' => Yii::$app->controller->id == 'conversations'
         ],

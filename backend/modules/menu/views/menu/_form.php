@@ -30,6 +30,7 @@ $menuIdJson = Json::htmlEncode($menuId);
             <div class="row">
                 <div class="col-md-3"><?= $form->field($model, 'teacher_menu')->checkbox([]) ?></div>
                 <div class="col-md-3"><?= $form->field($model, 'student_menu')->checkbox([]) ?></div>
+                <div class="col-md-3"><?= $form->field($model, 'is_flat_menu')->checkbox([]) ?></div>
             </div>
             <div class="row">
                 <div class="col-md-3"><?= $form->field($model, 'status')->dropDownList(Menu::statusOptions()) ?></div>

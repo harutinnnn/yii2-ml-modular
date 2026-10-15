@@ -26,7 +26,7 @@ class Menu extends ActiveRecord
     {
         return [
             [['status', 'show_in_menu', 'url', 'section_id'], 'required'],
-            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id','teacher_menu','student_menu'], 'integer'],
+            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id','teacher_menu','student_menu','is_flat_menu'], 'integer'],
             [['url', 'image', 'header_image'], 'string', 'max' => 255],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
             [['show_in_menu'], 'in', 'range' => [0, 1]],
@@ -52,6 +52,7 @@ class Menu extends ActiveRecord
             'header_image' => 'Header Image',
             'teacher_menu' => 'Teacher menu',
             'student_menu' => 'Student menu',
+            'is_flat_menu' => 'Is flat menu',
         ];
     }
 

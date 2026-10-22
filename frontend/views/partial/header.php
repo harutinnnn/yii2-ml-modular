@@ -1,6 +1,7 @@
 <?php
 
 use common\components\I18n;
+use common\components\UrlHelper;
 use yii\helpers\Html;
 
 
@@ -37,7 +38,28 @@ $userAdditional = $user?->additional ?? null;
             <?= I18n::translate('advanced_search') ?>
         </a>
         <button class="header-link" data-search-open=""><?= I18n::translate('search') ?></button>
-        <div class="lang">HY · EN · RU</div>
+        <div class="lang">
+
+            <?php
+
+            $currentUrl = Yii::$app->request->url;
+
+
+            $langList = [];
+            foreach (Yii::$app->globalData->languages as $langCode => $langTitle) {
+
+                $newUrl = UrlHelper::findAndChangeUrlLang($currentUrl, $langCode);
+
+                $isActive = '';
+                if ($langCode == Yii::$app->globalData->lang) {
+                    $langList[$langCode] = '<span class="active">' . strtoupper($langCode) . '</span>';
+                } else {
+                    $langList[$langCode] = '<a href="' . $newUrl . '">' . strtoupper($langCode) . '</a>';
+                }
+            }
+            ?>
+            <?= implode(' · ', $langList) ?>
+        </div>
         <button aria-label="Բացել մենյուն" class="burger" data-menu-open=""><i></i></button>
     </div>
 </header>

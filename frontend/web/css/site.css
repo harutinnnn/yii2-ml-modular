@@ -155,3 +155,7 @@ ul.pagination li.prev,
 ul.pagination li.next {
     padding: 0 10px;
 }
+
+.lang .active{
+    color: var(--red);
+}

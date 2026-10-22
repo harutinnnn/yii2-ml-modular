@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Content;
+use common\models\Language;
 use common\models\Menu;
 use common\models\Section;
 use Yii;

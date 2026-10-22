@@ -19,7 +19,11 @@ if ((!$headerImage || !strlen(trim($headerImage))) && isset($this->params['heade
             / <?= $menuObj?->getTranslation(Yii::$app->globalData->lang)->title ?>
         </div>
         <div class="eyebrow">
+            <?php if (isset($preParentMenuObj) && !empty($preParentMenuObj)) : ?>
+            <?= $preParentMenuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?>
+            <?php else: ?>
             <?= $parentMenuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?>
+            <?php endif; ?>
         </div>
         <h1><?= $menuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? "" ?></h1>
         <p class="lead">

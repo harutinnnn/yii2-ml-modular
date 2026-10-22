@@ -85,6 +85,13 @@ $csrfToken = Yii::$app->request->csrfToken;
                                         'placeholder' => "Title in {$language->name}",
                                 ]) ?>
 
+                        <?= $form->field($model, "translations[{$language->code}][short]")
+                                ->label("Short ({$language->name})")
+                                ->textarea([
+                                        'maxlength' => true,
+                                        'placeholder' => "Short in {$language->name}",
+                                ]) ?>
+
                         <?= $form->field($model, "translations[{$language->code}][text]")
                                 ->label("Text ({$language->name})")
                                 ->hiddenInput(['id' => "post-text-{$language->code}"])

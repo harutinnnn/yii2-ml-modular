@@ -36,13 +36,14 @@ class NewsForm extends Model
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
                     'text' => $translation->text,
+                    'short' => $translation->short,
                 ];
             }
         }
 
         foreach ($this->getLanguages() as $language) {
             $this->translations[$language->code] = array_merge(
-                ['title' => '', 'text' => ''],
+                ['title' => '', 'text' => '','short' => ''],
                 $this->translations[$language->code] ?? []
             );
         }
@@ -77,11 +78,15 @@ class NewsForm extends Model
             $data = $this->translations[$language->code] ?? [];
             $title = trim((string)($data['title'] ?? ''));
             $text = trim((string)($data['text'] ?? ''));
+            $short = trim((string)($data['short'] ?? ''));
 
             if ($title === '') {
                 $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
             }
 
+            if ($short === '') {
+                $this->addError("translations[{$language->code}][short]", "Short is required for {$language->name}.");
+            }
             if ($text === '') {
                 $this->addError("translations[{$language->code}][text]", "Text is required for {$language->name}.");
             }
@@ -122,6 +127,7 @@ class NewsForm extends Model
                 $translation->lang = $language->code;
                 $translation->title = trim((string)$this->translations[$language->code]['title']);
                 $translation->text = trim((string)$this->translations[$language->code]['text']);
+                $translation->short = trim((string)$this->translations[$language->code]['short']);
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

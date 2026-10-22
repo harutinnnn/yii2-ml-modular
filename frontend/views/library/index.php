@@ -1,25 +1,40 @@
+<?php
+
+use common\components\I18n;
+use common\models\TranslationModel;
+
+?>
 <main class="module-main">
     <section class="module-hero">
         <div>
-            <div class="eyebrow">Գրադարանային մոդուլ</div>
-            <h1>Գիտելիքի կենտրոնացված մուտք</h1>
-            <p>Ներքին և արտաքին կատալոգներ, էլեկտրոնային ֆոնդեր, պատվերներ և ընթերցողի ծառայություններ։</p></div>
-        <div class="status-box"><strong>Երկ-Ուրբ 09:00-18:00</strong><span>library@asue.am · Նալբանդյան 128</span></div>
-    </section>
-    <section id="digital" class="module-section"><h2>Էլեկտրոնային գրադարան</h2>
-        <div class="cards">
-            <div class="panel"><h3>ՀՊՏՀ կատալոգ</h3>
-                <p>Գրքեր, հոդվածներ և համալսարանական հրատարակություններ։</p><a class="btn" href="publications.html">Բացել</a>
-            </div>
-            <div class="panel"><h3>Էլեկտրոնային ֆոնդ</h3>
-                <p>Թվայնացված նյութեր՝ ըստ հասանելիության իրավունքի։</p><a class="btn secondary" href="documents.html">Բացել</a>
-            </div>
-            <div class="panel"><h3>Գիտական բազաներ</h3>
-                <p>Միջազգային շտեմարանների և ինդեքսների արտաքին հղումներ։</p><a class="btn secondary"
-                                                                                href="research.html">Բացել</a></div>
+            <div class="eyebrow"><?= I18n::translate('library_module') ?></div>
+            <h1><?= I18n::translate('centralized_access_to_knowledge') ?></h1>
+            <p><?= I18n::translate('library_module_header_text') ?></p>
+        </div>
+        <div class="status-box">
+            <strong>Երկ-Ուրբ 09:00-18:00</strong>
+            <span><?= Yii::$app->globalData->settings['library_email_address'] ?> · Նալբանդյան 128</span>
         </div>
     </section>
-    <section id="resources" class="module-section"><h2>Առցանց ռեսուրսներ</h2>
+    <section id="digital" class="module-section"><h2><?= I18n::translate('digital_library') ?></h2>
+        <div class="cards">
+            <?php
+            if (isset($libraryModules) && !empty($libraryModules)): ?>
+                <?php foreach ($libraryModules as $i => $libraryModule): ?>
+                    <div class="panel">
+                        <h3><?= TranslationModel::getTranslation($libraryModule, Yii::$app->globalData->lang) ?></h3>
+                        <?= TranslationModel::getTranslation($libraryModule, Yii::$app->globalData->lang, 'text') ?>
+                        <a class="btn <?= $i > 0 ? 'secondary' : '' ?>"
+                           href="/<?= Yii::$app->globalData->lang ?>/library/<?= $libraryModule->slug ?>">
+                            Բացել
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+        </div>
+    </section>
+    <section id="resources" class="module-section"><h2><?= I18n::translate('online_resources') ?></h2>
         <ul class="checklist">
             <li>Գրադարանային կատալոգներ</li>
             <li>Էլեկտրոնային շտեմարաններ</li>

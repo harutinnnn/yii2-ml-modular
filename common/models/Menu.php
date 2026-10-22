@@ -126,4 +126,10 @@ class Menu extends ActiveRecord
     {
         return self::statusOptions()[$this->status] ?? 'Unknown';
     }
+
+
+    public function getSideMenu()
+    {
+        return $this->hasMany(PageSideMenuItemsPerMenu::class, ['menu_id' => 'id']);
+    }
 }

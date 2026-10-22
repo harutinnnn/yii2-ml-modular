@@ -6,9 +6,11 @@ use common\models\Content;
 use common\models\Language;
 use common\models\Menu;
 use common\models\MenuMl;
+use common\models\PageSideMenuItemsPerMenu;
 use common\models\Section;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -33,10 +35,13 @@ class MenuForm extends Model
 
     private ?array $_languages = null;
 
+    public $sidebar_menus = [];
+
     public function __construct(?Menu $menu = null, $config = [])
     {
         $this->menu = $menu;
         parent::__construct($config);
+
 
         if ($this->menu !== null) {
             $this->status = (int)$this->menu->status;
@@ -51,6 +56,13 @@ class MenuForm extends Model
             $this->url = (string)$this->menu->url;
             $this->image = $this->menu->image;
             $this->header_image = $this->menu->header_image;
+
+
+            if (isset($menu->sideMenu) && !empty($menu->sideMenu)) {
+                $this->sidebar_menus = ArrayHelper::getColumn($menu->sideMenu, 'side_menu_id');
+            }
+
+
             foreach ($this->menu->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
@@ -77,7 +89,8 @@ class MenuForm extends Model
     {
         return [
             [['status', 'show_in_menu', 'url', 'section_id'], 'required'],
-            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id','student_menu','teacher_menu','is_flat_menu'], 'integer'],
+            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id', 'student_menu', 'teacher_menu', 'is_flat_menu'], 'integer'],
+            [['sidebar_menus'], 'each', 'rule' => ['integer']],
             [['status'], 'in', 'range' => array_keys(Menu::statusOptions())],
             [['show_in_menu'], 'in', 'range' => [0, 1]],
             [['url'], 'string', 'max' => 255],
@@ -116,6 +129,7 @@ class MenuForm extends Model
             'teacher_menu' => 'Teacher menu',
             'is_flat_menu' => 'Is flat menu',
             'student_menu' => 'Student menu',
+            'sidebar_menus' => 'Page sidebar menus',
         ];
     }
 
@@ -165,6 +179,24 @@ class MenuForm extends Model
                 return false;
             }
 
+            //Add page sidebar menus
+
+            if ($menu['id']) {
+                PageSideMenuItemsPerMenu::deleteAll(['menu_id' => $menu['id']]);
+
+                if (!empty($this->sidebar_menus)) {
+
+                    foreach ($this->sidebar_menus as $sidebar_menu) {
+
+                        $pageSideMenuItemsPerMenu = new PageSideMenuItemsPerMenu();
+                        $pageSideMenuItemsPerMenu->menu_id = $menu['id'];
+                        $pageSideMenuItemsPerMenu->side_menu_id = $sidebar_menu;
+                        $pageSideMenuItemsPerMenu->save();
+                    }
+                }
+            }
+
+
             MenuMl::deleteAll(['menu_id' => $menu->id]);
 
             foreach ($this->getLanguages() as $language) {
@@ -187,6 +219,7 @@ class MenuForm extends Model
 
             $transaction->commit();
             $this->menu = $menu;
+
             return true;
         } catch (\Throwable $e) {
             $transaction->rollBack();
@@ -225,7 +258,7 @@ class MenuForm extends Model
     public static function parentOptions(?int $excludeId = null): array
     {
         $result = ['' => 'No Parent'];
-        $items = Menu::find()->with('translations')->where(['!=','id',  intval($excludeId)])->orderBy(['position' => SORT_ASC, 'id' => SORT_ASC])->all();
+        $items = Menu::find()->with('translations')->where(['!=', 'id', intval($excludeId)])->orderBy(['position' => SORT_ASC, 'id' => SORT_ASC])->all();
         $result = self::getItemsWithParentTitles($items);
 //        foreach ($items as $item) {
 //            if ($excludeId !== null && $item->id === $excludeId) {

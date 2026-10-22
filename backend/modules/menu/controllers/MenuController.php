@@ -57,6 +57,17 @@ class MenuController extends Controller
         return $this->render('create', compact('model'));
     }
 
+    public function actionUpdate(int $id): string|Response
+    {
+        $model = new MenuForm($this->findModel($id));
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Menu item updated.');
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('update', compact('model'));
+    }
+
     public function actionSlugify(string $title = '', ?int $menuId = null): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -123,17 +134,6 @@ class MenuController extends Controller
     public function actionView(int $id): string
     {
         return $this->render('view', ['model' => $this->findModel($id)]);
-    }
-
-    public function actionUpdate(int $id): string|Response
-    {
-        $model = new MenuForm($this->findModel($id));
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Menu item updated.');
-            return $this->redirect(['index']);
-        }
-
-        return $this->render('update', compact('model'));
     }
 
     public function actionDelete(int $id): Response

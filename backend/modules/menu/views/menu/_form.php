@@ -54,6 +54,22 @@ $menuIdJson = Json::htmlEncode($menuId);
                     ]);
                     ?>
                 </div>
+
+                <div class="col-md-12">
+                    <?php
+                    echo $form->field($model, 'sidebar_menus')->widget(Select2::class, [
+                            'data' => $parentOptions,
+                            'options' => [
+                                    'placeholder' => 'Select parent menu...',
+                                    'multiple' => true,
+                            ],
+                            'pluginOptions' => [
+                                    'allowClear' => true,
+                            ],
+                    ]);
+//                    dd($model->sidebar_menus);
+                    ?>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
@@ -131,8 +147,8 @@ $menuIdJson = Json::htmlEncode($menuId);
     <?php ActiveForm::end(); ?>
 </div>
 <?php
-if(!isset($model->menu->id)){
-$this->registerJs(<<<JS
+if (!isset($model->menu->id)) {
+    $this->registerJs(<<<JS
 (function () {
     const slugUrl = {$slugUrlJson};
     const menuId = {$menuIdJson};
@@ -176,4 +192,5 @@ $this->registerJs(<<<JS
     });
 })();
 JS
-); } ?>
+    );
+} ?>

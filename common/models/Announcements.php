@@ -20,6 +20,7 @@ class Announcements extends ActiveRecord
 {
     public const STATUS_PENDING = 0;
     public const STATUS_PUBLISHED = 1;
+    public const PER_PAGE = 10;
 
     public static function tableName(): string
     {
@@ -98,5 +99,10 @@ class Announcements extends ActiveRecord
     public function getStatusLabel(): string
     {
         return self::statusOptions()[$this->status] ?? 'Unknown';
+    }
+
+    public function getCategory()
+    {
+        return $this->hasOne(NewsCategories::class, ['id' => 'category_id']);
     }
 }

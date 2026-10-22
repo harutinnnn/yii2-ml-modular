@@ -32,13 +32,15 @@ class ContentForm extends Model
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
                     'text' => $translation->text,
+                    'pre_title' => $translation->pre_title,
+                    'quote' => $translation->quote,
                 ];
             }
         }
 
         foreach ($this->getLanguages() as $language) {
             $this->translations[$language->code] = array_merge(
-                ['title' => '', 'text' => ''],
+                ['title' => '', 'text' => '','quote','pre_title'],
                 $this->translations[$language->code] ?? []
             );
         }
@@ -70,6 +72,8 @@ class ContentForm extends Model
             $data = $this->translations[$language->code] ?? [];
             $title = trim((string)($data['title'] ?? ''));
             $text = trim((string)($data['text'] ?? ''));
+            $pre_title = trim((string)($data['pre_title'] ?? ''));
+            $quote = trim((string)($data['quote'] ?? ''));
 
             if ($title === '') {
                 $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
@@ -113,6 +117,8 @@ class ContentForm extends Model
                 $translation->lang = $language->code;
                 $translation->title = trim((string)$this->translations[$language->code]['title']);
                 $translation->text = trim((string)$this->translations[$language->code]['text']);
+                $translation->pre_title = trim((string)$this->translations[$language->code]['pre_title']);
+                $translation->quote = trim((string)$this->translations[$language->code]['quote']);
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

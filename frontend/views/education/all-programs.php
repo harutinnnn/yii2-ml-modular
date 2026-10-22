@@ -10,17 +10,16 @@ $content = $this->context->pageData['content'];
 <section class="inner-section white">
     <div class="wrap">
         <div class="eyebrow red"><?= I18n::translate('sections') ?></div>
-        <h2 class="display-inner"><?= I18n::translate('education_levels') ?></h2>
+        <h2 class="display-inner"><?= I18n::translate('educational_programs') ?></h2>
         <div class="cards">
             <?php if (isset($educationLevels) && !empty($educationLevels)): ?>
+                <?php
+                $count = 1;
+                ?>
                 <?php foreach ($educationLevels as $i => $educationLevel): ?>
-                    <?php
-                    $index = $i + 1;
-                    $index = strlen($index) == 1 ? '0' . $index : $index;
-                    ?>
 
                     <article class="card">
-                        <div class="card-number"><?= $index ?></div>
+                        <div class="card-number"><?= '0' . ($count++) ?></div>
                         <h3><?= $educationLevel->getTranslation(Yii::$app->globalData->lang)->title ?></h3>
                         <p><?= $educationLevel->getTranslation(Yii::$app->globalData->lang)->text ?></p>
                         <?php if (isset($levelAttachedMenus[$educationLevel->m_id]->url)): ?>
@@ -67,16 +66,14 @@ $content = $this->context->pageData['content'];
         </div>
     </div>
 </section>
-
-<section class="rich-photo-section">
-    <div class="wrap">
-        <div class="photo-feature-split">
-            <div class="visual"><img src="<?= $content->image ?? null ?>" alt="ՀՊՏՀ ուսանողներ"></div>
-            <div class="photo-feature-copy">
-                <div class="eyebrow red">Կրթական միջավայր</div>
-                <h2><?= $content->getTranslation(Yii::$app->globalData->lang)->title ?></h2>
-                <?= $content->getTranslation(Yii::$app->globalData->lang)->text ?>
-                <a class="btn-red" href="/<?= Yii::$app->globalData->lang ?>/education/all-programs"><?= I18n::translate('view_educational_programs') ?> →</a></div>
+<section class="inner-section compact" id="">
+    <div class="wrap"><h2 class="display-inner">Դասացուցակներ և քննագրաֆիկներ</h2>
+        <div class="section-directory"><a href="schedules.html">Դասացուցակներ</a><a href="exam-schedules.html">Քննագրաֆիկներ</a>
         </div>
     </div>
+</section>
+<section class="inner-section compact" id="">
+    <div class="wrap"><h2 class="display-inner">Վիդեո դասախոսություններ</h2><a class="btn-outline"
+                                                                               href="video-lectures.html">Դիտել
+            վիդեո դասախոսությունները →</a></div>
 </section>

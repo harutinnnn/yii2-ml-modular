@@ -67,15 +67,23 @@ return [
                 '<language:(en|ru|am)>/digital-library' => 'library/index',
 
 
+                '<language:(en|ru|am)>/<controller>/all-educational-programs' => 'education/all-programs',
+//                '<language:(en|ru|am)>/education/<controller>/program' => 'education/program',
+//                '<language:(en|ru|am)>/education/<controller>/program/<id:\d+>' => 'education/program',
                 '<language:(en|ru|am)>/education/<controller>/program/<id:\d+>' => 'education/program',
 
                 '<language:(en|ru|am)>/logout' => 'site/logout',
 
                 '<language:(en|ru|am)>' => 'site/index',
 
+                '<language:(en|ru|am)>/news/<slug>' => 'news/view',
                 '<language:(en|ru|am)>/news' => 'news',
 
-                '<language:(en|ru|am)>/<controller>/<action>' => '<controller>/<action>',
+                '<language:(en|ru|am)>/announcements/<slug>' => 'announcements/view',
+                '<language:(en|ru|am)>/announcements' => 'announcements',
+
+                '<language:en|ru|am>/<slug1:[^/]+>/<slug2:[^/]+>' => 'content/index',
+//                '<language:(en|ru|am)>/<controller>/<action>' => '<controller>/<action>',
             ],
         ],
     ],

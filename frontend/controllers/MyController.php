@@ -100,6 +100,7 @@ class MyController extends Controller
         $preParentMenuObj = null;
         $parentMenuObj = null;
         $menuObj = Menu::find()->where(['url' => $currentUrl])->one();
+
         $content = null;
 
 
@@ -111,6 +112,7 @@ class MyController extends Controller
         if (isset($parentMenuObj->parent_id) && $parentMenuObj->parent_id) {
             $preParentMenuObj = Menu::find()->where(['id' => $parentMenuObj->parent_id])->one() ?? null;
         }
+
         $this->pageData['menuObj'] = $menuObj;
         $this->pageData['parentMenuObj'] = $parentMenuObj;
         $this->pageData['preParentMenuObj'] = $preParentMenuObj;

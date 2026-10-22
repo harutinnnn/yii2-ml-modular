@@ -51,16 +51,3 @@ $menu = $this->context->pageData['menuObj'];
 
     </div>
 </section>
-<section class="rich-photo-section">
-    <div class="wrap">
-        <div class="photo-feature-split">
-            <div class="visual"><img src="/images/editorial/reading-students.jpg" alt="ՀՊՏՀ ուսանողներ"></div>
-            <div class="photo-feature-copy">
-                <div class="eyebrow red">Կրթական միջավայր</div>
-                <h2>Գիտելիքը կապվում է փորձի, հետազոտության և համայնքի հետ</h2>
-                <p>Ծրագրերը ձևավորվում են այնպես, որ ուսանողները կարողանան համադրել տեսական հիմքը, կիրառական
-                    առաջադրանքները և մասնագիտական կապերը։</p><a class="btn-red" href="education.html">Դիտել կրթական
-                    ծրագրերը →</a></div>
-        </div>
-    </div>
-</section>

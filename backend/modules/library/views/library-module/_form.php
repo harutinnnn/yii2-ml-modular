@@ -34,6 +34,14 @@ $csrfToken = Yii::$app->request->csrfToken;
                     <?= $form->field($model, 'pos')->textInput() ?>
                 </div>
 
+                <div class="col-md-12">
+
+                        <?= $form->field($model, 'slug')->textInput(
+                                ['readonly' => $model->id && $model->id > 0]
+                        ) ?>
+
+                </div>
+
             </div>
 
         </div>

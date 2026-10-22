@@ -10,6 +10,8 @@ use yii\db\ActiveRecord;
  * @property string $lang
  * @property string $title
  * @property string $text
+ * @property string $pre_title
+ * @property string $quote
  *
  * @property Content $content
  */
@@ -25,7 +27,7 @@ class ContentMl extends ActiveRecord
         return [
             [['content_id', 'lang', 'title', 'text'], 'required'],
             [['content_id'], 'integer'],
-            [['text'], 'string'],
+            [['text','title','quote','pre_title'], 'string'],
             [['lang'], 'string', 'max' => 8],
             [['title'], 'string', 'max' => 255],
             [['content_id', 'lang'], 'unique', 'targetAttribute' => ['content_id', 'lang']],
@@ -41,6 +43,8 @@ class ContentMl extends ActiveRecord
             'lang' => 'Language',
             'title' => 'Title',
             'text' => 'Text',
+            'pre_title' => 'Pre title',
+            'quote' => 'Quote',
         ];
     }
 

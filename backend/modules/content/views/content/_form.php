@@ -62,6 +62,20 @@ $languages = $model->getLanguages();
                                 'placeholder' => "Title in {$language->name}",
                             ]) ?>
 
+                        <?= $form->field($model, "translations[{$language->code}][pre_title]")
+                                ->label("Pre title ({$language->name})")
+                                ->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => "Pre title in {$language->name}",
+                                ]) ?>
+
+                        <?= $form->field($model, "translations[{$language->code}][quote]")
+                                ->label("Quote{$language->name})")
+                                ->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => "Quote in {$language->name}",
+                                ]) ?>
+
                         <?= $form->field($model, "translations[{$language->code}][text]")
                             ->label("Text ({$language->name})")
                             ->widget(CkEditor::class, [

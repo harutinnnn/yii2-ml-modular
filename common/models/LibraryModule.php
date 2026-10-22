@@ -11,6 +11,7 @@ use Yii;
  * @property int $id
  * @property int $status
  * @property int $pos
+ * @property string $slug
  * @property string|null $created_at
  *
  * @property LibraryModuleMl[] $translations
@@ -35,7 +36,7 @@ class LibraryModule extends TranslationModel
         return [
             [['status'], 'default', 'value' => 0],
             [['status', 'pos'], 'integer'],
-            [['pos'], 'required'],
+            [['pos','slug'], 'required'],
             [['created_at'], 'safe'],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
@@ -50,6 +51,7 @@ class LibraryModule extends TranslationModel
             'id' => 'ID',
             'status' => 'Status',
             'pos' => 'Pos',
+            'slug' => 'Slug',
             'created_at' => 'Created At',
         ];
     }
@@ -61,12 +63,12 @@ class LibraryModule extends TranslationModel
 
 
 
-    public function getTranslation(string $lang): ?LibraryModuleMl
-    {
-        $translations = $this->translations;
-
-        return $translations[$lang] ?? null;
-    }
+//    public function getTranslation(string $lang): ?LibraryModuleMl
+//    {
+//        $translations = $this->translations;
+//
+//        return $translations[$lang] ?? null;
+//    }
 
     public static function statusOptions(): array
     {

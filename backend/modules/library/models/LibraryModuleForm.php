@@ -16,7 +16,9 @@ class LibraryModuleForm extends Model
 {
     public ?LibraryModule $library_module = null;
     public int $status = StatusList::STATUS_ACTIVE;
+    public int $id = 0;
     public int $pos = 0;
+    public string $slug = '';
     public array $translations = [];
 
     private ?array $_languages = null;
@@ -27,8 +29,10 @@ class LibraryModuleForm extends Model
         parent::__construct($config);
 
         if ($this->library_module !== null) {
+            $this->id = (int)$library_module->id;
             $this->status = (int)$this->library_module->status;
             $this->pos = (int)$this->library_module->pos;
+            $this->slug = (string)$this->library_module->slug;
             foreach ($this->library_module->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
@@ -48,7 +52,7 @@ class LibraryModuleForm extends Model
     public function rules(): array
     {
         return [
-            [['status', 'pos'], 'required'],
+            [['status', 'pos','slug'], 'required'],
             [['status', 'pos'], 'integer'],
             [['status'], 'in', 'range' => array_keys(LibraryModule::statusOptions())],
             [['translations'], 'safe'],
@@ -61,6 +65,7 @@ class LibraryModuleForm extends Model
         return [
             'status' => 'Status',
             'pos' => 'Position',
+            'slug' => 'Slug',
         ];
     }
 
@@ -88,6 +93,7 @@ class LibraryModuleForm extends Model
         $library_module = $this->library_module ?? new LibraryModule();
         $library_module->status = $this->status;
         $library_module->pos = $this->pos;
+        $library_module->slug = $this->slug;
 
 
         $transaction = Yii::$app->db->beginTransaction();

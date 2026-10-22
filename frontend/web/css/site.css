@@ -106,13 +106,52 @@
 }
 
 
-.error-msg{
+.error-msg {
     color: #810e0e;
 }
-.error-msg.message{
+
+.error-msg.message {
     background-color: #ef5959b0;
     padding: 5px 10px;
     margin-bottom: 3px;
     color: #fff;
     border-radius: 5px;
+}
+
+
+ul.pagination {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 0;
+    margin: 20px 0 0;
+}
+
+ul.pagination li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    border: solid 1px var(--red);
+    background-color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all .1s;
+
+    &:hover{
+        background-color: var(--red);
+        color: #fff;
+    }
+}
+
+ul.pagination li.active {
+    background-color: var(--red);
+    color: #fff;
+}
+
+ul.pagination li.prev,
+ul.pagination li.next {
+    padding: 0 10px;
 }

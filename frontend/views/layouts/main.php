@@ -38,10 +38,16 @@ AppAsset::register($this);
 
     <main>
 
-        <?php if (Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index'): ?>
-            <?= $this->render('//partial/home-header') ?>
-        <?php elseif (empty($this->params['hideMainHeader'])): ?>
-            <?= $this->render('//partial/main-header') ?>
+        <?php if (isset($this->params['customHeader']) && !empty($this->params['customHeader'])): ?>
+
+            <?= $this->render($this->params['customHeader']) ?>
+        <?php else: ?>
+
+            <?php if (Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index'): ?>
+                <?= $this->render('//partial/home-header') ?>
+            <?php elseif (empty($this->params['hideMainHeader'])): ?>
+                <?= $this->render('//partial/main-header') ?>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?= $content ?>

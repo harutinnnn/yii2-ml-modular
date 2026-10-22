@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\helpers\I18n;
+use common\models\LibraryModule;
 
 /**
  * Site controller
@@ -21,7 +22,13 @@ class LibraryController extends MyController
 
         $this->layout = 'library';
 
-        return $this->render('index');
+
+        $libraryModules = LibraryModule::find()->all();
+
+        return $this->render('index',
+        [
+            'libraryModules' => $libraryModules,
+        ]);
     }
 
 }

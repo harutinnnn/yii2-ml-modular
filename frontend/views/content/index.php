@@ -1,4 +1,7 @@
 <?php
+
+use common\models\TranslationModel;
+
 $content = $this->context->pageData['content'];
 $menuObj = $this->context->pageData['menuObj'];
 ?>
@@ -55,4 +58,63 @@ $menuObj = $this->context->pageData['menuObj'];
         </div>
     </section>
 
+<?php endif; ?>
+
+
+<?php if (isset($pageBlock) && !empty($pageBlock) && isset($pageBlockItems) && !empty($pageBlockItems)): ?>
+
+
+    <?php if ($pageBlock->type == \common\models\PageBlock::TYPE_CART): ?>
+
+        <section class="inner-section white">
+            <div class="wrap">
+                <div class="eyebrow red"><?= TranslationModel::getDisplayTitle($pageBlock, 'pre_title') ?></div>
+                <h2 class="display-inner"><?= TranslationModel::getDisplayTitle($pageBlock) ?></h2>
+                <div class="cards">
+                    <?php foreach ($pageBlockItems as $i => $pageBlockItem): ?>
+                        <?php
+
+                        $index = $i + 1;
+                        if (strlen($index) < 2) {
+                            $index = '0' . $index;
+                        }
+                        ?>
+                        <article class="card">
+
+                            <div class="card-number"><?= $index ?></div>
+                            <h3><?= TranslationModel::getDisplayTitle($pageBlockItem, 'title') ?></h3>
+                            <p>
+                                <?= TranslationModel::getDisplayTitle($pageBlockItem, 'text') ?>
+                            </p>
+
+
+                            <?php
+                            $itemUrl = TranslationModel::getDisplayTitle($pageBlockItem, 'url');
+                            ?>
+                            <?php if ($itemUrl && strlen(trim($itemUrl))): ?>
+                                <a href="<?= $itemUrl ?>">Բացել →</a>
+                            <?php endif; ?>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php else: ?>
+        <section class="inner-section white">
+            <div class="wrap">
+                <div class="eyebrow red"><?= TranslationModel::getDisplayTitle($pageBlock, 'pre_title') ?></div>
+                <h2 class="display-inner"><?= TranslationModel::getDisplayTitle($pageBlock) ?></h2>
+                <div class="facts-list">
+                    <?php foreach ($pageBlockItems as $i => $pageBlockItem): ?>
+                        <div>
+                            <strong><?= TranslationModel::getDisplayTitle($pageBlockItem, 'title') ?></strong>
+                            <span>
+                            <?= TranslationModel::getDisplayTitle($pageBlockItem, 'text') ?>
+                        </span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
 <?php endif; ?>

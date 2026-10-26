@@ -10,6 +10,9 @@ $headerImage = $menuObj['header_image'] ?? '';
 if ((!$headerImage || !strlen(trim($headerImage))) && isset($this->params['headerImage'])) {
     $headerImage = $this->params['headerImage'];
 }
+
+$headerSubNav = $menuObj->headerSubNav ?? [];
+
 ?>
 
 <section class="inner-hero" style="--hero:url('<?= $headerImage ?>')">
@@ -20,9 +23,9 @@ if ((!$headerImage || !strlen(trim($headerImage))) && isset($this->params['heade
         </div>
         <div class="eyebrow">
             <?php if (isset($preParentMenuObj) && !empty($preParentMenuObj)) : ?>
-            <?= $preParentMenuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?>
+                <?= $preParentMenuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?>
             <?php else: ?>
-            <?= $parentMenuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?>
+                <?= $parentMenuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?>
             <?php endif; ?>
         </div>
         <h1><?= $menuObj?->getTranslation(Yii::$app->globalData->lang)->title ?? "" ?></h1>
@@ -31,3 +34,14 @@ if ((!$headerImage || !strlen(trim($headerImage))) && isset($this->params['heade
         </p>
     </div>
 </section>
+<?php ?>
+
+<?php if (!empty($headerSubNav)): ?>
+    <nav class="inner-subnav">
+        <div class="wrap">
+            <?php foreach ($headerSubNav as $headerSubNavItem): ?>
+                <a href="#mission"><?= \common\models\TranslationModel::getTranslation($headerSubNavItem->sideMenu, Yii::$app->globalData->lang) ?></a>
+            <?php endforeach; ?>
+        </div>
+    </nav>
+<?php endif; ?>

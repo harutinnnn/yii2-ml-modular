@@ -140,7 +140,7 @@ ul.pagination li {
     cursor: pointer;
     transition: all .1s;
 
-    &:hover{
+    &:hover {
         background-color: var(--red);
         color: #fff;
     }
@@ -156,6 +156,17 @@ ul.pagination li.next {
     padding: 0 10px;
 }
 
-.lang .active{
+.lang .active {
     color: var(--red);
+}
+
+.d-flex {
+    display: flex;
+}
+
+.fs-12px{
+    font-size: 12px;
+}
+.fs-18px{
+    font-size: 18px;
 }

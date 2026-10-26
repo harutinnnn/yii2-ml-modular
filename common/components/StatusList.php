@@ -6,6 +6,7 @@ class StatusList
 {
 
     const STATUS_DELETED = 0;
+    const STATUS_PUBLISHED = 1;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
     const STATUS_PENDING = 2;

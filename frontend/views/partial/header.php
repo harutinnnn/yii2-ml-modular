@@ -2,6 +2,7 @@
 
 use common\components\I18n;
 use common\components\UrlHelper;
+use common\components\UserRoles;
 use yii\helpers\Html;
 
 
@@ -23,15 +24,29 @@ $userAdditional = $user?->additional ?? null;
             </a>
         <?php else: ?>
 
-            <span class="module-user">
-            <?= Html::beginForm(['/' . Yii::$app->globalData->lang . '/logout'], 'post', ['id' => 'logoutForm']) ?>
+            <?php
 
-            <a href="javascript:void(0)" onclick="$('#logoutForm').submit()">
-                <?= I18n::translate('sign_out') ?>
+            $userDashboard = '';
+            $usertype = Yii::$app->session->get('userType');
+
+            if ($usertype == UserRoles::STUDENT) {
+
+                $userDashboard = '/student/student-personal-dashboard';
+
+            } else if ($usertype == UserRoles::TEACHER) {
+
+                $userDashboard = '/lecturer/personal-dashboard';
+
+            } else if ($usertype == UserRoles::ADMINISTRATIVE_STAFF) {
+
+                $userDashboard = '/administrative/personal-dashboard';
+
+            }
+
+            ?>
+            <a class="header-link" href="/<?= Yii::$app->globalData->lang ?><?= $userDashboard ?>">
+                <?= $userAdditional->first_name ?? '-' ?> <?= $userAdditional->last_name ?? '-' ?>
             </a>
-
-            <?= Html::endForm() ?>
-        </span>
         <?php endif; ?>
 
         <a class="header-link advanced-search" href="/<?= Yii::$app->globalData->lang ?>/search">

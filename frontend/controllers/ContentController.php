@@ -3,14 +3,8 @@
 namespace frontend\controllers;
 
 use common\helpers\I18n;
-use common\models\EducationalPrograms;
-use common\models\EducationLevels;
-use common\models\EducationPlan;
-use common\models\Language;
-use common\models\Menu;
+use common\models\PageBlockItem;
 use Yii;
-use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -28,6 +22,7 @@ class ContentController extends MyController
 
 
         $sideMenuList = [];
+
 
         if (isset($this->pageData['menuObj']->sideMenu) && !empty($this->pageData['menuObj']->sideMenu)) {
             foreach ($this->pageData['menuObj']->sideMenu as $sideMenuObj) {
@@ -62,9 +57,19 @@ class ContentController extends MyController
             }
         }
 
+
+        $pageBlock = $this->pageData['menuObj']->pageBlock ?? null;
+        $pageBlockItems = [];
+        if (!empty($pageBlock)) {
+            $pageBlockItems = PageBlockItem::find()->where(['page_block_id' => $pageBlock->id])->orderBy(['pos' => SORT_ASC])->all();
+        }
+
+
         return $this->render('index',
             [
-                'sideMenuList' => $sideMenuList
+                'sideMenuList' => $sideMenuList,
+                'pageBlock' => $pageBlock,
+                'pageBlockItems' => $pageBlockItems,
             ]
         );
     }

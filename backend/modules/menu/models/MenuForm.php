@@ -6,6 +6,7 @@ use common\models\Content;
 use common\models\Language;
 use common\models\Menu;
 use common\models\MenuMl;
+use common\models\PageHeaderSubNavMenuItems;
 use common\models\PageSideMenuItemsPerMenu;
 use common\models\Section;
 use Yii;
@@ -33,9 +34,12 @@ class MenuForm extends Model
     public $imageFile = null;
     public $headerImageFile = null;
 
+    public int $page_blocks = 0;
+
     private ?array $_languages = null;
 
     public $sidebar_menus = [];
+    public $header_sub_menus = [];
 
     public function __construct(?Menu $menu = null, $config = [])
     {
@@ -56,10 +60,15 @@ class MenuForm extends Model
             $this->url = (string)$this->menu->url;
             $this->image = $this->menu->image;
             $this->header_image = $this->menu->header_image;
+            $this->page_blocks = $this->menu->page_blocks;
 
 
             if (isset($menu->sideMenu) && !empty($menu->sideMenu)) {
                 $this->sidebar_menus = ArrayHelper::getColumn($menu->sideMenu, 'side_menu_id');
+            }
+
+            if (isset($menu->headerSubNav) && !empty($menu->headerSubNav)) {
+                $this->header_sub_menus = ArrayHelper::getColumn($menu->headerSubNav, 'side_menu_id');
             }
 
 
@@ -89,8 +98,9 @@ class MenuForm extends Model
     {
         return [
             [['status', 'show_in_menu', 'url', 'section_id'], 'required'],
-            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id', 'student_menu', 'teacher_menu', 'is_flat_menu'], 'integer'],
+            [['status', 'show_in_menu', 'position', 'content_id', 'section_id', 'parent_id','page_blocks', 'student_menu', 'teacher_menu', 'is_flat_menu'], 'integer'],
             [['sidebar_menus'], 'each', 'rule' => ['integer']],
+            [['header_sub_menus'], 'each', 'rule' => ['integer']],
             [['status'], 'in', 'range' => array_keys(Menu::statusOptions())],
             [['show_in_menu'], 'in', 'range' => [0, 1]],
             [['url'], 'string', 'max' => 255],
@@ -104,7 +114,7 @@ class MenuForm extends Model
     {
         $scope = $formName ?? $this->formName();
         if ($scope !== '' && isset($data[$scope]) && is_array($data[$scope])) {
-            foreach (['content_id', 'section_id', 'parent_id', 'position'] as $field) {
+            foreach (['content_id', 'section_id', 'parent_id', 'position','page_blocks'] as $field) {
                 if (array_key_exists($field, $data[$scope]) && $data[$scope][$field] === '') {
                     $data[$scope][$field] = null;
                 }
@@ -123,6 +133,7 @@ class MenuForm extends Model
             'content_id' => 'Content',
             'section_id' => 'Section',
             'parent_id' => 'Parent',
+            'page_blocks' => 'Page block',
             'url' => 'URL',
             'imageFile' => 'Image',
             'headerImageFile' => 'Header Image',
@@ -130,6 +141,7 @@ class MenuForm extends Model
             'is_flat_menu' => 'Is flat menu',
             'student_menu' => 'Student menu',
             'sidebar_menus' => 'Page sidebar menus',
+            'header_sub_menus' => 'Header sub menus',
         ];
     }
 
@@ -162,6 +174,7 @@ class MenuForm extends Model
         $menu->content_id = $this->content_id ?: null;
         $menu->section_id = $this->section_id ?: null;
         $menu->parent_id = $this->parent_id ?: null;
+        $menu->page_blocks = $this->page_blocks ?? 0;
         $menu->url = trim($this->url);
 
         if ($this->imageFile !== null) {
@@ -181,6 +194,7 @@ class MenuForm extends Model
 
             //Add page sidebar menus
 
+
             if ($menu['id']) {
                 PageSideMenuItemsPerMenu::deleteAll(['menu_id' => $menu['id']]);
 
@@ -192,6 +206,22 @@ class MenuForm extends Model
                         $pageSideMenuItemsPerMenu->menu_id = $menu['id'];
                         $pageSideMenuItemsPerMenu->side_menu_id = $sidebar_menu;
                         $pageSideMenuItemsPerMenu->save();
+                    }
+                }
+            }
+
+
+            if ($menu['id']) {
+                PageHeaderSubNavMenuItems::deleteAll(['menu_id' => $menu['id']]);
+
+                if (!empty($this->header_sub_menus)) {
+
+                    foreach ($this->header_sub_menus as $header_sub_menu) {
+
+                        $PageHeaderSubNavMenuItem = new PageHeaderSubNavMenuItems();
+                        $PageHeaderSubNavMenuItem->menu_id = $menu['id'];
+                        $PageHeaderSubNavMenuItem->side_menu_id = $header_sub_menu;
+                        $PageHeaderSubNavMenuItem->save();
                     }
                 }
             }

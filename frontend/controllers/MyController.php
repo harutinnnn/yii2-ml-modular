@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\components\StatusList;
 use common\models\Content;
 use common\models\Language;
 use common\models\Menu;
@@ -42,7 +43,7 @@ class MyController extends Controller
         if (!empty($mainSection)) {
 
             $mainMenu = Menu::find()
-                ->where(['parent_id' => null, 'section_id' => $mainSection->id])
+                ->where(['parent_id' => null, 'section_id' => $mainSection->id,'show_in_menu' => StatusList::STATUS_PUBLISHED])
                 ->orderBy(['position' => SORT_ASC])
                 ->all();
 

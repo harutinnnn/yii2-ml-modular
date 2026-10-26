@@ -6,13 +6,14 @@ class TranslationModel extends \yii\db\ActiveRecord
 {
 
 
-    public static function getDisplayTitle($model, $attr = 'title'): string
+    public static function getDisplayTitle($model, $attr = 'title'): string | null
     {
         $defaultLanguage = Language::find()->where(['is_default' => 1])->select('code')->scalar();
 
+
         if ($defaultLanguage) {
 
-            return self::getTranslation($model, $defaultLanguage);
+            return self::getTranslation($model, $defaultLanguage, $attr);
         }
 
         foreach ($model->translations as $translation) {

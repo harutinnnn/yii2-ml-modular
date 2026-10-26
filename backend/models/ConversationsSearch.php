@@ -2,6 +2,8 @@
 
 namespace backend\models;
 
+use common\components\UserRoles;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Conversations;
@@ -18,7 +20,7 @@ class ConversationsSearch extends Conversations
     {
         return [
             [['id', 'created_by'], 'integer'],
-            [['type', 'title', 'created_at','moderator','status'], 'safe'],
+            [['type', 'title', 'created_at', 'moderator', 'status'], 'safe'],
         ];
     }
 
@@ -44,10 +46,25 @@ class ConversationsSearch extends Conversations
         $query = Conversations::find();
 
         // add conditions that should always apply here
+        $auth = Yii::$app->authManager;
+        $roles = $auth->getRolesByUser(Yii::$app->user->id);
+
+
+        if (
+            empty(array_intersect(
+                [UserRoles::ADMIN, UserRoles::SUPER_ADMIN],
+                array_keys($roles)
+            ))
+        ) {
+
+            $query->where(['moderator' => Yii::$app->user->id]);
+        }
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
 
         $this->load($params, $formName);
 

@@ -1,4 +1,8 @@
 <?php
+
+use common\components\I18n;
+use yii\helpers\Html;
+
 $parentCounter = 0;
 $childCounter = 0;
 ?>
@@ -18,6 +22,32 @@ $childCounter = 0;
                     <?php $parentCounter++; ?>
                 <?php endforeach; ?>
             <?php endif; ?>
+
+            <?php if (Yii::$app->user->isGuest): ?>
+                <a href="/<?= Yii::$app->globalData->lang ?>/login">
+                    <button class="menu-main-item"
+                            type="button">
+                        <span><?= I18n::translate('login') ?></span><b>→</b>
+                    </button>
+                </a>
+            <?php else: ?>
+
+                <?= Html::beginForm(['/' . Yii::$app->globalData->lang . '/logout'], 'post', ['id' => 'logoutForm']) ?>
+
+
+                <a href="javascript:void(0)" onclick="$('#logoutForm').submit()">
+                    <button class="menu-main-item"
+                            type="button">
+                        <?= \common\components\I18n::translate('sign_out') ?>
+                    </button>
+                </a>
+
+                <?= Html::endForm() ?>
+
+
+            <?php endif; ?>
+
+
         </div>
 
 

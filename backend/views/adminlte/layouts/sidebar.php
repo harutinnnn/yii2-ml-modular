@@ -41,6 +41,7 @@ $menuItems = [
                 'label' => 'Menus/Contents',
                 'icon' => 'list',
                 'visible' => RbacUtilities::allowRoles(['admin']),
+
                 'items' => [
                         ['label' => 'Sections', 'icon' => 'folder', 'url' => ['/section/section/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
@@ -54,10 +55,15 @@ $menuItems = [
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
                                 'active' => Yii::$app->controller->id == 'content'
                         ],
+                        ['label' => 'Page blocks', 'icon' => 'th-large', 'url' => ['/content/page-block/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'page-block' || Yii::$app->controller->id == 'page-block-item'
+                        ],
                         ['label' => 'Email Contents', 'icon' => 'envelope', 'url' => ['/email-content/email-content/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
                                 'active' => Yii::$app->controller->id == 'email-content'
                         ],
+
                 ]
         ],
 
@@ -131,7 +137,7 @@ $menuItems = [
         ],
 
         ['label' => 'Conversations/Groups', 'icon' => 'comments', 'url' => ['/conversations/index'],
-                'visible' => RbacUtilities::allowRoles(['admin']),'active' => Yii::$app->controller->id == 'conversations'
+                'visible' => RbacUtilities::allowRoles([UserRoles::ADMIN,UserRoles::TEACHER]), 'active' => Yii::$app->controller->id == 'conversations'
         ],
         ['label' => 'Actions/Logs', 'icon' => 'boxes', 'url' => ['/action-logs/index'],
                 'visible' => RbacUtilities::allowRoles(['admin'])

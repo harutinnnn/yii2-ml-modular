@@ -4,10 +4,13 @@ namespace backend\modules\menu\controllers;
 
 use backend\modules\menu\models\MenuForm;
 use common\models\Menu;
+use common\models\PageBlock;
 use common\models\Section;
+use common\models\TranslationModel;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\db\Transaction;
 use yii\web\Controller;
@@ -65,7 +68,15 @@ class MenuController extends Controller
             return $this->redirect(['index']);
         }
 
-        return $this->render('update', compact('model'));
+        $page_blocks = PageBlock::find()->all();
+
+        return $this->render('update',
+            [
+                'model' => $model,
+                'page_blocks' => ArrayHelper::map($page_blocks, 'id', function ($page_block) {
+                    return TranslationModel::getDisplayTitle($page_block);
+                })]
+        );
     }
 
     public function actionSlugify(string $title = '', ?int $menuId = null): array
@@ -105,19 +116,19 @@ class MenuController extends Controller
         $transaction = Yii::$app->db->beginTransaction(Transaction::SERIALIZABLE);
         try {
             foreach ($items as $item) {
-                $menu = Menu::findOne((int) ($item['id'] ?? 0));
+                $menu = Menu::findOne((int)($item['id'] ?? 0));
                 if ($menu === null) {
                     continue;
                 }
 
-                $depth = (int) ($item['depth'] ?? 1);
+                $depth = (int)($item['depth'] ?? 1);
                 if ($depth < 1 || $depth > 3) {
                     throw new \RuntimeException('Maximum depth is 3.');
                 }
 
-                $menu->section_id = (int) ($item['section_id'] ?? 0);
-                $menu->parent_id = empty($item['parent_id']) ? null : (int) $item['parent_id'];
-                $menu->position = (int) ($item['position'] ?? 0);
+                $menu->section_id = (int)($item['section_id'] ?? 0);
+                $menu->parent_id = empty($item['parent_id']) ? null : (int)$item['parent_id'];
+                $menu->position = (int)($item['position'] ?? 0);
                 if (!$menu->save(false, ['section_id', 'parent_id', 'position', 'updated_at'])) {
                     throw new \RuntimeException('Failed to save tree.');
                 }

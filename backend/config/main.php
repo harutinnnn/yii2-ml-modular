@@ -58,7 +58,13 @@ return [
         'faculties' => [
             'class' => \backend\modules\faculties\Module::class,
         ],
+        'menu' => [
+            'class' => \backend\modules\menu\Module::class,
+        ],
         'content' => [
+            'class' => \backend\modules\content\Module::class,
+        ],
+        'page-block' => [
             'class' => \backend\modules\content\Module::class,
         ],
         'posts' => [
@@ -81,9 +87,6 @@ return [
         ],
         'frontend-language' => [
             'class' => \backend\modules\frontendlanguage\Module::class,
-        ],
-        'menu' => [
-            'class' => \backend\modules\menu\Module::class,
         ],
         'language' => [
             'class' => \backend\modules\language\Module::class,

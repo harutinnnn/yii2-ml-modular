@@ -10,6 +10,7 @@ use backend\models\ConversationsSearch;
 use common\models\EducationLevels;
 use common\models\User;
 use Yii;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -23,19 +24,25 @@ class ConversationsController extends Controller
     /**
      * @inheritDoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin', 'teacher'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -49,7 +56,6 @@ class ConversationsController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         $moderators = UserHelper::getUsersByRoles([UserRoles::ADMIN, UserRoles::TEACHER]);
-
 
 
         return $this->render('index', [
@@ -71,8 +77,11 @@ class ConversationsController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $this->checkUserAccess($model);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -117,6 +126,9 @@ class ConversationsController extends Controller
     {
         $model = $this->findModel($id);
 
+        $this->checkUserAccess($model);
+
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
@@ -142,7 +154,9 @@ class ConversationsController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $this->checkUserAccess($model);
+        $model->delete();
 
         return $this->redirect(['index']);
     }
@@ -254,6 +268,27 @@ class ConversationsController extends Controller
                 }
             }
 
+        }
+
+    }
+
+    protected function checkUserAccess(Conversations $model)
+    {
+
+        $auth = Yii::$app->authManager;
+        $roles = $auth->getRolesByUser(Yii::$app->user->id);
+
+
+        if (
+            empty(array_intersect(
+                [UserRoles::ADMIN, UserRoles::SUPER_ADMIN],
+                array_keys($roles)
+            ))
+        ) {
+
+            if ($model->moderator != Yii::$app->user->id) {
+               return $this->redirect(['/conversations']);
+            }
         }
 
     }

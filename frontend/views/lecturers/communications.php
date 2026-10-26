@@ -11,18 +11,21 @@
         <aside class="panel">
 
             <?php use common\components\FileHelper;
+            use common\components\I18n;
+            use yii\helpers\Html;
 
             foreach ($conversations as $conversation): ?>
 
                 <?php if ($conversationId == $conversation->id): ?>
 
-                    <button class="btn">Նոր հաղորդագրություն</button>
-                    <?= \yii\helpers\Html::hiddenInput('conversationId', $conversation->id, ['id' => 'conversationId']) ?>
+                    <button class="btn"><?= I18n::translate('new_message') ?></button>
+                    <?= Html::hiddenInput('conversationId', $conversation->id, ['id' => 'conversationId']) ?>
                 <?php endif; ?>
 
                 <a class="list-item <?= $conversationId == $conversation->id ? 'active' : '' ?>"
                    href="/am/lecturer/communications?conversationId=<?= $conversation->id ?>">
                     <?= $conversation->title ?>
+
                 </a>
 
             <?php endforeach; ?>
@@ -33,7 +36,18 @@
         <div class="panel">
             <?php if (isset($currentConversation) && !empty($currentConversation)): ?>
                 <span class="badge">Կարդացված</span>
-                <h2><?= $currentConversation->title ?></h2>
+                <h2 class="d-flex">
+                    <?= $currentConversation->title ?>
+
+                    <?php if ($conversation->moderator == Yii::$app->user->id): ?>
+                        <div class="moderate-chat module-user fs-18px" target="_blank"
+                              style="margin-left: auto">
+                                <a href="/admin/conversations/members?conversation_id=<?= $currentConversation->id ?>" target="_blank">
+                                    Manage users
+                                </a>
+                        </div>
+                    <?php endif; ?>
+                </h2>
 
                 <p class="meta">
                     Պատասխանատու՝ <?= $currentConversation->creator_->additional->first_name . ' ' . $currentConversation->creator_->additional->last_name ?>

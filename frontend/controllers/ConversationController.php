@@ -2,23 +2,12 @@
 
 namespace frontend\controllers;
 
-use common\components\EntityTypes;
 use common\components\I18n;
-use common\components\UserRoles;
-use common\models\ActionLogs;
-use common\models\ApplicationsAndInquiries;
-use common\models\Chairs;
 use common\models\Conversations;
-use common\models\Faculties;
-use common\models\ScientificPortfolio;
-use common\models\User;
 use frontend\models\ConversationForm;
-use frontend\models\ScientificPortfolioForm;
-use frontend\models\StudentDataForm;
 use frontend\models\StudentLoginForm;
 use stdClass;
 use Yii;
-use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 
 /**

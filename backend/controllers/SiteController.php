@@ -90,7 +90,6 @@ class SiteController extends Controller
 
             return $this->goBack();
         }
-        dd($model->errors);
 
         $model->password = '';
 

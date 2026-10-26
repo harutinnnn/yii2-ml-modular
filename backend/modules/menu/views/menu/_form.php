@@ -5,7 +5,6 @@ use common\models\Menu;
 use common\widgets\ckeditor\CkEditor;
 use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -24,126 +23,202 @@ $menuIdJson = Json::htmlEncode($menuId);
 
 <div class="menu-form">
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <div class="container-fluid">
 
-    <div class="card card-primary">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3"><?= $form->field($model, 'teacher_menu')->checkbox([]) ?></div>
-                <div class="col-md-3"><?= $form->field($model, 'student_menu')->checkbox([]) ?></div>
-                <div class="col-md-3"><?= $form->field($model, 'is_flat_menu')->checkbox([]) ?></div>
-            </div>
-            <div class="row">
-                <div class="col-md-3"><?= $form->field($model, 'status')->dropDownList(Menu::statusOptions()) ?></div>
-                <div class="col-md-3"><?= $form->field($model, 'show_in_menu')->dropDownList(Menu::booleanOptions()) ?></div>
-                <div class="col-md-2"><?= $form->field($model, 'position')->input('number') ?></div>
-                <div class="col-md-4"><?= $form->field($model, 'content_id')->dropDownList($model::contentOptions()) ?></div>
-            </div>
-            <div class="row">
-                <div class="col-md-4"><?= $form->field($model, 'url')->textInput(['maxlength' => true, 'id' => 'menu-url']) ?></div>
-                <div class="col-md-4"><?= $form->field($model, 'section_id')->dropDownList($sectionOptions) ?></div>
-                <div class="col-md-4">
-                    <?php
-                    echo $form->field($model, 'parent_id')->widget(Select2::class, [
-                            'data' => $parentOptions,
-                            'options' => [
-                                    'placeholder' => 'Select parent menu...',
-                            ],
-                            'pluginOptions' => [
-                                    'allowClear' => true,
-                            ],
-                    ]);
-                    ?>
-                </div>
-
-                <div class="col-md-12">
-                    <?php
-                    echo $form->field($model, 'sidebar_menus')->widget(Select2::class, [
-                            'data' => $parentOptions,
-                            'options' => [
-                                    'placeholder' => 'Select parent menu...',
-                                    'multiple' => true,
-                            ],
-                            'pluginOptions' => [
-                                    'allowClear' => true,
-                            ],
-                    ]);
-//                    dd($model->sidebar_menus);
-                    ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <?= $form->field($model, 'imageFile')->fileInput() ?>
-                    <?php if ($model->image): ?><p class="mb-0"><img src="<?= Html::encode($model->image) ?>" alt=""
-                                                                     style="max-height: 70px;"></p><?php endif; ?>
-                </div>
-                <div class="col-md-6">
-                    <?= $form->field($model, 'headerImageFile')->fileInput() ?>
-                    <?php if ($model->header_image): ?><p class="mb-0"><img
-                                src="<?= Html::encode($model->header_image) ?>" alt="" style="max-height: 70px;">
-                        </p><?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-outline card-primary">
-        <div class="card-header p-0 border-bottom-0">
-            <ul class="nav nav-tabs" role="tablist">
-                <?php foreach ($languages as $index => $language): ?>
-                    <li class="nav-item">
-                        <a class="nav-link <?= $index === 0 ? 'active' : '' ?>" data-toggle="pill"
-                           href="#menu-lang-<?= Html::encode($language->code) ?>" role="tab">
-                            <?= Html::encode(strtoupper($language->code)) ?>: <?= Html::encode($language->name) ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-        <div class="card-body">
-            <div class="tab-content">
-                <?php foreach ($languages as $index => $language): ?>
-                    <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>"
-                         id="menu-lang-<?= Html::encode($language->code) ?>" role="tabpanel">
-                        <div class="row">
-                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][title]")->label("Title ({$language->name})")->textInput([
-                                        'maxlength' => true,
-                                        'class' => 'form-control js-menu-title',
-                                        'data-lang' => $language->code,
-                                ]) ?></div>
-                            <div class="col-md-6"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][meta_title]")->label("Meta Title ({$language->name})")->textInput(['maxlength' => true]) ?></div>
-                            <div class="col-md-6"></div>
-                        </div>
-                        <?= $form->field($model, "translations[{$language->code}][meta_desc]")->label("Meta Description ({$language->name})")->textarea(['rows' => 2]) ?>
-                        <?= $form->field($model, "translations[{$language->code}][meta_keywords]")->label("Meta Keywords ({$language->name})")->textarea(['rows' => 2]) ?>
-                        <?= $form->field($model, "translations[{$language->code}][description]")->label("Description ({$language->name})")->widget(CkEditor::class, [
-                                'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
-                                'clientOptions' => [
-                                        'height' => 220,
-                                        'toolbar' => [
-                                                ['name' => 'document', 'items' => ['Source']],
-                                                ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
-                                                ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
-                                                ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
-                                                ['name' => 'links', 'items' => ['Link', 'Unlink']],
-                                                ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
-                                                ['name' => 'styles', 'items' => ['Format']],
-                                        ],
-                                ],
-                        ]) ?>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">Block 1</h3>
                     </div>
-                <?php endforeach; ?>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4"><?= $form->field($model, 'teacher_menu')->checkbox([]) ?></div>
+                            <div class="col-md-4"><?= $form->field($model, 'student_menu')->checkbox([]) ?></div>
+                            <div class="col-md-4"><?= $form->field($model, 'is_flat_menu')->checkbox([]) ?></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6"><?= $form->field($model, 'content_id')->dropDownList($model::contentOptions()) ?></div>
+                            <div class="col-md-6"><?= $form->field($model, 'page_blocks')->dropDownList([0 => "None"] + ($page_blocks ?? [])) ?></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4"><?= $form->field($model, 'url')->textInput(['maxlength' => true, 'id' => 'menu-url']) ?></div>
+                            <div class="col-md-4"><?= $form->field($model, 'section_id')->dropDownList($sectionOptions) ?></div>
+                            <div class="col-md-4">
+                                <?php
+                                echo $form->field($model, 'parent_id')->widget(Select2::class, [
+                                        'data' => $parentOptions,
+                                        'options' => [
+                                                'placeholder' => 'Select parent menu...',
+                                        ],
+                                        'pluginOptions' => [
+                                                'allowClear' => true,
+                                        ],
+                                ]);
+                                ?>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="card-footer">
-            <?= Html::submitButton($model->menu === null ? 'Create' : 'Update', ['class' => 'btn btn-primary']) ?>
-            <?= Html::a('Cancel', ['index'], ['class' => 'btn btn-default']) ?>
+
+            <div class="col-md-4">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">Block 1</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="col-md-12"><?= $form->field($model, 'status')->dropDownList(Menu::statusOptions()) ?></div>
+                            <div class="col-md-12"><?= $form->field($model, 'show_in_menu')->dropDownList(Menu::booleanOptions()) ?></div>
+                            <div class="col-md-12"><?= $form->field($model, 'position')->input('number') ?></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">Block 3</h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+
+                            <div class="col-md-12">
+                                <?php
+                                echo $form->field($model, 'sidebar_menus')->widget(Select2::class, [
+                                        'data' => $parentOptions,
+                                        'options' => [
+                                                'placeholder' => 'Select parent menu...',
+                                                'multiple' => true,
+                                        ],
+                                        'pluginOptions' => [
+                                                'allowClear' => true,
+                                        ],
+                                ]);
+                                ?>
+                            </div>
+
+                            <div class="col-md-12">
+                                <?php
+                                echo $form->field($model, 'header_sub_menus')->widget(Select2::class, [
+                                        'data' => $parentOptions,
+                                        'options' => [
+                                                'placeholder' => 'Select parent menu...',
+                                                'multiple' => true,
+                                        ],
+                                        'pluginOptions' => [
+                                                'allowClear' => true,
+                                        ],
+                                ]);
+                                ?>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'imageFile')->fileInput() ?>
+                                <?php if ($model->image): ?><p class="mb-0"><img
+                                            src="<?= Html::encode($model->image) ?>"
+                                            alt=""
+                                            style="max-height: 70px;">
+                                    </p><?php endif; ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'headerImageFile')->fileInput() ?>
+                                <?php if ($model->header_image): ?><p class="mb-0"><img
+                                            src="<?= Html::encode($model->header_image) ?>" alt=""
+                                            style="max-height: 70px;">
+                                    </p><?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">Languages block</h3>
+                    </div>
+
+
+                    <div class=" pt-3">
+                        <div class="card-header p-0 border-bottom-0">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <?php foreach ($languages as $index => $language): ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link <?= $index === 0 ? 'active' : '' ?>" data-toggle="pill"
+                                           href="#menu-lang-<?= Html::encode($language->code) ?>" role="tab">
+                                            <?= Html::encode(strtoupper($language->code)) ?>
+                                            : <?= Html::encode($language->name) ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <div class="card-body mb-1">
+                            <div class="tab-content">
+                                <?php foreach ($languages as $index => $language): ?>
+                                    <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>"
+                                         id="menu-lang-<?= Html::encode($language->code) ?>" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][title]")->label("Title ({$language->name})")->textInput([
+                                                        'maxlength' => true,
+                                                        'class' => 'form-control js-menu-title',
+                                                        'data-lang' => $language->code,
+                                                ]) ?></div>
+                                            <div class="col-md-6"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6"><?= $form->field($model, "translations[{$language->code}][meta_title]")->label("Meta Title ({$language->name})")->textInput(['maxlength' => true]) ?></div>
+                                            <div class="col-md-6"></div>
+                                        </div>
+                                        <?= $form->field($model, "translations[{$language->code}][meta_desc]")->label("Meta Description ({$language->name})")->textarea(['rows' => 2]) ?>
+                                        <?= $form->field($model, "translations[{$language->code}][meta_keywords]")->label("Meta Keywords ({$language->name})")->textarea(['rows' => 2]) ?>
+                                        <?= $form->field($model, "translations[{$language->code}][description]")->label("Description ({$language->name})")->widget(CkEditor::class, [
+                                                'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
+                                                'clientOptions' => [
+                                                        'height' => 220,
+                                                        'toolbar' => [
+                                                                ['name' => 'document', 'items' => ['Source']],
+                                                                ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
+                                                                ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
+                                                                ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
+                                                                ['name' => 'links', 'items' => ['Link', 'Unlink']],
+                                                                ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
+                                                                ['name' => 'styles', 'items' => ['Format']],
+                                                        ],
+                                                ],
+                                        ]) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <?= Html::submitButton($model->menu === null ? 'Create' : 'Update', ['class' => 'btn btn-primary']) ?>
+                            <?= Html::a('Cancel', ['index'], ['class' => 'btn btn-default']) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-
     <?php ActiveForm::end(); ?>
 </div>
 <?php

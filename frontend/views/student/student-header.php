@@ -11,12 +11,21 @@ $userAdditional = $user?->additional ?? null;
         <img src="/images/logo_am.svg" alt="ՀՊՏՀ">
     </a>
     <nav>
-        <a href="#profile">Անձնական տվյալներ</a>
-        <a href="#card">Ուսանողական տոմս</a>
-        <a href="#requests">Դիմումներ</a>
-        <a href="/<?= Yii::$app->globalData->lang ?>/student/communications">Նամակագրություն</a>
-        <a href="notifications.html">Ծանուցումներ</a>
-        <a href="#portfolio">Պորտֆոլիո</a>
+        <?php if (isset(Yii::$app->globalData->settings['headerMenuLinks']) && Yii::$app->globalData->settings['headerMenuLinks']): ?>
+            <a href="#profile">Անձնական տվյալներ</a>
+            <a href="#card">Ուսանողական տոմս</a>
+            <a href="#requests">Դիմումներ</a>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/communications">Նամակագրություն</a>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/notifications">Ծանուցումներ</a>
+            <a href="#portfolio">Պորտֆոլիո</a>
+        <?php else: ?>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/student-personal-dashboard#profile">Անձնական տվյալներ</a>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/student-personal-dashboard#card">Ուսանողական տոմս</a>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/student-personal-dashboard#requests">Դիմումներ</a>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/communications">Նամակագրություն</a>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/notifications">Ծանուցումներ</a>
+            <a href="/<?= Yii::$app->globalData->lang ?>/student/student-personal-dashboard#portfolio">Պորտֆոլիո</a>
+        <?php endif; ?>
     </nav>
     <span class="module-user">
         <?= Html::beginForm(['/' . Yii::$app->globalData->lang . '/logout'], 'post', ['id' => 'logoutForm']) ?>

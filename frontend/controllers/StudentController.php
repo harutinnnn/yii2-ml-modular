@@ -134,6 +134,8 @@ class StudentController extends MyController
         $applicationsAndInquiriesList = ApplicationsAndInquiries::find()->where(['user_id' => $userId])->all();
 
 
+        Yii::$app->globalData->settings['headerMenuLinks'] = true;
+
         return $this->render('student-personal-dashboard',
             [
                 'studentDataModel' => $studentDataModel,
@@ -192,6 +194,16 @@ class StudentController extends MyController
                 'currentConversation' => $currentConversation,
                 'messages' => array_reverse($messages)
             ]
+        );
+    }
+
+    public function actionNotifications()
+    {
+        $this->layout = 'student';
+
+
+        return $this->render('notifications',
+            []
         );
     }
 }

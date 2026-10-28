@@ -131,7 +131,7 @@ class LecturersController extends MyController
 
                 if (Yii::$app->request->get('request_id')) {
 
-                    return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard' . '#articles-and-books-requests-'.Yii::$app->request->get('request_id'));
+                    return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard' . '#articles-and-books-requests-' . Yii::$app->request->get('request_id'));
                 } else {
 
                     return $this->refresh('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard' . '#research');
@@ -147,6 +147,8 @@ class LecturersController extends MyController
 
         $articlesAndBooksRequestsList = ArticlesAndBooksRequests::find()->where(['user_id' => $userId])->all();
 
+        Yii::$app->globalData->settings['headerMenuLinks'] = true;
+
         return $this->render('personal-dashboard',
             [
                 'user' => $user,
@@ -161,12 +163,12 @@ class LecturersController extends MyController
 
     public function actionCommunications()
     {
+        $this->layout = 'teacher';
 
-        if(Yii::$app->user->isGuest){
+        if (Yii::$app->user->isGuest) {
             return $this->redirect(['/site/login']);
         }
 
-        $this->layout = 'teacher';
         $conversationId = Yii::$app->request->get('conversationId');
 
 
@@ -176,13 +178,11 @@ class LecturersController extends MyController
             ->one();
 
 
-
         if ($conversationId && empty($currentConversation)) {
             return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturer/communications');
         }
 
         $messages = [];
-
 
 
         if (isset($currentConversation->id)) {
@@ -203,6 +203,16 @@ class LecturersController extends MyController
                 'currentConversation' => $currentConversation,
                 'messages' => array_reverse($messages)
             ]
+        );
+    }
+
+    public function actionNotifications()
+    {
+        $this->layout = 'teacher';
+
+
+        return $this->render('notifications',
+            []
         );
     }
 }

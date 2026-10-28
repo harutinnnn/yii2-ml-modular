@@ -35,7 +35,7 @@ AppAsset::register($this);
     <body class="module-body" id="top">
     <?php $this->beginBody() ?>
 
-    <?= $this->render('//partial/teacher-header') ?>
+    <?= $this->render('//lecturers/teacher-header') ?>
 
     <main class="login-shell">
         <?= $content ?>

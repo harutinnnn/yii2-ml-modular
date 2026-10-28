@@ -34,7 +34,7 @@ AppAsset::register($this);
     <body class="module-body" id="top">
     <?php $this->beginBody() ?>
 
-    <?= $this->render('//partial/library-header') ?>
+    <?= $this->render('//library/library-header') ?>
 
     <main class="login-shell">
         <?= $content ?>

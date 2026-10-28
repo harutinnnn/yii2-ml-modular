@@ -68,18 +68,6 @@ class EducationLevelsController extends Controller
         ]);
     }
 
-    public function actionView(int $id): string
-    {
-
-        $menuModel = new MenuForm();
-        $menuItem = $menuModel::parentOptions($menuModel->menu?->id);
-
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'menuItem' =>$menuItem
-        ]);
-    }
-
     public function actionUpdate(int $id): string|Response
     {
         $form = new EducationLevelsForm($this->findModel($id));

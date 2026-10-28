@@ -18,7 +18,7 @@ class UserRoles
         return [
             self::STUDENT => I18n::translate(self::STUDENT),
             self::TEACHER => I18n::translate(self::TEACHER),
-            self::ADMINISTRATIVE_STAFF => I18n::translate(self::ADMINISTRATIVE_STAFF),
+//            self::ADMINISTRATIVE_STAFF => I18n::translate(self::ADMINISTRATIVE_STAFF),
         ];
 
     }

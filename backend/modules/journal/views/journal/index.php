@@ -41,10 +41,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                             'class' => ActionColumn::class,
                             'header' => 'Actions',
-                            'template' => '{update} {numbers} {administrators} {view} {delete}',
+                            'template' => '{update} {numbers} {administrators} {delete}',
                             'contentOptions' => ['class' => 'text-nowrap'],
                             'buttons' => [
-                                    'view' => static fn($url, $model) => Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-info btn-sm mr-1']),
                                     'update' => static fn($url, $model) => Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
                                     'numbers' => static fn($url, $model) => Html::a('<i class="fas fa-newspaper"></i>&nbsp;&nbsp; Numbers', ['numbers', 'journal_id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
                                     'administrators' => static fn($url, $model) => Html::a('<i class="fas fa-users"></i>&nbsp;&nbsp; Admins', ['administrators', 'id' => $model->id], ['class' => 'btn btn-warning btn-sm mr-1']),

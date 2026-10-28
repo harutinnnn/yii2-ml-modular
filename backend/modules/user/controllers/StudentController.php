@@ -63,19 +63,6 @@ class StudentController extends Controller
     }
 
     /**
-     * Displays a single Student model.
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $model = new StudentForm($this->findModel($id)),
-        ]);
-    }
-
-    /**
      * Updates an existing Student model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id

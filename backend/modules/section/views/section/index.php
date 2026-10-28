@@ -27,10 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'position',
                     [
                         'class' => ActionColumn::class,
-                        'template' => '{view} {update} {delete}',
+                        'template' => '{update} {delete}',
                         'contentOptions' => ['class' => 'text-nowrap'],
                         'buttons' => [
-                            'view' => static fn($url, $model) => Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-info btn-sm mr-1']),
                             'update' => static fn($url, $model) => Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
                             'delete' => static fn($url, $model) => Html::a('Remove', ['delete', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm', 'data-method' => 'post', 'data-confirm' => 'Are you sure you want to delete this item?']),
                         ],

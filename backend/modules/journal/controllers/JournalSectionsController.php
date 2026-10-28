@@ -65,27 +65,6 @@ class JournalSectionsController extends Controller
     }
 
     /**
-     * Displays a single JournalSections model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-
-        $journals = Journal::find()->all();
-        $journalsMap = [];
-        foreach ($journals as $journal) {
-            $journalsMap[$journal->id] = $journal->getDisplayTitle();
-        }
-
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'journals' => $journalsMap
-        ]);
-    }
-
-    /**
      * Creates a new JournalSections model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response

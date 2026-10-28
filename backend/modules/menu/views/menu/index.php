@@ -35,7 +35,7 @@ $renderTree = function ($sectionId, $parentId, $depth) use (&$renderTree, $group
 
         $html .= '</div></div>';
         $html .= '<div class="menu-node__actions">';
-        $html .= Html::a('View', ['view', 'id' => $item->id], ['class' => 'btn btn-info btn-sm mr-1']);
+        
         $html .= Html::a('Edit', ['update', 'id' => $item->id], ['class' => 'btn btn-success btn-sm mr-1']);
         $html .= Html::a('Remove', ['delete', 'id' => $item->id], ['class' => 'btn btn-danger btn-sm', 'data-method' => 'post', 'data-confirm' => 'Are you sure you want to delete this item?']);
         $html .= '</div></div>';

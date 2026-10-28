@@ -142,11 +142,6 @@ class MenuController extends Controller
         }
     }
 
-    public function actionView(int $id): string
-    {
-        return $this->render('view', ['model' => $this->findModel($id)]);
-    }
-
     public function actionDelete(int $id): Response
     {
         $this->findModel($id)->delete();

@@ -121,28 +121,6 @@ class JournalController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Journal model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-
-        $journalAuthors = JournalAuthors::find()->alias('jo')
-            ->innerJoin(JournalAuthorsLcp::tableName(), "jo.id = " . JournalAuthorsLcp::tableName() . ".author_id")
-            ->where([JournalAuthorsLcp::tableName() . '.journal_id' => $id])->all();
-
-
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'journal_authors' => ArrayHelper::map($journalAuthors, 'id', function ($author) {
-                return $author->first_name . ' ' . $author->last_name;
-            }),
-        ]);
-    }
-
     public function actionCreate(): string|Response
     {
         $form = new JournalForm();
@@ -277,21 +255,6 @@ class JournalController extends Controller
 
         return $this->render('update_article', [
             'model' => $form,
-            'journalId' => $journalId,
-            'number_id' => $number_id
-        ]);
-    }
-
-    /**
-     * Displays a single Journal model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionArticleView($id, $journalId, $number_id)
-    {
-        return $this->render('article_view', [
-            'model' => $this->findModelArticle($id),
             'journalId' => $journalId,
             'number_id' => $number_id
         ]);

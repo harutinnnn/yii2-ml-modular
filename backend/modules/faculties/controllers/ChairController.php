@@ -69,14 +69,6 @@ class ChairController extends Controller
         ]);
     }
 
-    public function actionView(int $id): string
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'faculties' => Faculties::getFalcultiesKeyVal()
-        ]);
-    }
-
     public function actionUpdate(int $id): string|Response
     {
         $form = new ChairsForm($this->findModel($id));

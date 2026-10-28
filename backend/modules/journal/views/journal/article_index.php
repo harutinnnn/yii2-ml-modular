@@ -39,10 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                             'class' => ActionColumn::class,
                             'header' => 'Actions',
-                            'template' => '{update} {view} {delete}',
+                            'template' => '{update} {delete}',
                             'contentOptions' => ['class' => 'text-nowrap'],
                             'buttons' => [
-                                    'view' => static fn($url, $model) => Html::a('View', ['article-view', 'id' => $model->id, 'journalId' => $model->journal_id, 'number_id' => $model->number_id], ['class' => 'btn btn-info btn-sm mr-1']),
                                     'update' => static fn($url, $model) => Html::a('Edit', ['update-article', 'id' => $model->id, 'journalId' => $model->journal_id, 'number_id' => $model->number_id], ['class' => 'btn btn-success btn-sm mr-1']),
                                     'delete' => static fn($url, $model) => Html::a('Remove', ['article-delete', 'id' => $model->id, 'journalId' => $model->journal_id, 'number_id' => $model->number_id], [
                                             'class' => 'btn btn-danger btn-sm',

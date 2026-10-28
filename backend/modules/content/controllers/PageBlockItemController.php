@@ -83,14 +83,6 @@ class PageBlockItemController extends Controller
         ]);
     }
 
-    public function actionView(int $id, $page_block_id = 0): string
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'page_block_id' => $page_block_id
-        ]);
-    }
-
 
     public function actionDelete(int $id, $page_block_id = 0): Response
     {

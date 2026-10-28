@@ -51,11 +51,6 @@ class SectionController extends Controller
         return $this->render('create', compact('model'));
     }
 
-    public function actionView(int $id): string
-    {
-        return $this->render('view', ['model' => $this->findModel($id)]);
-    }
-
     public function actionUpdate(int $id): string|Response
     {
         $model = $this->findModel($id);

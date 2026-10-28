@@ -73,17 +73,6 @@ class EducationalProgramsController extends Controller
             'langList' => ArrayHelper::map(Language::find()->all(), 'code', 'code')
         ]);
     }
-
-    public function actionView(int $id): string
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'levels' => \yii\helpers\ArrayHelper::map(\common\models\EducationLevels::find()->all(), 'id', function ($level) {
-                return $level->getDisplayTitle();
-            })
-        ]);
-    }
-
     public function actionUpdate(int $id): string|Response
     {
         $form = new EducationalProgramsForm($this->findModel($id));

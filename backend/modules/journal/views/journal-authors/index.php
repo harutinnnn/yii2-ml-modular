@@ -32,10 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                             'class' => ActionColumn::class,
                             'header' => 'Actions',
-                            'template' => '{update} {view} {delete}',
+                            'template' => '{update} {delete}',
                             'contentOptions' => ['class' => 'text-nowrap'],
                             'buttons' => [
-                                    'view' => static fn($url, $model) => Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-info btn-sm mr-1']),
                                     'update' => static fn($url, $model) => Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
                                     'delete' => static fn($url, $model) => Html::a('Remove', ['delete', 'id' => $model->id], [
                                             'class' => 'btn btn-danger btn-sm',

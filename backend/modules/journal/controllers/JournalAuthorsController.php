@@ -37,6 +37,7 @@ class JournalAuthorsController extends Controller
             ],
         ];
     }
+
     /**
      * Lists all JournalAuthors models.
      *
@@ -54,19 +55,6 @@ class JournalAuthorsController extends Controller
     }
 
     /**
-     * Displays a single JournalAuthors model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
      * Creates a new JournalAuthors model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
@@ -77,7 +65,7 @@ class JournalAuthorsController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
         } else {
             $model->loadDefaultValues();
@@ -100,7 +88,7 @@ class JournalAuthorsController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [

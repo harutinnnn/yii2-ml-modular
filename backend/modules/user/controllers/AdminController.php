@@ -62,19 +62,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Displays a single User model.
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
@@ -102,7 +89,7 @@ class AdminController extends Controller
                     $model->attributes,
                 );
 
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
         } else {
             $model->loadDefaultValues();
@@ -136,7 +123,7 @@ class AdminController extends Controller
                 $model->attributes,
             );
 
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [

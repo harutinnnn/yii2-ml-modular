@@ -53,28 +53,16 @@ class TeacherController extends Controller
      * @return string
      */
     public function actionIndex()
-{
-$searchModel = new TeacherSearch();
-$dataProvider = $searchModel->search($this->request->queryParams);
-
-return $this->render('index', [
-'searchModel' => $searchModel,
-'dataProvider' => $dataProvider,
-]);
-}
-
-    /**
-     * Displays a single Teacher model.
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $model = new TeacherForm($this->findModel($id)),
+        $searchModel = new TeacherSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
+
 
     /**
      * Creates a new Teacher model.

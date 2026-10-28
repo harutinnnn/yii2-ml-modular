@@ -65,19 +65,6 @@ class ApplicantController extends Controller
     }
 
     /**
-     * Displays a single Applicant model.
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $model = new ApplicantForm($this->findModel($id)),
-        ]);
-    }
-
-    /**
      * Creates a new Applicant model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response

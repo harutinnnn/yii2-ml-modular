@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Actions',
-                                    'template' => '{view} {update} {block_items} {delete}',
+                                    'template' => '{update} {block_items} {delete}',
                                     'contentOptions' => ['class' => 'text-nowrap'],
                                     'buttons' => [
                                             'block_items' => static fn($url, $model) => Html::a(
@@ -56,7 +56,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     ['//content/page-block-item/index', 'id' => $model->id, 'page_block_id' => $model->id],
                                                     ['class' => 'btn btn-info btn-sm mr-1']
                                             ),
-                                            'view' => static fn($url, $model) => Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-info btn-sm mr-1']),
                                             'update' => static fn($url, $model) => Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
                                             'delete' => static fn($url, $model) => Html::a('Remove', ['delete', 'id' => $model->id], [
                                                     'class' => 'btn btn-danger btn-sm',

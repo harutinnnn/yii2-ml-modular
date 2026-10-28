@@ -72,16 +72,6 @@ class NewsController extends Controller
         ]);
     }
 
-    public function actionView(int $id): string
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'categories' => ArrayHelper::map(NewsCategories::find()->all(), 'id', function ($category) {
-                return $category->translations['en']->title;
-            })
-        ]);
-    }
-
     public function actionUpdate(int $id): string|Response
     {
         $form = new NewsForm($this->findModel($id));

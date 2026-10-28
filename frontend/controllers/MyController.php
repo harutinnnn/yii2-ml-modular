@@ -26,6 +26,13 @@ class MyController extends Controller
 
         $this->userType = Yii::$app->session->get('userType') ?? null;
 
+        if (!Yii::$app->user->isGuest && !$this->userType) {
+            $roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
+            $roles = array_keys($roles);
+            $usertype = reset($roles);
+            Yii::$app->session->set('userType', $usertype);
+        }
+
         $lang = Yii::$app->request->get('language');
         if (in_array($lang, ['en', 'ru', 'am'])) {
             $this->lang = $lang;
@@ -43,7 +50,7 @@ class MyController extends Controller
         if (!empty($mainSection)) {
 
             $mainMenu = Menu::find()
-                ->where(['parent_id' => null, 'section_id' => $mainSection->id,'show_in_menu' => StatusList::STATUS_PUBLISHED])
+                ->where(['parent_id' => null, 'section_id' => $mainSection->id, 'show_in_menu' => StatusList::STATUS_PUBLISHED])
                 ->orderBy(['position' => SORT_ASC])
                 ->all();
 

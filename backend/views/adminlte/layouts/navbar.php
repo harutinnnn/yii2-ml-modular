@@ -14,7 +14,7 @@ $email = Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->email;
             <a href="<?= Url::to(['/site/index']) ?>" class="nav-link">Dashboard</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="<?= Yii::$app->urlManagerFrontend->createUrl(['/site/index']) ?>" class="nav-link" target="_blank" rel="noopener">View Site</a>
+            <a href="<?= Yii::$app->urlManagerFrontend->createUrl(['/']) ?>" class="nav-link" target="_blank" rel="noopener">View Site</a>
         </li>
     </ul>
 

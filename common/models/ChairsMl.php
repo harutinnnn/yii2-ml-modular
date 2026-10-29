@@ -10,6 +10,7 @@ use yii\db\ActiveRecord;
  * @property string $lang
  * @property string $title
  * @property string $text
+ * @property string $about_chair
  *
  * @property Chairs $chairs
  */
@@ -23,9 +24,9 @@ class ChairsMl extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['chair_id', 'lang', 'title'], 'required'],
+            [['chair_id', 'lang', 'title','about_chair'], 'required'],
             [['chair_id'], 'integer'],
-            [['text'], 'string'],
+            [['text','about_chair'], 'string'],
             [['lang'], 'string', 'max' => 8],
             [['title'], 'string', 'max' => 255],
             [['chair_id', 'lang'], 'unique', 'targetAttribute' => ['chair_id', 'lang']],
@@ -41,6 +42,7 @@ class ChairsMl extends ActiveRecord
             'lang' => 'Language',
             'title' => 'Title',
             'text' => 'Text',
+            'about_chair' => 'About chair',
         ];
     }
 

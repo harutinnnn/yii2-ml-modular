@@ -30,6 +30,13 @@ $languages = $model->getLanguages();
                     <?= $form->field($model, 'faculty_id')->dropDownList($faculties ?? []) ?>
                 </div>
             </div>
+
+            <div class="row">
+                <?= $form->field($model, 'imageFile')->fileInput() ?>
+                <?php if ($model->image): ?>
+                    <p class="mb-0"><img src="<?= Html::encode($model->image) ?>" alt="" style="max-height: 100px;"></p>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
@@ -86,6 +93,13 @@ $languages = $model->getLanguages();
                                                         ['name' => 'colors', 'items' => ['TextColor', 'BGColor']],
                                                 ],
                                         ],
+                                ]) ?>
+
+                        <?= $form->field($model, "translations[{$language->code}][about_chair]")
+                                ->label("About chair ({$language->name})")
+                                ->textarea([
+                                        'maxlength' => true,
+                                        'placeholder' => "About chair in {$language->name}",
                                 ]) ?>
                     </div>
                 <?php endforeach; ?>

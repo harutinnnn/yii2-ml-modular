@@ -34,13 +34,36 @@ $headerSubNav = $menuObj->headerSubNav ?? [];
         </p>
     </div>
 </section>
-<?php ?>
 
 <?php if (!empty($headerSubNav)): ?>
     <nav class="inner-subnav">
         <div class="wrap">
             <?php foreach ($headerSubNav as $headerSubNavItem): ?>
-                <a href="#mission"><?= \common\models\TranslationModel::getTranslation($headerSubNavItem->sideMenu, Yii::$app->globalData->lang) ?></a>
+                <?php
+                $preParent = null;
+                $parent = null;
+                $current = $headerSubNavItem->sideMenu;
+
+
+                $url = '/' . Yii::$app->globalData->lang;
+                if (isset($headerSubNavItem->sideMenu->parent)) {
+                    $parent = $headerSubNavItem->sideMenu->parent;
+                }
+                if (isset($headerSubNavItem->sideMenu->parent->parent)) {
+                    $preParent = $headerSubNavItem->sideMenu->parent->parent;
+                }
+
+                if ($preParent) {
+                    $url .= '/' . $preParent->url;
+                }
+
+                if (!$preParent && $parent) {
+                    $url .= '/' . $parent->url;
+                }
+                $url .= '/' . $current->url;
+
+                ?>
+                <a href="<?= $url ?>"><?= \common\models\TranslationModel::getTranslation($headerSubNavItem->sideMenu, Yii::$app->globalData->lang) ?></a>
             <?php endforeach; ?>
         </div>
     </nav>

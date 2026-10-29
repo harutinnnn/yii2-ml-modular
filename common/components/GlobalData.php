@@ -14,6 +14,7 @@ class GlobalData extends Component
     public array $settings = [];
     public $lang = 'am';
     public array $languages = [];
+    public $pageData = [];
 
 
     public function init()
@@ -28,12 +29,19 @@ class GlobalData extends Component
         $this->settings = ArrayHelper::map(Setting::find()->all(), 'key', 'value');
 
 
-        $this->languages  = ArrayHelper::map(Language::find()->all(), 'code', 'name');
+        $this->languages = ArrayHelper::map(Language::find()->all(), 'code', 'name');
     }
 
     public function setLang($lang)
     {
         $this->lang = $lang;
+    }
+
+    public function setPageData($key, $value)
+    {
+
+        $this->pageData[$key] = $value;
+
     }
 
     public function getLang()

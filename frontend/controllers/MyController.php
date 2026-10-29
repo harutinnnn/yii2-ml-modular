@@ -122,6 +122,47 @@ class MyController extends Controller
             $preParentMenuObj = Menu::find()->where(['id' => $parentMenuObj->parent_id])->one() ?? null;
         }
 
+
+        $sideMenuList = [];
+
+
+        if (isset($menuObj->sideMenu) && !empty($menuObj->sideMenu)) {
+            foreach ($menuObj->sideMenu as $sideMenuObj) {
+
+                $sideMenu = $sideMenuObj?->sideMenu;
+                $parentSideMenu = null;
+                $preParentSideMenu = null;
+
+                if (isset($sideMenu->parent_id) && $sideMenu->parent_id) {
+
+                    $parentSideMenu = $sideMenu->parent;
+                    if (isset($parentSideMenu->parent_id) && $parentSideMenu->parent_id) {
+                        $preParentSideMenu = $parentSideMenu->parent;
+                    }
+
+                }
+
+                $url = '/' . Yii::$app->globalData->lang . '/';
+
+                if (isset($preParentSideMenu->url) && strlen(trim($preParentSideMenu->url))) {
+                    $url .= $preParentSideMenu->url . '/';
+                } else if (isset($parentSideMenu->url) && strlen(trim($parentSideMenu->url))) {
+                    $url .= $parentSideMenu->url . '/';
+                }
+
+                $url .= $sideMenu->url;
+
+                $sideMenuList[] = [
+                    'title' => $sideMenu?->getTranslation(Yii::$app->globalData->lang)->title,
+                    'url' => $url,
+                ];
+            }
+        }
+
+
+
+        $this->pageData['sideMenuList'] = $sideMenuList;
+
         $this->pageData['menuObj'] = $menuObj;
         $this->pageData['parentMenuObj'] = $parentMenuObj;
         $this->pageData['preParentMenuObj'] = $preParentMenuObj;

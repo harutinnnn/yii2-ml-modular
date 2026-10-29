@@ -10,6 +10,7 @@ use yii\db\ActiveRecord;
  * @property int $status
  * @property int $faculty_id
  * @property int $pos
+ * @property string|null $image
  * @property int $created_at
  * @property int $updated_at
  *
@@ -37,6 +38,7 @@ class Chairs extends ActiveRecord
         return [
             [['status','pos','faculty_id'], 'required'],
             [['status','pos','faculty_id'], 'integer'],
+            [['image'], 'string'],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
     }
@@ -48,6 +50,7 @@ class Chairs extends ActiveRecord
             'status' => 'Status',
             'faculty_id' => 'Faculty',
             'pos' => 'Position',
+            'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

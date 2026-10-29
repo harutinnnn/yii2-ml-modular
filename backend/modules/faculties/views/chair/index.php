@@ -36,12 +36,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                         return $faculties[$model->faculty_id] ?? '-';
                                     },
                             ],
+                            [
+                                    'attribute' => 'image',
+                                    'value' => static fn($model) => Html::img($model->image, ['class' => 'img-thumbnail', 'style' => 'width:250px']),
+                                    'format' => 'html',
+                            ],
                             'pos',
                             [
                                     'attribute' => 'status',
                                     'filter' => \common\models\Chairs::statusOptions(),
                                     'value' => static fn($model) => $model->getStatusLabel(),
                             ],
+
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Actions',

@@ -10,6 +10,7 @@ use yii\db\ActiveRecord;
  * @property string $lang
  * @property string $title
  * @property string $text
+ * @property string $about_faculty
  *
  * @property Faculties $faculties
  */
@@ -25,7 +26,7 @@ class FacultiesMl extends ActiveRecord
         return [
             [['faculty_id', 'lang', 'title'], 'required'],
             [['faculty_id'], 'integer'],
-            [['text'], 'string'],
+            [['text','about_faculty'], 'string'],
             [['lang'], 'string', 'max' => 8],
             [['title'], 'string', 'max' => 255],
             [['faculty_id', 'lang'], 'unique', 'targetAttribute' => ['faculty_id', 'lang']],
@@ -41,6 +42,7 @@ class FacultiesMl extends ActiveRecord
             'lang' => 'Language',
             'title' => 'Title',
             'text' => 'Text',
+            'about_faculty' => 'About faculty',
         ];
     }
 

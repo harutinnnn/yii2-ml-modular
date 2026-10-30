@@ -5,11 +5,13 @@ namespace backend\modules\faculties\controllers;
 use backend\modules\faculties\models\ChairsForm;
 use backend\modules\faculties\models\ChairsSearch;
 use common\models\Chairs;
+use common\models\EducationalPrograms;
 use common\models\Faculties;
 use common\models\Language;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -63,9 +65,13 @@ class ChairController extends Controller
 
 
 
+        $educationalPrograms = EducationalPrograms::find()->all();
         return $this->render('create', [
             'model' => $form,
-            'faculties' => Faculties::getFalcultiesKeyVal()
+            'faculties' => Faculties::getFalcultiesKeyVal(),
+            'educationalPrograms' => ArrayHelper::map($educationalPrograms,'id',function ($programm){
+                return $programm->translations['en']->title;
+            }),
         ]);
     }
 
@@ -79,7 +85,13 @@ class ChairController extends Controller
             return $this->redirect(['index']);
         }
 
+        $educationalPrograms = EducationalPrograms::find()->all();
+
+
         return $this->render('update', [
+            'educationalPrograms' => ArrayHelper::map($educationalPrograms,'id',function ($programm){
+                return $programm->translations['en']->title;
+            }),
             'model' => $form,
             'faculties' => Faculties::getFalcultiesKeyVal()
         ]);

@@ -1,6 +1,7 @@
 <?php
 
 use common\components\I18n;
+use common\components\NumberHelper;
 use common\models\TranslationModel;
 
 ?>
@@ -14,16 +15,29 @@ use common\models\TranslationModel;
             </h2>
             <div class="body-copy">
                 <div id="about">
-                    <?= TranslationModel::getTranslation($chair,Yii::$app->globalData->lang,'about_chair') ?>
+                    <?= TranslationModel::getTranslation($chair, Yii::$app->globalData->lang, 'about_chair') ?>
                 </div>
             </div>
         </div>
         <aside data-quick-links="">
             <div class="meta-label">Արագ հղումներ</div>
-            <div class="link-list"><a
-                        href="education.html"><span><small>Տես նաև</small><br>Կրթական ծրագրեր</span></a><a
-                        href="structure.html"><span><small>ՀՊՏՀ կառուցվածք</small><br>Ֆակուլտետներ և ամբիոններ</span></a><a
-                        href="contact.html"><span><small>Կապ</small><br>Գրել համալսարանին</span></a></div>
+            <div class="link-list">
+                <a href="education.html">
+                    <span>
+                        <small>Տես նաև</small>
+                        <br>Կրթական ծրագրեր</span>
+                </a>
+                <a href="structure.html">
+                    <span>
+                        <small>ՀՊՏՀ կառուցվածք</small>
+                        <br>Ֆակուլտետներ և ամբիոններ</span>
+                </a>
+                <a href="contact.html">
+                    <span>
+                        <small>Կապ</small>
+                        <br>Գրել համալսարանին</span>
+                </a>
+            </div>
         </aside>
     </div>
 </section>
@@ -33,18 +47,21 @@ use common\models\TranslationModel;
         <div class="eyebrow red">Բաժիններ</div>
         <h2 class="display-inner">Կրթական ծրագրեր</h2>
         <div class="cards">
-            <article class="card">
-                <div class="card-number">01</div>
-                <h3>Կառավարում</h3>
-                <p>Բակալավրիատ · առկա ուսուցում</p><a href="education.html#programs">Բացել →</a></article>
-            <article class="card">
-                <div class="card-number">02</div>
-                <h3>Բիզնես վարչարարություն</h3>
-                <p>Մագիստրատուրա · առկա և հեռակա</p><a href="education.html#programs">Բացել →</a></article>
-            <article class="card">
-                <div class="card-number">03</div>
-                <h3>Նախագծերի կառավարում</h3>
-                <p>Կարճաժամկետ շարունակական կրթություն</p><a href="short-courses.html">Բացել →</a></article>
+            <?php if (isset($educationalPrograms) && !empty($educationalPrograms)): ?>
+                <?php foreach ($educationalPrograms as $i => $educationalProgram): ?>
+
+                    <article class="card">
+                        <div class="card-number"><?= NumberHelper::numberZeroFill($i + 1) ?></div>
+                        <h3>
+                            <?= TranslationModel::getTranslation($educationalProgram->educationProgramm, Yii::$app->globalData->lang) ?>
+                        </h3>
+                        <p>
+                            <?= TranslationModel::getTranslation($educationalProgram->educationProgramm, Yii::$app->globalData->lang, 'desc') ?>
+                        </p>
+                        <a href="/<?= Yii::$app->globalData->lang ?>/education/education/program/<?= $educationalProgram->educationProgramm->id ?>"><?= I18n::translate('open') ?> →</a>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>

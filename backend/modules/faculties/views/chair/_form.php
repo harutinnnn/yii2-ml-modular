@@ -6,6 +6,7 @@
 
 use common\models\Chairs;
 use common\widgets\ckeditor\CkEditor;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
@@ -40,6 +41,37 @@ $languages = $model->getLanguages();
         </div>
     </div>
 
+
+    <div class="card card-secondary">
+        <div class="card-header">
+            <h3 class="card-title">Educational programs</h3>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <?php
+                    echo $form->field($model, 'programs')->widget(Select2::class, [
+                            'data' => $educationalPrograms ?? [],
+                            'options' => [
+                                    'placeholder' => 'Select program',
+                                    'multiple' => true,
+                            ],
+
+                            'pluginOptions' => [
+                                    'allowClear' => true,
+                            ],
+                    ]);
+                    ?>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
     <div class="card card-outline card-primary">
         <div class="card-header p-0 border-bottom-0">
             <ul class="nav nav-tabs" role="tablist">
@@ -60,6 +92,7 @@ $languages = $model->getLanguages();
                 <?php endforeach; ?>
             </ul>
         </div>
+
         <div class="card-body">
             <div class="tab-content">
                 <?php foreach ($languages as $index => $language): ?>
@@ -97,10 +130,24 @@ $languages = $model->getLanguages();
 
                         <?= $form->field($model, "translations[{$language->code}][about_chair]")
                                 ->label("About chair ({$language->name})")
-                                ->textarea([
-                                        'maxlength' => true,
-                                        'placeholder' => "About chair in {$language->name}",
+                                ->widget(CkEditor::class, [
+                                        'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
+                                        'clientOptions' => [
+                                                'height' => 300,
+                                                'toolbar' => [
+                                                        ['name' => 'document', 'items' => ['Source']],
+                                                        ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
+                                                        ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
+                                                        ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
+                                                        ['name' => 'links', 'items' => ['Link', 'Unlink']],
+                                                        ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
+                                                        ['name' => 'styles', 'items' => ['Format']],
+                                                        ['name' => 'colors', 'items' => ['TextColor', 'BGColor']],
+                                                ],
+                                        ],
                                 ]) ?>
+
+
                     </div>
                 <?php endforeach; ?>
             </div>

@@ -23,19 +23,20 @@ class FacultiesForm extends Model
         parent::__construct($config);
 
         if ($this->faculties !== null) {
-            $this->status = (int) $this->faculties->status;
-            $this->pos = (int) $this->faculties->pos;
+            $this->status = (int)$this->faculties->status;
+            $this->pos = (int)$this->faculties->pos;
             foreach ($this->faculties->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
                     'text' => $translation->text,
+                    'about_faculty' => $translation->about_faculty,
                 ];
             }
         }
 
         foreach ($this->getLanguages() as $language) {
             $this->translations[$language->code] = array_merge(
-                ['title' => '', 'text' => ''],
+                ['title' => '', 'text' => '', 'about_faculty' => ''],
                 $this->translations[$language->code] ?? []
             );
         }
@@ -44,8 +45,8 @@ class FacultiesForm extends Model
     public function rules(): array
     {
         return [
-            [['status','pos'], 'required'],
-            [['status','pos'], 'integer'],
+            [['status', 'pos'], 'required'],
+            [['status', 'pos'], 'integer'],
             [['status'], 'in', 'range' => array_keys(Faculties::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
@@ -64,7 +65,7 @@ class FacultiesForm extends Model
     {
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
-            $title = trim((string) ($data['title'] ?? ''));
+            $title = trim((string)($data['title'] ?? ''));
 //            $text = trim((string) ($data['text'] ?? ''));
 
             if ($title === '') {
@@ -102,8 +103,9 @@ class FacultiesForm extends Model
                 $translation = new FacultiesMl();
                 $translation->faculty_id = $faculties->id;
                 $translation->lang = $language->code;
-                $translation->title = trim((string) $this->translations[$language->code]['title']);
-                $translation->text = trim((string) $this->translations[$language->code]['text']);
+                $translation->title = trim((string)$this->translations[$language->code]['title']);
+                $translation->text = trim((string)$this->translations[$language->code]['text']);
+                $translation->about_faculty = trim((string)$this->translations[$language->code]['about_faculty']);
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

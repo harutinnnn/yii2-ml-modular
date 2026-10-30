@@ -8,4 +8,4 @@ $this->params['breadcrumbs'][] = ['label' => 'Chairs', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('_form', ['model' => $model,'faculties' => $faculties ?? []]) ?>
+<?= $this->render('_form', ['model' => $model,'faculties' => $faculties ?? [],'educationalPrograms' => $educationalPrograms ?? []]) ?>

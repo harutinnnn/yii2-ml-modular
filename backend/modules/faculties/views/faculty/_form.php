@@ -83,6 +83,26 @@ $languages = $model->getLanguages();
                                                 ],
                                         ],
                                 ]) ?>
+
+
+                        <?= $form->field($model, "translations[{$language->code}][about_faculty]")
+                                ->label("About faculty ({$language->name})")
+                                ->widget(CkEditor::class, [
+                                        'elfinderController' => ['elfinder', 'filter' => 'image', 'lang' => 'en'],
+                                        'clientOptions' => [
+                                                'height' => 300,
+                                                'toolbar' => [
+                                                        ['name' => 'document', 'items' => ['Source']],
+                                                        ['name' => 'clipboard', 'items' => ['Undo', 'Redo']],
+                                                        ['name' => 'basicstyles', 'items' => ['Bold', 'Italic', 'Underline', 'RemoveFormat']],
+                                                        ['name' => 'paragraph', 'items' => ['NumberedList', 'BulletedList', 'Blockquote']],
+                                                        ['name' => 'links', 'items' => ['Link', 'Unlink']],
+                                                        ['name' => 'insert', 'items' => ['Image', 'Table', 'HorizontalRule', 'SpecialChar']],
+                                                        ['name' => 'styles', 'items' => ['Format']],
+                                                        ['name' => 'colors', 'items' => ['TextColor', 'BGColor']],
+                                                ],
+                                        ],
+                                ]) ?>
                     </div>
                 <?php endforeach; ?>
             </div>

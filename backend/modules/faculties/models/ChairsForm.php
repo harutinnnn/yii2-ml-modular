@@ -2,11 +2,13 @@
 
 namespace backend\modules\faculties\models;
 
+use common\models\ChairEducationProgrammLcp;
 use common\models\Chairs;
 use common\models\ChairsMl;
 use common\models\Language;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -19,6 +21,7 @@ class ChairsForm extends Model
     public int $faculty_id = 0;
     public array $translations = [];
     public $imageFile = null;
+    public $programs = [];
 
     private ?array $_languages = null;
 
@@ -32,6 +35,9 @@ class ChairsForm extends Model
             $this->pos = (int)$this->chairs->pos;
             $this->image = $this->chairs->image;
             $this->faculty_id = (int)$this->chairs->faculty_id;
+
+
+            $this->programs =  ArrayHelper::getColumn($this->chairs->chairEducationProgrammLcp,'education_programm_id');
             foreach ($this->chairs->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
@@ -56,6 +62,7 @@ class ChairsForm extends Model
             [['status', 'pos', 'faculty_id'], 'integer'],
             [['status'], 'in', 'range' => array_keys(Chairs::statusOptions())],
             [['translations'], 'safe'],
+            [['programs'], 'each', 'rule' => ['integer']],
             [['translations'], 'validateTranslations'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
@@ -68,6 +75,7 @@ class ChairsForm extends Model
             'pos' => 'Position',
             'faculty_id' => 'Faculty',
             'imageFile' => 'Image',
+            'programs' => 'Educational programs(optional)',
         ];
     }
 
@@ -117,6 +125,24 @@ class ChairsForm extends Model
                 $transaction->rollBack();
 
                 return false;
+            }
+
+            if ($chairs['id']) {
+
+                ChairEducationProgrammLcp::deleteAll(['chair_id' => $chairs['id']]);
+
+
+                if (!empty($this->programs)) {
+
+                    foreach ($this->programs as $program) {
+
+
+                        $chairEducationProgrammLcp = new ChairEducationProgrammLcp();
+                        $chairEducationProgrammLcp->chair_id = $chairs['id'];
+                        $chairEducationProgrammLcp->education_programm_id = $program;
+                        $chairEducationProgrammLcp->save();
+                    }
+                }
             }
 
             ChairsMl::deleteAll(['chair_id' => $chairs->id]);

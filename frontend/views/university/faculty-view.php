@@ -14,7 +14,7 @@ use common\models\TranslationModel;
                 <div id="about">
 
                     <?php if (isset($faculty)): ?>
-                        <?= TranslationModel::getTranslation($faculty, Yii::$app->globalData->lang, 'text') ?>
+                        <?= TranslationModel::getTranslation($faculty, Yii::$app->globalData->lang, 'about_faculty') ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -39,6 +39,7 @@ use common\models\TranslationModel;
     </div>
 
 </section>
+
 
 <section class="inner-section white">
     <div class="wrap">

@@ -21,8 +21,8 @@ $headerImage = Yii::$app->globalData->pageData['headerImage'] ?? '';
             <?= $preTitle ?>
         </div>
         <h1><?= $pageTitle ?></h1>
-        <p class="lead">
-            <?= $afterTitle ?>
-        </p>
+        <div class="lead">
+            <?= strip_tags($afterTitle) ?>
+        </div>
     </div>
 </section>

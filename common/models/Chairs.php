@@ -15,6 +15,7 @@ use yii\db\ActiveRecord;
  * @property int $updated_at
  *
  * @property ChairsMl[] $translations
+ * @property ChairEducationProgrammLcp $chairEducationProgrammLcp
  */
 class Chairs extends ActiveRecord
 {
@@ -120,5 +121,14 @@ class Chairs extends ActiveRecord
         return $facultiesTmp;
     }
 
+    /**
+     * Gets query for [[ChairEducationProgrammLcp]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChairEducationProgrammLcp()
+    {
+        return $this->hasMany(ChairEducationProgrammLcp::class, ['chair_id' => 'id']);
+    }
 
 }

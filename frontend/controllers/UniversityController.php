@@ -87,6 +87,20 @@ class UniversityController extends MyController
         );
     }
 
+
+    public function actionChairs()
+    {
+
+        $chairs = Chairs::find()->orderBy(['pos' => SORT_ASC])->all();
+
+
+        return $this->render('chairs',
+            [
+                'chairs' => $chairs
+            ]
+        );
+    }
+
     public function actionChair($id)
     {
 

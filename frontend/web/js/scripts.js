@@ -28,7 +28,7 @@ function initListFilter(inputId, listSelector, textElement) {
                 }
 
             })
-        }, 1000);
+        }, 500);
     })
 
 }

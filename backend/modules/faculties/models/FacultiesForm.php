@@ -4,9 +4,11 @@ namespace backend\modules\faculties\models;
 
 use common\models\Faculties;
 use common\models\FacultiesMl;
+use common\models\FacultyEducationLevelsLcp;
 use common\models\Language;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 class FacultiesForm extends Model
 {
@@ -14,6 +16,7 @@ class FacultiesForm extends Model
     public int $status = Faculties::STATUS_PUBLISHED;
     public int $pos = 1;
     public array $translations = [];
+    public array $education_levels = [];
 
     private ?array $_languages = null;
 
@@ -34,6 +37,10 @@ class FacultiesForm extends Model
             }
         }
 
+        if (isset($faculties->educationLevels) && !empty($faculties->educationLevels)) {
+            $this->education_levels = ArrayHelper::getColumn($faculties->educationLevels, 'education_level_id');
+        }
+
         foreach ($this->getLanguages() as $language) {
             $this->translations[$language->code] = array_merge(
                 ['title' => '', 'text' => '', 'about_faculty' => ''],
@@ -47,6 +54,7 @@ class FacultiesForm extends Model
         return [
             [['status', 'pos'], 'required'],
             [['status', 'pos'], 'integer'],
+            [['education_levels'], 'each', 'rule' => ['integer']],
             [['status'], 'in', 'range' => array_keys(Faculties::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
@@ -58,6 +66,7 @@ class FacultiesForm extends Model
         return [
             'status' => 'Status',
             'pos' => 'Position',
+            'education_levels' => 'Education levels',
         ];
     }
 
@@ -72,9 +81,6 @@ class FacultiesForm extends Model
                 $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
             }
 
-//            if ($text === '') {
-//                $this->addError("translations[{$language->code}][text]", "Text is required for {$language->name}.");
-//            }
         }
     }
 
@@ -95,6 +101,24 @@ class FacultiesForm extends Model
                 $transaction->rollBack();
 
                 return false;
+            }
+
+
+            if ($faculties['id']) {
+
+                FacultyEducationLevelsLcp::deleteAll(['faculty_id' => $faculties['id']]);
+
+                if (!empty($this->education_levels)) {
+
+
+                    foreach ($this->education_levels as $education_level) {
+
+                        $facultyEducationLevelsLcp = new FacultyEducationLevelsLcp();
+                        $facultyEducationLevelsLcp->faculty_id = $faculties['id'];
+                        $facultyEducationLevelsLcp->education_level_id = $education_level;
+                        $facultyEducationLevelsLcp->save();
+                    }
+                }
             }
 
             FacultiesMl::deleteAll(['faculty_id' => $faculties->id]);

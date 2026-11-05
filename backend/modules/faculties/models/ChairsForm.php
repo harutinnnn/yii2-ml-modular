@@ -5,6 +5,7 @@ namespace backend\modules\faculties\models;
 use common\models\ChairEducationProgrammLcp;
 use common\models\Chairs;
 use common\models\ChairsMl;
+use common\models\ChairStaffLcp;
 use common\models\Language;
 use Yii;
 use yii\base\Model;
@@ -19,9 +20,11 @@ class ChairsForm extends Model
     public int $pos = 1;
     public ?string $image = null;
     public int $faculty_id = 0;
+    public int $head_of_department = 0;
     public array $translations = [];
     public $imageFile = null;
     public $programs = [];
+    public $staff = [];
 
     private ?array $_languages = null;
 
@@ -35,9 +38,13 @@ class ChairsForm extends Model
             $this->pos = (int)$this->chairs->pos;
             $this->image = $this->chairs->image;
             $this->faculty_id = (int)$this->chairs->faculty_id;
+            $this->head_of_department = (int)$this->chairs->head_of_department;
 
 
             $this->programs =  ArrayHelper::getColumn($this->chairs->chairEducationProgrammLcp,'education_programm_id');
+            $this->staff =  ArrayHelper::getColumn($this->chairs->chairStaff,'user_id');
+
+
             foreach ($this->chairs->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
@@ -59,10 +66,11 @@ class ChairsForm extends Model
     {
         return [
             [['status', 'pos', 'faculty_id'], 'required'],
-            [['status', 'pos', 'faculty_id'], 'integer'],
+            [['status', 'pos', 'faculty_id','head_of_department'], 'integer'],
             [['status'], 'in', 'range' => array_keys(Chairs::statusOptions())],
             [['translations'], 'safe'],
             [['programs'], 'each', 'rule' => ['integer']],
+            [['staff'], 'each', 'rule' => ['integer']],
             [['translations'], 'validateTranslations'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
@@ -74,8 +82,10 @@ class ChairsForm extends Model
             'status' => 'Status',
             'pos' => 'Position',
             'faculty_id' => 'Faculty',
+            'head_of_department' => 'Head of department',
             'imageFile' => 'Image',
             'programs' => 'Educational programs(optional)',
+            'staff' => 'Staff(optional)',
         ];
     }
 
@@ -112,6 +122,7 @@ class ChairsForm extends Model
         $chairs->status = $this->status;
         $chairs->pos = $this->pos;
         $chairs->faculty_id = $this->faculty_id;
+        $chairs->head_of_department = $this->head_of_department;
 
         if ($this->imageFile !== null) {
             $chairs->image = $this->saveUpload($this->imageFile);
@@ -135,14 +146,25 @@ class ChairsForm extends Model
                 if (!empty($this->programs)) {
 
                     foreach ($this->programs as $program) {
-
-
                         $chairEducationProgrammLcp = new ChairEducationProgrammLcp();
                         $chairEducationProgrammLcp->chair_id = $chairs['id'];
                         $chairEducationProgrammLcp->education_programm_id = $program;
                         $chairEducationProgrammLcp->save();
                     }
                 }
+
+
+                ChairStaffLcp::deleteAll(['chair_id' => $chairs['id']]);
+                if (!empty($this->staff)) {
+
+                    foreach ($this->staff as $staff) {
+                        $chairStaffLcp = new ChairStaffLcp();
+                        $chairStaffLcp->chair_id = $chairs['id'];
+                        $chairStaffLcp->user_id = $staff;
+                        $chairStaffLcp->save();
+                    }
+                }
+
             }
 
             ChairsMl::deleteAll(['chair_id' => $chairs->id]);

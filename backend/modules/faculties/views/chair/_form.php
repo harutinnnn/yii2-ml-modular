@@ -65,6 +65,38 @@ $languages = $model->getLanguages();
                     ]);
                     ?>
                 </div>
+
+                <div class="col-md-12">
+                    <?php
+                    echo $form->field($model, 'staff')->widget(Select2::class, [
+                            'data' => $staff ?? [],
+                            'options' => [
+                                    'placeholder' => 'Select program',
+                                    'multiple' => true,
+                            ],
+
+                            'pluginOptions' => [
+                                    'allowClear' => true,
+                            ],
+                    ]);
+                    ?>
+                </div>
+
+                <div class="col-md-6">
+                    <?php
+                    echo $form->field($model, 'head_of_department')->widget(Select2::class, [
+                            'data' => $staff ?? [],
+                            'options' => [
+                                    'placeholder' => 'Select Head of department',
+                                    'multiple' => false,
+                            ],
+
+                            'pluginOptions' => [
+                                    'allowClear' => true,
+                            ],
+                    ]);
+                    ?>
+                </div>
             </div>
 
 

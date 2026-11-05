@@ -4,10 +4,13 @@ namespace backend\modules\faculties\controllers;
 
 use backend\modules\faculties\models\FacultiesForm;
 use backend\modules\faculties\models\FacultiesSearch;
+use common\components\StatusList;
+use common\models\EducationLevels;
 use common\models\Faculties;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -57,8 +60,13 @@ class FacultyController extends Controller
             return $this->redirect(['index']);
         }
 
+        $educationLevels  = EducationLevels::find()->where(['as_edu_level' => StatusList::STATUS_PUBLISHED])->all();
+
         return $this->render('create', [
             'model' => $form,
+            'educationLevels' =>ArrayHelper::map($educationLevels, 'id', function ($educationLevel) {
+                return $educationLevel->translations['en']->title;
+            })
         ]);
     }
 
@@ -72,8 +80,14 @@ class FacultyController extends Controller
             return $this->redirect(['index']);
         }
 
+        $educationLevels  = EducationLevels::find()->where(['as_edu_level' => StatusList::STATUS_PUBLISHED])->all();
+
+
         return $this->render('update', [
             'model' => $form,
+            'educationLevels' =>ArrayHelper::map($educationLevels, 'id', function ($educationLevel) {
+                return $educationLevel->translations['en']->title;
+            })
         ]);
     }
 

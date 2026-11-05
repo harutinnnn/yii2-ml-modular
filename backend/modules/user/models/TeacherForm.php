@@ -26,6 +26,7 @@ use Yii;
  * @property string $contact_email
  * @property string $teacher_academic_degree
  * @property string $teacher_position
+ * @property string $profession
  * @property int $faculty
  * @property int $chair
  * @property int $status
@@ -50,6 +51,7 @@ class TeacherForm extends \yii\base\Model
     public $contact_email;
     public $teacher_academic_degree;
     public $teacher_position;
+    public $profession;
     public $faculty;
     public $chair;
     public $status;
@@ -82,6 +84,7 @@ class TeacherForm extends \yii\base\Model
             $this->contact_email = (string)$user->contact_email;
             $this->teacher_academic_degree = (string)$user->additional->teacher_academic_degree ?? "";
             $this->teacher_position = (string)$user->additional->teacher_position ?? "";
+            $this->profession = (string)$user->additional->profession ?? "";
             $this->faculty = (int)$user->additional->faculty;
             $this->chair = (int)$user->additional->chair;
             $this->status = (int)$this->user->status;
@@ -120,6 +123,7 @@ class TeacherForm extends \yii\base\Model
             'contact_email',
             'teacher_academic_degree',
             'teacher_position',
+            'profession',
             'faculty',
             'chair',
             'status',
@@ -134,6 +138,7 @@ class TeacherForm extends \yii\base\Model
             'contact_email',
             'teacher_academic_degree',
             'teacher_position',
+            'profession',
             'faculty',
             'chair',
             'status',
@@ -154,8 +159,8 @@ class TeacherForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'faculty', 'chair', 'phone', 'contact_email',], 'required'],
-            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'phone', 'contact_email',], 'string'],
+            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position','profession', 'faculty', 'chair', 'phone', 'contact_email',], 'required'],
+            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position','profession', 'phone', 'contact_email',], 'string'],
             [['status', 'created_at', 'faculty', 'chair', 'updated_at'], 'integer'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
@@ -200,6 +205,7 @@ class TeacherForm extends \yii\base\Model
             'contact_email' => 'Contact email',
             'teacher_academic_degree' => 'Academic degree',
             'teacher_position' => 'Teacher position',
+            'profession' => 'Profession',
             'faculty' => 'Faculty',
             'chair' => 'Chair',
             'status' => 'Status',
@@ -255,6 +261,7 @@ class TeacherForm extends \yii\base\Model
                 $additional->last_name = $this->last_name;
                 $additional->teacher_academic_degree = $this->teacher_academic_degree;
                 $additional->teacher_position = $this->teacher_position;
+                $additional->profession = $this->profession;
                 $additional->faculty = $this->faculty;
                 $additional->chair = $this->chair;
                 $additional->phone = $this->phone;
@@ -322,6 +329,7 @@ class TeacherForm extends \yii\base\Model
                 $additional->last_name = $this->last_name;
                 $additional->teacher_academic_degree = $this->teacher_academic_degree;
                 $additional->teacher_position = $this->teacher_position;
+                $additional->profession = $this->profession;
                 $additional->faculty = $this->faculty;
                 $additional->chair = $this->chair;
                 $additional->phone = $this->phone;

@@ -131,4 +131,19 @@ class Chairs extends ActiveRecord
         return $this->hasMany(ChairEducationProgrammLcp::class, ['chair_id' => 'id']);
     }
 
+    /**
+     * Gets query for [[ChairEducationProgrammLcp]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChairStaff()
+    {
+        return $this->hasMany(ChairStaffLcp::class, ['chair_id' => 'id']);
+    }
+
+
+    public function getDepartmentHead()
+    {
+        return $this->hasOne(User::class, ['id' => 'head_of_department']);
+    }
 }

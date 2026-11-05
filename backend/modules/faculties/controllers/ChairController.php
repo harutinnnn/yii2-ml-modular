@@ -4,6 +4,8 @@ namespace backend\modules\faculties\controllers;
 
 use backend\modules\faculties\models\ChairsForm;
 use backend\modules\faculties\models\ChairsSearch;
+use backend\modules\user\models\User;
+use common\components\UserRoles;
 use common\models\Chairs;
 use common\models\EducationalPrograms;
 use common\models\Faculties;
@@ -63,14 +65,20 @@ class ChairController extends Controller
         }
 
 
-
-
         $educationalPrograms = EducationalPrograms::find()->all();
+
+        $staff = User::find()
+            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::TEACHER])
+            ->joinWith('additional add')->all();
+
         return $this->render('create', [
             'model' => $form,
             'faculties' => Faculties::getFalcultiesKeyVal(),
-            'educationalPrograms' => ArrayHelper::map($educationalPrograms,'id',function ($programm){
+            'educationalPrograms' => ArrayHelper::map($educationalPrograms, 'id', function ($programm) {
                 return $programm->translations['en']->title;
+            }),
+            'staff' => ArrayHelper::map($staff, 'id', function ($stafItem) {
+                return $stafItem->additional->first_name . ' ' . $stafItem->additional->last_name;
             }),
         ]);
     }
@@ -87,10 +95,17 @@ class ChairController extends Controller
 
         $educationalPrograms = EducationalPrograms::find()->all();
 
+        $staff = User::find()
+            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::TEACHER])
+            ->joinWith('additional add')->all();
+
 
         return $this->render('update', [
-            'educationalPrograms' => ArrayHelper::map($educationalPrograms,'id',function ($programm){
+            'educationalPrograms' => ArrayHelper::map($educationalPrograms, 'id', function ($programm) {
                 return $programm->translations['en']->title;
+            }),
+            'staff' => ArrayHelper::map($staff, 'id', function ($stafItem) {
+                return $stafItem->additional->first_name . ' ' . $stafItem->additional->last_name;
             }),
             'model' => $form,
             'faculties' => Faculties::getFalcultiesKeyVal()

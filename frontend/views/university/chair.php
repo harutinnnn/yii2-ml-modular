@@ -19,23 +19,24 @@ use common\models\TranslationModel;
                 </div>
             </div>
         </div>
-        <aside data-quick-links="">
-            <div class="meta-label">Արագ հղումներ</div>
+        <aside>
+            <div class="meta-label"><?= I18n::translate('quick_links') ?></div>
+
             <div class="link-list">
                 <a href="education.html">
                     <span>
-                        <small>Տես նաև</small>
-                        <br>Կրթական ծրագրեր</span>
+                        Կրթական ծրագրեր
+                    </span>
                 </a>
                 <a href="structure.html">
                     <span>
-                        <small>ՀՊՏՀ կառուցվածք</small>
-                        <br>Ֆակուլտետներ և ամբիոններ</span>
+                        Ֆակուլտետներ և ամբիոններ
+                    </span>
                 </a>
                 <a href="contact.html">
                     <span>
-                        <small>Կապ</small>
-                        <br>Գրել համալսարանին</span>
+                        Գրել համալսարանին
+                    </span>
                 </a>
             </div>
         </aside>
@@ -44,8 +45,8 @@ use common\models\TranslationModel;
 
 <section class="inner-section white">
     <div class="wrap">
-        <div class="eyebrow red">Բաժիններ</div>
-        <h2 class="display-inner">Կրթական ծրագրեր</h2>
+        <div class="eyebrow red"><?= I18n::translate('sections') ?></div>
+        <h2 class="display-inner"><?= I18n::translate('educational_programs') ?></h2>
         <div class="cards">
             <?php if (isset($educationalPrograms) && !empty($educationalPrograms)): ?>
                 <?php foreach ($educationalPrograms as $i => $educationalProgram): ?>
@@ -58,38 +59,57 @@ use common\models\TranslationModel;
                         <p>
                             <?= TranslationModel::getTranslation($educationalProgram->educationProgramm, Yii::$app->globalData->lang, 'desc') ?>
                         </p>
-                        <a href="/<?= Yii::$app->globalData->lang ?>/education/education/program/<?= $educationalProgram->educationProgramm->id ?>"><?= I18n::translate('open') ?> →</a>
+                        <a href="/<?= Yii::$app->globalData->lang ?>/education/education/program/<?= $educationalProgram->educationProgramm->id ?>"><?= I18n::translate('open') ?>
+                            →</a>
                     </article>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </div>
 </section>
+
 <section class="inner-section compact white" id="staff">
     <div class="wrap">
-        <div class="department-head">
-            <div class="meta-label">Ամբիոնի ղեկավարություն</div>
-            <h2>Ամբիոնի վարիչ</h2>
-            <p>Պրոֆեսոր · կառավարման գիտություններ</p><a class="btn-outline" href="teacher-profile.html">Դիտել
-                պրոֆիլը →</a></div>
-        <h2 class="display-inner">Դասախոսական կազմ</h2>
-        <ul class="staff-list" data-staff-list="">
-            <li><a href="teacher-profile.html"><strong>Աննա Հարությունյան</strong><span>Պրոֆեսոր · Ռազմավարական կառավարում</span><span
-                            aria-hidden="true">→</span></a></li>
-            <li><a href="teacher-profile-2.html"><strong>Դավիթ
-                        Սարգսյան</strong><span>Դոցենտ · Ֆինանսական կառավարում</span><span
-                            aria-hidden="true">→</span></a>
-            </li>
-            <li><a href="teacher-profile-3.html"><strong>Մարիամ Գրիգորյան</strong><span>Դասախոս · Մարքեթինգ և հաղորդակցություն</span><span
-                            aria-hidden="true">→</span></a></li>
-            <li><a href="teacher-profile-4.html"><strong>Արամ Պետրոսյան</strong><span>Պրոֆեսոր · Տնտեսական քաղաքականություն</span><span
-                            aria-hidden="true">→</span></a></li>
-            <li><a href="teacher-profile-5.html"><strong>Լիլիթ
-                        Ավետիսյան</strong><span>Դոցենտ · Տվյալների վերլուծություն</span><span
-                            aria-hidden="true">→</span></a></li>
-            <li><a href="teacher-profile-6.html"><strong>Գոռ
-                        Մանուկյան</strong><span>Դասախոս · Ձեռնարկատիրություն</span><span aria-hidden="true">→</span></a>
-            </li>
+        <!--TODO -->
+        <?php if (isset($chair->departmentHead) && !empty($chair->departmentHead)): ?>
+            <?php
+            $userAdditional = $chair->departmentHead->additional;
+            ?>
+            <div class="department-head">
+                <div class="meta-label"><?= I18n::translate('department_leadership') ?></div>
+                <h2><?= I18n::translate('head_of_department') ?></h2>
+                <p><?= $userAdditional->teacher_academic_degree ?? '' ?>
+                    · <?= $userAdditional->teacher_position ?? '' ?></p>
+                <a class="btn-outline"
+                   href="/<?= Yii::$app->globalData->lang ?>/about-the-university/head-of-department/profile/<?= $chair->departmentHead->id ?? 0 ?>">
+                    <?= I18n::translate('view_profile') ?> →
+                </a>
+            </div>
+        <?php endif; ?>
+
+        <h2 class="display-inner"><?= I18n::translate('academic_staff') ?></h2>
+        <ul class="staff-list">
+
+            <?php if (isset($staff) && !empty($staff)): ?>
+                <?php foreach ($staff as $staffItem): ?>
+                    <?php if (isset($staffItem->user)): ?>
+                        <?php
+                        $user = $staffItem->user ?? null;
+                        $additional = $staffItem->user->additional ?? null;
+
+                        $url = '/' . Yii::$app->globalData->lang . '/about-the-university/teacher/profile/' . $user->id;
+
+                        ?>
+                        <li>
+                            <a href="<?= $url ?>">
+                                <strong><?= $additional->first_name . ' ' . $additional->last_name ?></strong>
+                                <span><?= $additional->teacher_academic_degree ?> · <?= $additional->teacher_position ?></span>
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </ul>
     </div>
 </section>

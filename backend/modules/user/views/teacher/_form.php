@@ -48,6 +48,14 @@ use yii\widgets\ActiveForm;
                             ]) ?>
                 </div>
 
+                <div class="col-md-6">
+                    <?= $form->field($model, "profession")
+                            ->textInput([
+                                    'maxlength' => true,
+                                    'placeholder' => "Profession",
+                            ]) ?>
+                </div>
+
             </div>
 
             <div class="row">

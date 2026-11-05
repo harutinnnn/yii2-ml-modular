@@ -68,6 +68,8 @@ return [
 
                 '<language:(en|ru|am)>/digital-library' => 'library/index',
 
+                '<language:(en|ru|am)>/about-the-university/<type:(head-of-department|teacher)>/profile/<id:\d+>' => 'profile/index',
+
                 '<language:(en|ru|am)>/about-the-university/faculties/<id>' => 'university/view',
                 '<language:(en|ru|am)>/about-the-university/chair/<id>' => 'university/chair',
                 '<language:(en|ru|am)>/about-the-university/faculties' => 'university/faculties',

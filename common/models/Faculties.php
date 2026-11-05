@@ -64,6 +64,11 @@ class Faculties extends ActiveRecord
         return $this->hasMany(FacultiesMl::class, ['faculty_id' => 'id'])->indexBy('lang');
     }
 
+    public function getEducationLevels()
+    {
+        return $this->hasMany(FacultyEducationLevelsLcp::class, ['faculty_id' => 'id']);
+    }
+
     public function getTranslation(string $lang): ?FacultiesMl
     {
         $translations = $this->translations;

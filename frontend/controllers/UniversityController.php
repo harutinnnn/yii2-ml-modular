@@ -7,6 +7,7 @@ use common\components\I18n;
 use common\components\StatusList;
 use common\models\ChairEducationProgrammLcp;
 use common\models\Chairs;
+use common\models\EducationLevels;
 use common\models\Faculties;
 use common\models\TranslationModel;
 use Yii;
@@ -20,6 +21,7 @@ class UniversityController extends MyController
 
     public function actionFaculties()
     {
+
         $menuObj = $this->pageData['menuObj'] ?? null;
 
         Yii::$app->globalData->setPageData('bread', TranslationModel::getTranslation($menuObj, Yii::$app->globalData->lang));
@@ -31,11 +33,29 @@ class UniversityController extends MyController
 
         $this->layout = 'university';
 
-        $faculties = Faculties::find()->where(['status' => StatusList::STATUS_PUBLISHED])->orderBy(['pos' => SORT_ASC])->all();
+
+        $educationLevelId = Yii::$app->request->get('education_level');
+
+        if (intval($educationLevelId)) {
+
+            $faculties = Faculties::find()
+                ->innerJoin('faculty_education_levels_lcp fed', 'faculties.id = fed.faculty_id')
+                ->where(['status' => StatusList::STATUS_PUBLISHED, 'fed.education_level_id' => intval($educationLevelId)])
+                ->orderBy(['pos' => SORT_ASC])->all();
+        } else {
+
+            $faculties = Faculties::find()->where(['status' => StatusList::STATUS_PUBLISHED])->orderBy(['pos' => SORT_ASC])->all();
+        }
+
+
+        $educationLevels = EducationLevels::find()->where(['as_edu_level' => StatusList::STATUS_PUBLISHED])->orderBy(['pos' => SORT_ASC])->all();
+
 
         return $this->render('faculties',
             [
-                'faculties' => $faculties
+                'faculties' => $faculties,
+                'educationLevels' => $educationLevels,
+                'educationLevelId' => $educationLevelId
             ]
         );
     }
@@ -84,10 +104,12 @@ class UniversityController extends MyController
         $educationalPrograms = ChairEducationProgrammLcp::find()
             ->where(['chair_id' => $chair->id])->all();
 
+
         return $this->render('chair',
             [
                 'sideMenuList' => $this->pageData['sideMenuList'],
                 "chair" => $chair,
+                "staff" => $chair->chairStaff,
                 'educationalPrograms' => $educationalPrograms
             ]
         );

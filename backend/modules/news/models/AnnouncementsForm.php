@@ -4,9 +4,11 @@ namespace backend\modules\news\models;
 
 use common\models\Announcements;
 use common\models\AnnouncementsMl;
+use common\models\AnnouncementTagsLcp;
 use common\models\Language;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -20,6 +22,8 @@ class AnnouncementsForm extends Model
     public array $translations = [];
     public $imageFile = null;
 
+    public $tags = [];
+
     private ?array $_languages = null;
 
     public function __construct(?Announcements $announcements = null, $config = [])
@@ -32,6 +36,11 @@ class AnnouncementsForm extends Model
             $this->category_id = (int)$this->announcements->category_id;
             $this->date = (string)$this->announcements->date;
             $this->image = $this->announcements->image;
+
+            if (isset($announcements->tags) && !empty($announcements->tags)) {
+                $this->tags = ArrayHelper::getColumn($announcements->tags, 'tag_id');
+            }
+
             foreach ($this->announcements->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
@@ -55,6 +64,7 @@ class AnnouncementsForm extends Model
             [['status', 'category_id'], 'integer'],
             [['date'], 'string'],
             [['status'], 'in', 'range' => array_keys(Announcements::statusOptions())],
+            [['tags'], 'each', 'rule' => ['integer']],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
@@ -68,6 +78,7 @@ class AnnouncementsForm extends Model
             'category_id' => 'Category',
             'date' => 'Date',
             'imageFile' => 'Image',
+            'tags' => 'Tags',
         ];
     }
 
@@ -112,6 +123,21 @@ class AnnouncementsForm extends Model
                 $transaction->rollBack();
 
                 return false;
+            }
+
+            if ($announcements['id']) {
+                AnnouncementTagsLcp::deleteAll(['news_id' => $announcements['id']]);
+
+                if (!empty($this->tags)) {
+
+                    foreach ($this->tags as $tag) {
+
+                        $newsTagsLcp = new AnnouncementTagsLcp();
+                        $newsTagsLcp->news_id = $announcements['id'];
+                        $newsTagsLcp->tag_id = $tag;
+                        $newsTagsLcp->save();
+                    }
+                }
             }
 
             AnnouncementsMl::deleteAll(['announcements_id' => $announcements->id]);

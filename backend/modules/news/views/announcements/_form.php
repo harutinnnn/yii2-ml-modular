@@ -6,6 +6,7 @@
 
 use common\helpers\EditorJsHelper;
 use common\models\Announcements;
+use kartik\select2\Select2;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 use yii\helpers\Json;
@@ -46,6 +47,34 @@ $csrfToken = Yii::$app->request->csrfToken;
             <?php if ($model->image): ?>
                 <p class="mb-0"><img src="<?= Html::encode($model->image) ?>" alt="" style="max-height: 100px;"></p>
             <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title">Tags block</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php
+                        echo $form->field($model, 'tags')->widget(Select2::class, [
+                                'data' => $tags ?? [],
+                                'options' => [
+                                        'placeholder' => 'Select news tags',
+                                        'multiple' => true,
+                                ],
+                                'pluginOptions' => [
+                                        'allowClear' => true,
+                                ],
+                        ]);
+                        ?>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 

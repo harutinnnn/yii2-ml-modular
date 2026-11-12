@@ -53,14 +53,11 @@ $csrfToken = Yii::$app->request->csrfToken;
     <div class="col-md-12">
         <div class="card card-secondary">
             <div class="card-header">
-                <h3 class="card-title">Block 3</h3>
+                <h3 class="card-title">Tags block</h3>
             </div>
 
             <div class="card-body">
-
                 <div class="row">
-
-
                     <div class="col-md-12">
                         <?php
                         echo $form->field($model, 'tags')->widget(Select2::class, [
@@ -75,12 +72,7 @@ $csrfToken = Yii::$app->request->csrfToken;
                         ]);
                         ?>
                     </div>
-
-
-
                 </div>
-
-
             </div>
 
         </div>

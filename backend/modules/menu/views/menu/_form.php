@@ -131,11 +131,11 @@ $menuIdJson = Json::htmlEncode($menuId);
                         <div class="row">
                             <div class="col-md-6">
                                 <?= $form->field($model, 'imageFile')->fileInput() ?>
-                                <?php if ($model->image): ?><p class="mb-0"><img
-                                            src="<?= Html::encode($model->image) ?>"
-                                            alt=""
-                                            style="max-height: 70px;">
-                                    </p><?php endif; ?>
+                                <?php if ($model->image): ?>
+                                    <p class="mb-0">
+                                        <img src="<?= Html::encode($model->image) ?>" alt="" style="max-height: 70px;">
+                                    </p>
+                                <?php endif; ?>
                             </div>
                             <div class="col-md-6">
                                 <?= $form->field($model, 'headerImageFile')->fileInput() ?>

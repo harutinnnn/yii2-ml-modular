@@ -66,6 +66,7 @@ return [
 
                 '<language:(en|ru|am)>/send-message' => 'conversation/send-message',
 
+                '<language:(en|ru|am)>/digital-library/<moduleSlug>' => 'library/module',
                 '<language:(en|ru|am)>/digital-library' => 'library/index',
 
                 '<language:(en|ru|am)>/about-the-university/<type:(head-of-department|teacher)>/profile/<id:\d+>' => 'profile/index',

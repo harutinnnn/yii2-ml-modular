@@ -121,7 +121,6 @@ class EducationController extends MyController
         }
         $plans = EducationPlan::find()->where(['educational_program_id' => $id])->orderBy(['pos' => SORT_ASC])->all();
 
-
         $this->pageData['menuObj'] = $program;
 
         $this->pageData['plans'] = $plans;

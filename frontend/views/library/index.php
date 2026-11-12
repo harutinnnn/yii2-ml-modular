@@ -25,7 +25,7 @@ use common\models\TranslationModel;
                         <h3><?= TranslationModel::getTranslation($libraryModule, Yii::$app->globalData->lang) ?></h3>
                         <?= TranslationModel::getTranslation($libraryModule, Yii::$app->globalData->lang, 'text') ?>
                         <a class="btn <?= $i > 0 ? 'secondary' : '' ?>"
-                           href="/<?= Yii::$app->globalData->lang ?>/library/<?= $libraryModule->slug ?>">
+                           href="/<?= Yii::$app->globalData->lang ?>/digital-library/<?= $libraryModule->slug ?>">
                             Բացել
                         </a>
                     </div>

@@ -36,7 +36,7 @@ class LibraryModule extends TranslationModel
         return [
             [['status'], 'default', 'value' => 0],
             [['status', 'pos'], 'integer'],
-            [['pos','slug'], 'required'],
+            [['pos', 'slug'], 'required'],
             [['created_at'], 'safe'],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
@@ -62,14 +62,6 @@ class LibraryModule extends TranslationModel
     }
 
 
-
-//    public function getTranslation(string $lang): ?LibraryModuleMl
-//    {
-//        $translations = $this->translations;
-//
-//        return $translations[$lang] ?? null;
-//    }
-
     public static function statusOptions(): array
     {
         return [
@@ -77,4 +69,22 @@ class LibraryModule extends TranslationModel
             StatusList::STATUS_ACTIVE => 'Published'
         ];
     }
+
+    public static function getModulesKeyVal()
+    {
+
+        $defaultLanguage = Language::find()->where(['is_default' => 1])->select('code')->scalar();
+        $module = LibraryModule::find()
+            ->alias('ec')
+            ->joinWith('translations ect')
+            ->groupBy('ec.id')
+            ->all();
+
+        $moduleTmp = [];
+        foreach ($module as $moduleItem) {
+            $moduleTmp[$moduleItem->id] = $moduleItem->translations[$defaultLanguage]->title;
+        }
+        return $moduleTmp;
+    }
+
 }

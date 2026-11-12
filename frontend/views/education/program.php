@@ -1,81 +1,70 @@
 <?php
 $content = $this->context->pageData['content'];
-
+$menuObj = $this->context->pageData['menuObj'];
+$parentMenuObj = $this->context->pageData['parentMenuObj'];
+$preParentMenuObj = $this->context->pageData['preParentMenuObj'];
 ?>
-<nav class="inner-subnav">
-    <div class="wrap">
-        <a href="program-detail.html">Ծրագրի մասին</a>
-        <a href="#curriculum">Ուսումնական պլան</a>
-        <a href="program-detail.html">Ընդունելություն</a>
-        <a href="program-detail.html">Կարիերա</a>
-    </div>
-</nav>
 
-<section class="inner-section">
-    <div class="wrap">
-        <div class="program-hero-box">
-            <div class="eyebrow red"><?= $level->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?></div>
-            <h2 class="display-inner"><?= $program->getTranslation(Yii::$app->globalData->lang)->title ?></h2>
-            <div class="body-copy">
-                <?= $program->getTranslation(Yii::$app->globalData->lang)->desc ?>
-            </div>
-            <div class="program-meta">
-                <div><span class="meta-label">Տևողություն</span><b><?= $program->duration_by_year ?> տարի</b></div>
-                <div><span class="meta-label">Որակավորում</span><b>Bachelor</b></div>
-                <div><span class="meta-label">Ուսուցում</span><b>Առկա</b></div>
-                <div>
-                    <span class="meta-label">Լեզու</span><b><?= strtoupper(implode(' / ', explode(',', $program->languages))) ?></b>
-                </div>
-            </div>
+<section class="inner-section white">
+    <div class="wrap" id="programs">
+        <div class="eyebrow red">Բաժիններ</div>
+        <h2 class="display-inner">Կրթական ծրագրեր</h2>
+        <div class="cards">
+            <article class="card">
+                <div class="card-number">01</div>
+                <h3>Բակալավրիատ</h3>
+                <p>Հիմնական մասնագիտական կրթական ծրագրեր՝ առկա և հեռակա ձևաչափերով։</p>
+                <a href="bachelor.html">Բացել →</a>
+            </article>
+            <article class="card">
+                <div class="card-number">02</div>
+                <h3>Մագիստրատուրա</h3>
+                <p>Խորացված մասնագիտական ծրագրեր՝ հետազոտական և կիրառական ուղղություններով։</p>
+                <a href="masters.html">Բացել →</a>
+            </article>
+            <article class="card">
+                <div class="card-number">03</div>
+                <h3>Ասպիրանտուրա</h3>
+                <p>Գիտական և հետազոտական առաջադեմ պատրաստություն։</p>
+                <a href="phd.html">Բացել →</a>
+            </article>
         </div>
     </div>
 </section>
 
-<?php if (isset($content) && !empty($content)): ?>
-    <section class="rich-photo-section">
-        <div class="wrap">
-            <div class="photo-feature-split">
-                <div class="visual"><img src="<?= $content->image ?? null ?>" alt="ՀՊՏՀ ուսանողներ"></div>
-                <div class="photo-feature-copy">
-                    <div class="eyebrow red">Կրթական միջավայր</div>
-                    <h2><?= $content->getTranslation(Yii::$app->globalData->lang)->title ?></h2>
-                    <?= $content->getTranslation(Yii::$app->globalData->lang)->text ?>
-                    <a class="btn-red" href="education.html">Դիտել կրթական ծրագրերը →</a></div>
-            </div>
+<section class="inner-section white">
+    <div class="wrap">
+        <div class="eyebrow red">Բաժիններ</div>
+        <h2 class="display-inner">Շարունակական կրթություն</h2>
+        <div class="cards">
+            <article class="card">
+                <div class="card-number">01</div>
+                <h3>Վերապատրաստումներ</h3>
+                <p>Մասնագիտական զարգացման ծրագրեր։</p>
+                <a href="trainings.html">Բացել →</a>
+            </article>
+            <article class="card">
+                <div class="card-number">02</div>
+                <h3>Կարճաժամկետ դասընթացներ</h3>
+                <p>Թեմատիկ և կիրառական կրթական մոդուլներ։</p>
+                <a href="short-courses.html">Բացել →</a>
+            </article>
         </div>
-    </section>
-<?php endif; ?>
+    </div>
+</section>
 
-<section class="inner-section white" id="curriculum">
-    <div class="wrap inner-grid-2">
-        <div>
-            <div class="eyebrow red">Ուսումնական պլան</div>
-            <h2 class="display-inner">Ինչ եք ուսումնասիրելու</h2>
-            <div class="accordion">
-                <?php if (isset($plans) && !empty($plans)): ?>
-                    <?php foreach ($plans as $i => $plan): ?>
-                        <details <?= !$i ? 'open' : '' ?>>
-                            <summary><?= $plan->getTranslation(Yii::$app->globalData->lang)->title ?></summary>
-                            <div class="answer">
-                                <?= $plan->getTranslation(Yii::$app->globalData->lang)->text ?>
-                            </div>
-                        </details>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-
-            </div>
+<section class="inner-section compact" id="">
+    <div class="wrap">
+        <h2 class="display-inner">Դասացուցակներ և քննագրաֆիկներ</h2>
+        <div class="section-directory">
+            <a href="schedules.html">Դասացուցակներ</a>
+            <a href="exam-schedules.html">Քննագրաֆիկներ</a>
         </div>
-        <aside>
-            <div class="meta-label"><?= \common\components\I18n::translate('application') ?></div>
-            <h3 style="font-family:Georgia,serif;font-size:30px">
-                <?= \common\components\I18n::translate('ready_to_apply') ?>
-            </h3>
-            <p class="body-copy">
-                <?= \common\components\I18n::translate('ready_to_apply_text') ?>
-            </p>
-            <a class="btn-red"
-               href="/<?= Yii::$app->globalData->lang ?>/admission/online-application"><?= \common\components\I18n::translate('admission') ?>
-                →</a>
-        </aside>
+    </div>
+</section>
+<section class="inner-section compact" id="">
+    <div class="wrap">
+        <h2 class="display-inner">Վիդեո դասախոսություններ</h2>
+        <a class="btn-outline" href="video-lectures.html">Դիտել վիդեո դասախոսությունները →</a>
     </div>
 </section>

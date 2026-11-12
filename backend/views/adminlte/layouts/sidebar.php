@@ -133,6 +133,11 @@ $menuItems = [
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
                                 'active' => Yii::$app->controller->id == 'library-module'
                         ],
+
+                        ['label' => 'Library Items', 'icon' => 'icons', 'url' => ['/library/library-item/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'library-item'
+                        ],
                 ]
         ],
 

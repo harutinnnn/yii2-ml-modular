@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\components\StatusList;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -15,8 +16,6 @@ use yii\db\ActiveRecord;
  */
 class NewsCategories extends ActiveRecord
 {
-    public const STATUS_PENDING = 0;
-    public const STATUS_PUBLISHED = 1;
 
     public static function tableName(): string
     {
@@ -52,9 +51,10 @@ class NewsCategories extends ActiveRecord
 
     public static function statusOptions(): array
     {
+
         return [
-            self::STATUS_PENDING => 'Pending',
-            self::STATUS_PUBLISHED => 'Published',
+            StatusList::STATUS_PENDING => 'Pending',
+            StatusList::STATUS_PUBLISHED => 'Published',
         ];
     }
 

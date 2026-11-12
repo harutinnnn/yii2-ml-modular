@@ -6,6 +6,7 @@ use backend\modules\news\models\NewsForm;
 use backend\modules\News\models\NewsSearch;
 use common\models\News;
 use common\models\NewsCategories;
+use common\models\NewsTags;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
@@ -68,7 +69,10 @@ class NewsController extends Controller
             'model' => $form,
             'categories' => ArrayHelper::map(NewsCategories::find()->all(), 'id', function ($category) {
                 return $category->translations['en']->title;
-            })
+            }),
+            'tags' => ArrayHelper::map(NewsTags::find()->all(), 'id', function ($tag) {
+                return $tag->translations['en']->title;
+            }),
         ]);
     }
 
@@ -86,7 +90,10 @@ class NewsController extends Controller
             'model' => $form,
             'categories' => ArrayHelper::map(NewsCategories::find()->all(), 'id', function ($category) {
                 return $category->translations['en']->title;
-            })
+            }),
+            'tags' => ArrayHelper::map(NewsTags::find()->all(), 'id', function ($tag) {
+                return $tag->translations['en']->title;
+            }),
         ]);
     }
 

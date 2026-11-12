@@ -21,6 +21,7 @@ class StatusList
             self::STATUS_ACTIVE => 'Active',
             self::STATUS_PENDING => 'Pending',
             self::STATUS_REJECTED => 'Rejected',
+            self::STATUS_PUBLISHED => 'Published',
         ];
 
         if ($status === null) {

@@ -169,6 +169,11 @@ $menuItems = [
                                 'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
                                 'active' => Yii::$app->controller->id == 'news-categories'
                         ],
+
+                        ['label' => 'News tags', 'icon' => 'tags', 'url' => ['/news/news-tags/index'],
+                                'visible' => RbacUtilities::allowRoles(['moderator', 'admin']),
+                                'active' => Yii::$app->controller->id == 'news-tags'
+                        ],
                 ]
         ],
 

@@ -5,8 +5,10 @@ namespace backend\modules\news\models;
 use common\models\Language;
 use common\models\News;
 use common\models\NewsMl;
+use common\models\NewsTagsLcp;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -22,6 +24,8 @@ class NewsForm extends Model
 
     private ?array $_languages = null;
 
+    public $tags = [];
+
     public function __construct(?News $news = null, $config = [])
     {
         $this->news = $news;
@@ -32,6 +36,11 @@ class NewsForm extends Model
             $this->category_id = (int)$this->news->category_id;
             $this->date = (string)$this->news->date;
             $this->image = $this->news->image;
+
+            if (isset($news->tags) && !empty($news->tags)) {
+                $this->tags = ArrayHelper::getColumn($news->tags, 'tag_id');
+            }
+
             foreach ($this->news->translations as $translation) {
                 $this->translations[$translation->lang] = [
                     'title' => $translation->title,
@@ -55,6 +64,7 @@ class NewsForm extends Model
             [['status', 'category_id','date'], 'required'],
             [['status', 'category_id'], 'integer'],
             [['date'], 'string'],
+            [['tags'], 'each', 'rule' => ['integer']],
             [['status'], 'in', 'range' => array_keys(News::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations'],
@@ -69,6 +79,7 @@ class NewsForm extends Model
             'category_id' => 'Category',
             'date' => 'Date',
             'imageFile' => 'Image',
+            'tags' => 'Tags',
         ];
     }
 
@@ -117,6 +128,21 @@ class NewsForm extends Model
                 $transaction->rollBack();
 
                 return false;
+            }
+
+            if ($news['id']) {
+                NewsTagsLcp::deleteAll(['news_id' => $news['id']]);
+
+                if (!empty($this->tags)) {
+
+                    foreach ($this->tags as $tag) {
+
+                        $newsTagsLcp = new NewsTagsLcp();
+                        $newsTagsLcp->news_id = $news['id'];
+                        $newsTagsLcp->tag_id = $tag;
+                        $newsTagsLcp->save();
+                    }
+                }
             }
 
             NewsMl::deleteAll(['news_id' => $news->id]);

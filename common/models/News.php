@@ -105,4 +105,9 @@ class News extends ActiveRecord
     {
         return $this->hasOne(NewsCategories::class, ['id' => 'category_id']);
     }
+
+    public function getTags()
+    {
+        return $this->hasMany(NewsTagsLcp::class, ['news_id' => 'id']);
+    }
 }

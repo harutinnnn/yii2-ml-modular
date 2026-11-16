@@ -87,9 +87,11 @@ class AdmissionController extends MyController
 
 
                         //TODO send email...?
+//                        $userAdmissionData->sendEmail($user);
+                        $userAdmissionData->sendAdminForRegisterApplicant($user,$additional);
                         Yii::$app->session->setFlash('admission_successfully_sent', 'Yor admission successfully sent!');
 
-                        return $this->redirect([Yii::$app->globalData->lang . '/admission/online-application']);
+                        return $this->redirect([Yii::$app->globalData->lang . '/online-application']);
                     }
 
                 } else {

@@ -83,4 +83,32 @@ class UserAdmissionData extends \yii\db\ActiveRecord
         return true;
     }
 
+    public function sendEmail($user): bool
+    {
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
+                ['user' => $user]
+            )
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setTo($user->email)
+            ->setSubject('Account registration at ' . Yii::$app->name)
+            ->send();
+    }
+
+    public function sendAdminForRegisterApplicant($user, $additional): bool
+    {
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'applicantRegistered-html', 'text' => 'applicantRegistered-text'],
+                ['user' => $user, 'additional' => $additional]
+            )
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setTo($user->email)
+            ->setSubject('Account registration at ' . Yii::$app->name)
+            ->send();
+    }
+
 }

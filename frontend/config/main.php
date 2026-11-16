@@ -92,6 +92,8 @@ return [
                 '<language:(en|ru|am)>/announcements/<slug>' => 'announcements/view',
                 '<language:(en|ru|am)>/announcements' => 'announcements',
 
+                '<language:(en|ru|am)>/online-application' => 'admission/online-application',
+
                 '<language:en|ru|am>/<slug1:[^/]+>/<slug2:[^/]+>' => 'content/index',
 //                '<language:(en|ru|am)>/<controller>/<action>' => '<controller>/<action>',
             ],

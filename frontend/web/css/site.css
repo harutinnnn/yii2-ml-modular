@@ -41,8 +41,12 @@
     display: none !important;
 }
 
-.field input, .field select {
+.field input:not([type=checkbox]), .field select {
     height: 50px;
+}
+
+.field input[type=checkbox] {
+    width: auto;
 }
 
 .user-messages {
@@ -164,9 +168,10 @@ ul.pagination li.next {
     display: flex;
 }
 
-.fs-12px{
+.fs-12px {
     font-size: 12px;
 }
-.fs-18px{
+
+.fs-18px {
     font-size: 18px;
 }

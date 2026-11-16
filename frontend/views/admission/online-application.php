@@ -79,10 +79,8 @@ $content = $this->context->pageData['content'];
                                     ]
                             )
                     ?>
-                    <label>
-
-                    </label>
                 </div>
+
                 <div class="field full">
                     <?= Html::submitButton(I18n::translate('continue_application') . '→', ['class' => 'btn-red']) ?>
                 </div>
@@ -107,8 +105,8 @@ $content = $this->context->pageData['content'];
                 <?php endif; ?>
                 <div class="photo-feature-copy">
                     <div class="eyebrow red"><?= I18n::translate('educational_environment') ?></div>
-                    <h2><?= $content->getTranslation(Yii::$app->globalData->lang)->title ?? '' ?></h2>
-                    <?= $content->getTranslation(Yii::$app->globalData->lang)->text ?? '' ?>
+                    <h2><?= \common\models\TranslationModel::getTranslation($content,Yii::$app->globalData->lang) ?></h2>
+                    <?= \common\models\TranslationModel::getTranslation($content,Yii::$app->globalData->lang,'text') ?>
 
                     <a class="btn-red" href="/<?= Yii::$app->globalData->lang ?>/education/all-programs">
                         <?= I18n::translate('view_educational_programs') ?> →

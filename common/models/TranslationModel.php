@@ -28,7 +28,7 @@ class TranslationModel extends \yii\db\ActiveRecord
 
     public static function getTranslation($model, $lang, $attr = 'title'): string|null
     {
-        $translations = $model->translations;
+        $translations = $model->translations ?? null;
         return $translations[$lang]->{$attr} ?? ($translations[$lang][$attr] ?? null);
     }
 }

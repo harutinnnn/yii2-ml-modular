@@ -32,6 +32,9 @@ return [
         ],
     ],
     'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module',
+        ],
         'admin' => [
             'class' => 'mdm\admin\Module',
             'controllerMap' => [

@@ -20,7 +20,7 @@ class StudentSearch extends Student
     {
         return [
             [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['email', 'first_name', 'last_name', 'phone'], 'safe'],
+            [['email', 'first_name', 'last_name', 'phone', 'course', 'chair'], 'safe'],
         ];
     }
 
@@ -50,6 +50,9 @@ class StudentSearch extends Student
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
         ]);
 
         $this->load($params, $formName);
@@ -58,6 +61,22 @@ class StudentSearch extends Student
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
+        }
+
+
+        $queryParams = \Yii::$app->request->getQueryParams();
+        if (isset($queryParams['StudentSearch'])) {
+
+            $filters = array_filter(
+                $queryParams['StudentSearch'],
+                function ($value) {
+                    return $value !== null && $value !== '';
+                }
+            );
+
+            if (!empty($filters)) {
+                $dataProvider->pagination = false;
+            }
         }
 
         // grid filtering conditions
@@ -82,6 +101,10 @@ class StudentSearch extends Student
                 'like',
                 'add.phone',
                 $this->phone
+            ])->andFilterWhere([
+                'add.course' => $this->course
+            ])->andFilterWhere([
+                'add.chair' => $this->chair
             ]);
 
         return $dataProvider;

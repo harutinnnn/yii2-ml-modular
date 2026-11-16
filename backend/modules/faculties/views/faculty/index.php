@@ -4,6 +4,7 @@
 /** @var backend\modules\faculties\models\FacultiesSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
+use common\components\ExportTools;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -15,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="faculty-content-index">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <?= Html::a('Create Faculty', ['create'], ['class' => 'btn btn-primary']) ?>
+        <?= ExportTools::export($dataProvider) ?>
     </div>
 
     <div class="card">

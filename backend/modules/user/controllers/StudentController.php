@@ -10,6 +10,7 @@ use backend\modules\user\models\User;
 use common\components\EntityTypes;
 use common\models\ActionLogs;
 use common\models\Chairs;
+use common\models\Student;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -126,6 +127,31 @@ class StudentController extends Controller
         }
 
         return $model;
+    }
+
+    public function actionMoveCourse()
+    {
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $ids = Yii::$app->request->post('ids');
+
+        if (!empty($ids)) {
+            $students = Student::find()->where(['IN', 'id', $ids])->all();
+            if (!empty($students)) {
+                foreach ($students as $student) {
+
+                    if ($student->additional->course < Student::MAX_COURSE) {
+                        $student->additional->course = $student->additional->course + 1;
+                        $student->additional->save();
+                    }
+
+                }
+            }
+
+        }
+        return true;
+
     }
 
 }

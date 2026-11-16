@@ -24,6 +24,8 @@ use Yii;
 class Student extends \yii\db\ActiveRecord
 {
 
+    const MAX_COURSE = 5;
+
     public const STATUS_DELETED = 0;
     public const STATUS_INACTIVE = 9;
     public const STATUS_ACTIVE = 10;
@@ -34,8 +36,10 @@ class Student extends \yii\db\ActiveRecord
     public $first_name;
     public $last_name;
     public $phone;
+    public $course;
 
     public $password;
+    public $chair;
 
     /**
      * {@inheritdoc}

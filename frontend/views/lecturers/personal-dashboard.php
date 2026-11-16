@@ -5,7 +5,7 @@ use common\models\ArticlesAndBooksRequests;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/** @var \frontend\assets\frontend\models\TeacherDataForm $teacherDataForm */
+/** @var \frontend\models\TeacherDataForm $teacherDataForm */
 /** @var \common\models\ArticlesAndBooksRequests $articlesAndBooksRequests */
 /** @var \common\models\User $user */
 

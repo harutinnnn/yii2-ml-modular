@@ -2,7 +2,7 @@
 
 /** @var yii\web\View $this */
 /** @var yii\bootstrap5\ActiveForm $form */
-/** @var \frontend\models\ResetPasswordForm $model */
+/** @var \frontend\assets\frontend\models\ResetPasswordForm $model */
 
 use common\components\I18n;
 use yii\bootstrap5\Html;

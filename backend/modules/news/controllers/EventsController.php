@@ -3,7 +3,7 @@
 namespace backend\modules\news\controllers;
 
 use backend\modules\news\models\EventsForm;
-use backend\modules\News\models\EventsSearch;
+use backend\modules\news\models\EventsSearch;
 use common\models\Events;
 use Yii;
 use yii\helpers\FileHelper;

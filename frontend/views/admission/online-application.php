@@ -1,7 +1,7 @@
 <?php
 
 
-/** @var frontend\models\AdmissionForm $model */
+/** @var \frontend\assets\frontend\models\AdmissionForm $model */
 
 use common\components\I18n;
 use yii\helpers\Html;

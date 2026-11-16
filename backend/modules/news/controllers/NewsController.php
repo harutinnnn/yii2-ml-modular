@@ -3,7 +3,7 @@
 namespace backend\modules\news\controllers;
 
 use backend\modules\news\models\NewsForm;
-use backend\modules\News\models\NewsSearch;
+use backend\modules\news\models\NewsSearch;
 use common\models\News;
 use common\models\NewsCategories;
 use common\models\NewsTags;

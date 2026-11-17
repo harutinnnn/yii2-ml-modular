@@ -1,28 +1,59 @@
 <?php
 
+use common\components\I18n;
 use common\helpers\EditorJsHelper;
+use common\models\Language;
 use common\models\TranslationModel;
+use yii\helpers\ArrayHelper;
 
 $this->params['hideMainHeader'] = true;
-$this->params['customHeader'] = '//announcements/header';
+$this->params['customHeader'] = '//partial/dynamic-header';
+$languages = ArrayHelper::map(Language::find()->all(), 'code', 'name');
 ?>
 
 <section class="inner-section">
     <div class="wrap inner-grid-2">
         <article>
-            <div class="meta-label">
-                <?= date('d', strtotime($newsItem->date)) ?>
-                <?= \common\components\DateHelper::getMonth($newsItem->date, \Yii::$app->globalData->lang) ?>,
-                <?= date('Y', strtotime($newsItem->date)) ?> · <?= TranslationModel::getTranslation($newsItem->category, Yii::$app->globalData->lang) ?>
-            </div>
+            <?php if ($newsItem): ?>
 
-            <h2 class="display-inner">
-                <?= TranslationModel::getTranslation($newsItem, Yii::$app->globalData->lang) ?>
-            </h2>
-            <div class="body-copy">
-                <?= EditorJsHelper::render(TranslationModel::getTranslation($newsItem, Yii::$app->globalData->lang,'text')) ?>
-            </div>
+                <div class="meta-label">
+                    <?= date('d', strtotime($newsItem->date)) ?>
+                    <?= \common\components\DateHelper::getMonth($newsItem->date, \Yii::$app->globalData->lang) ?>,
+                    <?= date('Y', strtotime($newsItem->date)) ?>
+                    · <?= TranslationModel::getTranslation($newsItem->category, Yii::$app->globalData->lang) ?>
+                </div>
+
+                <h2 class="display-inner">
+                    <?= TranslationModel::getTranslation($newsItem, Yii::$app->globalData->lang) ?>
+                </h2>
+                <div class="body-copy">
+                    <?= EditorJsHelper::render(TranslationModel::getTranslation($newsItem, Yii::$app->globalData->lang, 'text')) ?>
+                </div>
+            <?php else: ?>
+
+                <h2 class="display-inner">
+                    <?= I18n::translate('no_content_with_current_language_text') ?>
+                </h2>
+                <div class="body-copy">
+                    <?= I18n::translate('for_example') ?>`
+
+                    <?php if (isset($navLangList) && !empty($navLangList)): ?>
+                        <?php foreach ($navLangList as $langKey => $newsSlug): ?>
+                            <?php if ($langKey !== Yii::$app->globalData->lang): ?>
+
+                                <a href="<?= $newsSlug ?>"
+                                   class="no-content-lang-url"><?= $languages[$langKey] ?>
+                                </a>
+                            <?php endif; ?>
+
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+
+            <?php endif; ?>
+
         </article>
+
         <aside>
             <div class="meta-label">Կիսվել / թեմաներ</div>
             <div class="link-list"><a href="international.html">Միջազգային համագործակցություն</a><a
@@ -30,6 +61,8 @@ $this->params['customHeader'] = '//announcements/header';
         </aside>
     </div>
 </section>
+
+
 <section class="rich-photo-section">
     <div class="wrap">
         <div class="eyebrow red">Պատմություններ համալսարանից</div>

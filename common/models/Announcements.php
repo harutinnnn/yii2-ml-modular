@@ -24,7 +24,7 @@ class Announcements extends ActiveRecord
 
     public static function tableName(): string
     {
-        return '{{%announcements}}';
+        return 'announcements';
     }
 
     public function behaviors(): array

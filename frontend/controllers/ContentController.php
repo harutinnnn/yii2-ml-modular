@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\helpers\I18n;
 use common\models\PageBlockItem;
+use common\models\TranslationModel;
 use Yii;
 
 /**
@@ -58,6 +59,8 @@ class ContentController extends MyController
 //        }
 
 
+
+
         $pageBlock = $this->pageData['menuObj']->pageBlock ?? null;
         $pageBlockItems = [];
         if (!empty($pageBlock)) {
@@ -65,7 +68,16 @@ class ContentController extends MyController
         }
 
 
-        return $this->render('index',
+        $view = 'index';
+        if(
+            !TranslationModel::getTranslation($this->pageData['content'],Yii::$app->globalData->lang)  ||
+            TranslationModel::getTranslation($this->pageData['content'],Yii::$app->globalData->lang) && !strlen(trim(TranslationModel::getTranslation($this->pageData['content'],Yii::$app->globalData->lang)))
+        ){
+            $view = 'no-content-with-current-language';
+        }
+
+
+        return $this->render($view,
             [
                 'sideMenuList' => $this->pageData['sideMenuList'],
                 'pageBlock' => $pageBlock,

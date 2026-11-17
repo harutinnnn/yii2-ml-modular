@@ -15,6 +15,8 @@ class GlobalData extends Component
     public $lang = 'am';
     public array $languages = [];
     public $pageData = [];
+    public array $customLanguageSLugs = [];
+    public $headerBottomNavbar = false;
 
 
     public function init()

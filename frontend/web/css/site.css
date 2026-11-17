@@ -175,3 +175,12 @@ ul.pagination li.next {
 .fs-18px {
     font-size: 18px;
 }
+
+.no-content-lang-url {
+    color: var(--red);
+
+    &:hover {
+        color: #e5b6bc;
+    }
+    transition: color .1s;
+}

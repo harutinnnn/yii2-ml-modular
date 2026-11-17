@@ -40,7 +40,7 @@ class ContentForm extends Model
 
         foreach ($this->getLanguages() as $language) {
             $this->translations[$language->code] = array_merge(
-                ['title' => '', 'text' => '','quote','pre_title'],
+                ['title' => '', 'text' => '', 'quote' => '', 'pre_title' => ''],
                 $this->translations[$language->code] ?? []
             );
         }
@@ -53,7 +53,7 @@ class ContentForm extends Model
             [['status'], 'integer'],
             [['status'], 'in', 'range' => array_keys(Content::statusOptions())],
             [['translations'], 'safe'],
-            [['translations'], 'validateTranslations'],
+            [['translations'], 'validateTranslations', 'skipOnEmpty' => false],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
     }
@@ -68,21 +68,35 @@ class ContentForm extends Model
 
     public function validateTranslations(string $attribute): void
     {
+        if ($this->getCompleteTranslations() === []) {
+            $this->addError($attribute, 'Fill in the title and text in at least one language.');
+        }
+    }
+
+    private function getCompleteTranslations(): array
+    {
+        $translations = [];
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
-            $title = trim((string)($data['title'] ?? ''));
-            $text = trim((string)($data['text'] ?? ''));
-            $pre_title = trim((string)($data['pre_title'] ?? ''));
-            $quote = trim((string)($data['quote'] ?? ''));
+            $title = is_string($data['title'] ?? null) ? trim($data['title']) : '';
+            $text = is_string($data['text'] ?? null) ? trim($data['text']) : '';
+            $visibleContent = html_entity_decode(
+                strip_tags($text, ['img', 'hr', 'table', 'iframe', 'video', 'audio', 'embed', 'object', 'svg']),
+                ENT_QUOTES | ENT_HTML5,
+                'UTF-8'
+            );
 
-            if ($title === '') {
-                $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
-            }
-
-            if ($text === '') {
-                $this->addError("translations[{$language->code}][text]", "Text is required for {$language->name}.");
+            if ($title !== '' && preg_match('/[^\s\x{200B}\x{FEFF}]/u', $visibleContent)) {
+                $translations[$language->code] = [
+                    'title' => $title,
+                    'text' => $text,
+                    'pre_title' => is_string($data['pre_title'] ?? null) ? trim($data['pre_title']) : '',
+                    'quote' => is_string($data['quote'] ?? null) ? trim($data['quote']) : '',
+                ];
             }
         }
+
+        return $translations;
     }
 
     public function save(): bool
@@ -109,16 +123,17 @@ class ContentForm extends Model
                 return false;
             }
 
-            ContentMl::deleteAll(['content_id' => $content->id]);
+            $translations = $this->getCompleteTranslations();
+            ContentMl::deleteAll(['content_id' => $content->id, 'lang' => array_keys($translations)]);
 
-            foreach ($this->getLanguages() as $language) {
+            foreach ($translations as $lang => $data) {
                 $translation = new ContentMl();
                 $translation->content_id = $content->id;
-                $translation->lang = $language->code;
-                $translation->title = trim((string)$this->translations[$language->code]['title']);
-                $translation->text = trim((string)$this->translations[$language->code]['text']);
-                $translation->pre_title = trim((string)$this->translations[$language->code]['pre_title']);
-                $translation->quote = trim((string)$this->translations[$language->code]['quote']);
+                $translation->lang = $lang;
+                $translation->title = $data['title'];
+                $translation->text = $data['text'];
+                $translation->pre_title = $data['pre_title'];
+                $translation->quote = $data['quote'];
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

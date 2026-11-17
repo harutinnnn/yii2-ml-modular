@@ -20,7 +20,7 @@ class NewsMl extends ActiveRecord
 {
     public static function tableName(): string
     {
-        return '{{%news_ml}}';
+        return 'news_ml';
     }
 
     public function rules(): array

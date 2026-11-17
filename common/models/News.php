@@ -24,7 +24,7 @@ class News extends ActiveRecord
 
     public static function tableName(): string
     {
-        return '{{%news}}';
+        return 'news';
     }
 
     public function behaviors(): array

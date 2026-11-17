@@ -21,7 +21,7 @@ $csrfToken = Yii::$app->request->csrfToken;
 ?>
 
 <div class="post-form">
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin(['id' => 'news-form', 'options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <div class="card card-primary">
         <div class="card-body">
@@ -99,6 +99,7 @@ $csrfToken = Yii::$app->request->csrfToken;
             </ul>
         </div>
         <div class="card-body">
+            <?= $form->errorSummary($model) ?>
             <div class="tab-content">
                 <?php foreach ($languages as $index => $language): ?>
                     <div
@@ -173,4 +174,18 @@ $this->registerJs(<<<JS
 JS, \yii\web\View::POS_HEAD);
 
 $this->registerJsFile('/admin/js/js-content-editor.js', ['position' => \yii\web\View::POS_END]);
+$this->registerJs(<<<'JS'
+    let syncingNewsEditors = false;
+    $('#news-form').on('beforeSubmit', function () {
+        if (!syncingNewsEditors) {
+            syncingNewsEditors = true;
+            Promise.all(editors.map(function ({cancelScheduledSave, saveToInput}) {
+                cancelScheduledSave();
+                return saveToInput();
+            })).then(() => HTMLFormElement.prototype.submit.call(this));
+        }
+
+        return false;
+    });
+JS);
 ?>

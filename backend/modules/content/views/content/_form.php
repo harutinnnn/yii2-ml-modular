@@ -47,6 +47,7 @@ $languages = $model->getLanguages();
             </ul>
         </div>
         <div class="card-body">
+            <?= $form->errorSummary($model) ?>
             <div class="tab-content">
                 <?php foreach ($languages as $index => $language): ?>
                     <div

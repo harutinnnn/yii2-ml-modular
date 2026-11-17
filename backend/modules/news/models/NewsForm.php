@@ -67,7 +67,7 @@ class NewsForm extends Model
             [['tags'], 'each', 'rule' => ['integer']],
             [['status'], 'in', 'range' => array_keys(News::statusOptions())],
             [['translations'], 'safe'],
-            [['translations'], 'validateTranslations'],
+            [['translations'], 'validateTranslations', 'skipOnEmpty' => false],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
     }
@@ -85,23 +85,28 @@ class NewsForm extends Model
 
     public function validateTranslations(string $attribute): void
     {
+        if ($this->getCompleteTranslations() === []) {
+            $this->addError($attribute, 'Fill in the title, short description, and text in at least one language.');
+        }
+    }
+
+    private function getCompleteTranslations(): array
+    {
+        $translations = [];
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
-            $title = trim((string)($data['title'] ?? ''));
-            $text = trim((string)($data['text'] ?? ''));
-            $short = trim((string)($data['short'] ?? ''));
+            $title = is_string($data['title'] ?? null) ? trim($data['title']) : '';
+            $short = is_string($data['short'] ?? null) ? trim($data['short']) : '';
+            $text = is_string($data['text'] ?? null) ? trim($data['text']) : '';
+            $editorData = json_decode($text, true);
 
-            if ($title === '') {
-                $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
-            }
-
-            if ($short === '') {
-                $this->addError("translations[{$language->code}][short]", "Short is required for {$language->name}.");
-            }
-            if ($text === '') {
-                $this->addError("translations[{$language->code}][text]", "Text is required for {$language->name}.");
+            if ($title !== '' && $short !== '' && $text !== ''
+                && (!is_array($editorData) || !empty($editorData['blocks']))) {
+                $translations[$language->code] = ['title' => $title, 'short' => $short, 'text' => $text];
             }
         }
+
+        return $translations;
     }
 
     public function save(): bool
@@ -145,15 +150,16 @@ class NewsForm extends Model
                 }
             }
 
-            NewsMl::deleteAll(['news_id' => $news->id]);
+            $translations = $this->getCompleteTranslations();
+            NewsMl::deleteAll(['news_id' => $news->id, 'lang' => array_keys($translations)]);
 
-            foreach ($this->getLanguages() as $language) {
+            foreach ($translations as $lang => $data) {
                 $translation = new NewsMl();
                 $translation->news_id = $news->id;
-                $translation->lang = $language->code;
-                $translation->title = trim((string)$this->translations[$language->code]['title']);
-                $translation->text = trim((string)$this->translations[$language->code]['text']);
-                $translation->short = trim((string)$this->translations[$language->code]['short']);
+                $translation->lang = $lang;
+                $translation->title = $data['title'];
+                $translation->text = $data['text'];
+                $translation->short = $data['short'];
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

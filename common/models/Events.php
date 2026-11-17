@@ -23,7 +23,7 @@ class Events extends ActiveRecord
 
     public static function tableName(): string
     {
-        return '{{%events}}';
+        return 'events';
     }
 
     public function behaviors(): array

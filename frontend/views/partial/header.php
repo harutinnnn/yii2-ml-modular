@@ -63,13 +63,25 @@ $userAdditional = $user?->additional ?? null;
             $langList = [];
             foreach (Yii::$app->globalData->languages as $langCode => $langTitle) {
 
-                $newUrl = UrlHelper::findAndChangeUrlLang($currentUrl, $langCode);
+                if (isset(Yii::$app->globalData->customLanguageSLugs[$langCode])) {
 
-                $isActive = '';
-                if ($langCode == Yii::$app->globalData->lang) {
-                    $langList[$langCode] = '<span class="active">' . strtoupper($langCode) . '</span>';
+
+                    if ($langCode == Yii::$app->globalData->lang) {
+                        $langList[Yii::$app->globalData->customLanguageSLugs[$langCode]] = '<span class="active">' . strtoupper($langCode) . '</span>';
+                    } else {
+                        $langList[Yii::$app->globalData->customLanguageSLugs[$langCode]] = '<a href="' . Yii::$app->globalData->customLanguageSLugs[$langCode] . '">' . strtoupper($langCode) . '</a>';
+                    }
+
                 } else {
-                    $langList[$langCode] = '<a href="' . $newUrl . '">' . strtoupper($langCode) . '</a>';
+
+                    $newUrl = UrlHelper::findAndChangeUrlLang($currentUrl, $langCode);
+
+                    $isActive = '';
+                    if ($langCode == Yii::$app->globalData->lang) {
+                        $langList[$langCode] = '<span class="active">' . strtoupper($langCode) . '</span>';
+                    } else {
+                        $langList[$langCode] = '<a href="' . $newUrl . '">' . strtoupper($langCode) . '</a>';
+                    }
                 }
             }
             ?>

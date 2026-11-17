@@ -66,7 +66,7 @@ class AnnouncementsForm extends Model
             [['status'], 'in', 'range' => array_keys(Announcements::statusOptions())],
             [['tags'], 'each', 'rule' => ['integer']],
             [['translations'], 'safe'],
-            [['translations'], 'validateTranslations'],
+            [['translations'], 'validateTranslations', 'skipOnEmpty' => false],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
     }
@@ -84,19 +84,30 @@ class AnnouncementsForm extends Model
 
     public function validateTranslations(string $attribute): void
     {
+        if ($this->getCompleteTranslations() === []) {
+            $this->addError($attribute, 'Fill in the title and text in at least one language.');
+        }
+    }
+
+    private function getCompleteTranslations(): array
+    {
+        $translations = [];
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
-            $title = trim((string)($data['title'] ?? ''));
-            $text = trim((string)($data['text'] ?? ''));
+            $title = is_string($data['title'] ?? null) ? trim($data['title']) : '';
+            $text = is_string($data['text'] ?? null) ? trim($data['text']) : '';
+            $editorData = json_decode($text, true);
 
-            if ($title === '') {
-                $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
-            }
-
-            if ($text === '') {
-                $this->addError("translations[{$language->code}][text]", "Text is required for {$language->name}.");
+            if ($title !== '' && $text !== ''
+                && (!is_array($editorData) || !empty($editorData['blocks']))) {
+                $translations[$language->code] = [
+                    'title' => $title,
+                    'text' => $text,
+                ];
             }
         }
+
+        return $translations;
     }
 
     public function save(): bool
@@ -140,14 +151,15 @@ class AnnouncementsForm extends Model
                 }
             }
 
-            AnnouncementsMl::deleteAll(['announcements_id' => $announcements->id]);
+            $translations = $this->getCompleteTranslations();
+            AnnouncementsMl::deleteAll(['announcements_id' => $announcements->id, 'lang' => array_keys($translations)]);
 
-            foreach ($this->getLanguages() as $language) {
+            foreach ($translations as $lang => $data) {
                 $translation = new AnnouncementsMl();
                 $translation->announcements_id = $announcements->id;
-                $translation->lang = $language->code;
-                $translation->title = trim((string)$this->translations[$language->code]['title']);
-                $translation->text = trim((string)$this->translations[$language->code]['text']);
+                $translation->lang = $lang;
+                $translation->title = $data['title'];
+                $translation->text = $data['text'];
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

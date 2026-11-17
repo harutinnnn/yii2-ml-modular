@@ -7,6 +7,7 @@ use common\models\Announcements;
 use common\models\News;
 use common\models\NewsCategories;
 use common\models\NewsMl;
+use common\models\TranslationModel;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -26,11 +27,14 @@ class NewsController extends MyController
     public function actionIndex()
     {
 
+        Yii::$app->globalData->headerBottomNavbar = '//news/header-bottom-navbar';
+
         $newsCategories = NewsCategories::find()->all();
 
         $category = Yii::$app->request->get('category');
 
         $query = News::find()
+            ->innerJoin(NewsMl::tableName(), NewsMl::tableName() . '.news_id = ' . News::tableName() . '.id AND ' . NewsMl::tableName() . '.lang = "' . \Yii::$app->globalData->lang . '"')
             ->where(['status' => 1])
             ->orderBy(['id' => SORT_DESC]);
         if (intval($category)) {
@@ -51,8 +55,7 @@ class NewsController extends MyController
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-//                'pageSize' => News::PER_PAGE,
-                'pageSize' => 1,
+                'pageSize' => News::PER_PAGE,
                 'pageSizeParam' => false,
                 'forcePageParam' => false,
                 'route' => 'news',
@@ -64,6 +67,15 @@ class NewsController extends MyController
             ->where(['status' => 1])
             ->limit(2)
             ->orderBy(['date' => SORT_DESC])->all();
+
+
+        $menuObj = $this->pageData['menuObj'] ?? null;
+
+        Yii::$app->globalData->setPageData('bread', TranslationModel::getTranslation($menuObj, Yii::$app->globalData->lang));
+        Yii::$app->globalData->setPageData('preTitle', \common\components\I18n::translate('structure'));
+        Yii::$app->globalData->setPageData('pageTitle', TranslationModel::getTranslation($menuObj, Yii::$app->globalData->lang));
+        Yii::$app->globalData->setPageData('afterTitle', TranslationModel::getTranslation($menuObj, Yii::$app->globalData->lang, 'description'));
+        Yii::$app->globalData->setPageData('headerImage', $menuObj->header_image ?? '-');
 
 
         return $this->render('index', [
@@ -86,12 +98,50 @@ class NewsController extends MyController
             ->one();
 
 
-        if (!$newsItem) {
-            $this->redirect('/' . \Yii::$app->globalData->lang . '/announcements');
+        $newsItemCheckOtherLang = News::find()
+            ->innerJoin(
+                NewsMl::tableName(),
+                NewsMl::tableName() . '.news_id = ' . News::tableName() . '.id'
+            )
+            ->where([NewsMl::tableName() . '.slug' => $slug])
+            ->one();
+
+
+        if (!$newsItemCheckOtherLang) {
+            return $this->redirect('/' . Yii::$app->globalData->lang . '/news');
         }
 
+
+        $newsAllLangList = News::find()->select([NewsMl::tableName() . '.lang', NewsMl::tableName() . '.title', News::tableName() . '.id', NewsMl::tableName() . '.slug'])
+            ->innerJoin(
+                NewsMl::tableName(),
+                NewsMl::tableName() . '.news_id = ' . News::tableName() . '.id'
+            )
+            ->where([News::tableName() . '.id' => $newsItemCheckOtherLang->id])
+            ->createCommand()
+            ->queryAll();
+
+
+        $navLangList = [];
+        foreach ($newsAllLangList as $newsAllLang) {
+            $navLangList[$newsAllLang['lang']] = '/' . $newsAllLang['lang'] . '/news/' . $newsAllLang['slug'];
+        }
+        Yii::$app->globalData->customLanguageSLugs = $navLangList;
+
+
+        Yii::$app->globalData->setPageData('bread', TranslationModel::getTranslation($newsItem, Yii::$app->globalData->lang));
+        Yii::$app->globalData->setPageData('preTitle', \common\components\I18n::translate('news'));
+        Yii::$app->globalData->setPageData('pageTitle', TranslationModel::getTranslation($newsItem, Yii::$app->globalData->lang));
+        Yii::$app->globalData->setPageData('headerImage', '/images/editorial/campus-entrance.jpg');
+
+
+
         return $this->render('view',
-            ['newsItem' => $newsItem]
+            [
+                'newsItem' => $newsItem,
+                'newsItemCheckOtherLang' => $newsItemCheckOtherLang,
+                'navLangList' => $navLangList
+            ]
         );
     }
 

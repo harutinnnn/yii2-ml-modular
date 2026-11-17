@@ -20,7 +20,7 @@ class EventsMl extends ActiveRecord
 {
     public static function tableName(): string
     {
-        return '{{%events_ml}}';
+        return 'events_ml';
     }
 
     public function rules(): array

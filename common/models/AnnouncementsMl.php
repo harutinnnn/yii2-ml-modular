@@ -19,7 +19,7 @@ class AnnouncementsMl extends ActiveRecord
 {
     public static function tableName(): string
     {
-        return '{{%announcements_ml}}';
+        return 'announcements_ml';
     }
 
     public function rules(): array

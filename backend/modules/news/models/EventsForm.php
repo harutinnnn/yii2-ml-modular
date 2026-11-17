@@ -59,7 +59,7 @@ class EventsForm extends Model
             [['date', 'time'], 'string'],
             [['status'], 'in', 'range' => array_keys(Events::statusOptions())],
             [['translations'], 'safe'],
-            [['translations'], 'validateTranslations'],
+            [['translations'], 'validateTranslations', 'skipOnEmpty' => false],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'webp']],
         ];
     }
@@ -76,34 +76,36 @@ class EventsForm extends Model
 
     public function validateTranslations(string $attribute): void
     {
+        if ($this->getCompleteTranslations() === []) {
+            $this->addError($attribute, 'Fill in the title, text, place, organiser, and contact in at least one language.');
+        }
+    }
+
+    private function getCompleteTranslations(): array
+    {
+        $translations = [];
         foreach ($this->getLanguages() as $language) {
             $data = $this->translations[$language->code] ?? [];
-            $title = trim((string)($data['title'] ?? ''));
-            $text = trim((string)($data['text'] ?? ''));
-            $place = trim((string)($data['place'] ?? ''));
-            $organiser = trim((string)($data['organiser'] ?? ''));
-            $contact = trim((string)($data['contact'] ?? ''));
+            $title = is_string($data['title'] ?? null) ? trim($data['title']) : '';
+            $text = is_string($data['text'] ?? null) ? trim($data['text']) : '';
+            $place = is_string($data['place'] ?? null) ? trim($data['place']) : '';
+            $organiser = is_string($data['organiser'] ?? null) ? trim($data['organiser']) : '';
+            $contact = is_string($data['contact'] ?? null) ? trim($data['contact']) : '';
+            $editorData = json_decode($text, true);
 
-            if ($title === '') {
-                $this->addError("translations[{$language->code}][title]", "Title is required for {$language->name}.");
-            }
-
-            if ($text === '') {
-                $this->addError("translations[{$language->code}][text]", "Text is required for {$language->name}.");
-            }
-
-            if ($place === '') {
-                $this->addError("translations[{$language->code}][place]", "Place is required for {$language->name}.");
-            }
-
-            if ($organiser === '') {
-                $this->addError("translations[{$language->code}][organiser]", "Organiser is required for {$language->name}.");
-            }
-
-            if ($contact === '') {
-                $this->addError("translations[{$language->code}][contact]", "Contact is required for {$language->name}.");
+            if ($title !== '' && $text !== '' && $place !== '' && $organiser !== '' && $contact !== ''
+                && (!is_array($editorData) || !empty($editorData['blocks']))) {
+                $translations[$language->code] = [
+                    'title' => $title,
+                    'text' => $text,
+                    'place' => $place,
+                    'organiser' => $organiser,
+                    'contact' => $contact,
+                ];
             }
         }
+
+        return $translations;
     }
 
     public function save(): bool
@@ -132,17 +134,18 @@ class EventsForm extends Model
                 return false;
             }
 
-            EventsMl::deleteAll(['events_id' => $events->id]);
+            $translations = $this->getCompleteTranslations();
+            EventsMl::deleteAll(['events_id' => $events->id, 'lang' => array_keys($translations)]);
 
-            foreach ($this->getLanguages() as $language) {
+            foreach ($translations as $lang => $data) {
                 $translation = new EventsMl();
                 $translation->events_id = $events->id;
-                $translation->lang = $language->code;
-                $translation->title = trim((string)$this->translations[$language->code]['title']);
-                $translation->text = trim((string)$this->translations[$language->code]['text']);
-                $translation->place = trim((string)$this->translations[$language->code]['place']);
-                $translation->organiser = trim((string)$this->translations[$language->code]['organiser']);
-                $translation->contact = trim((string)$this->translations[$language->code]['contact']);
+                $translation->lang = $lang;
+                $translation->title = $data['title'];
+                $translation->text = $data['text'];
+                $translation->place = $data['place'];
+                $translation->organiser = $data['organiser'];
+                $translation->contact = $data['contact'];
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

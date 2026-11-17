@@ -6,6 +6,8 @@ use common\helpers\I18n;
 use common\models\Announcements;
 use common\models\AnnouncementsMl;
 use common\models\News;
+use common\models\TranslationModel;
+use Yii;
 use yii\data\ActiveDataProvider;
 
 /**
@@ -22,8 +24,10 @@ class AnnouncementsController extends MyController
      */
     public function actionIndex()
     {
+        Yii::$app->globalData->headerBottomNavbar = '//news/header-bottom-navbar';
 
         $query = Announcements::find()
+            ->innerJoin(AnnouncementsMl::tableName(), AnnouncementsMl::tableName() . '.announcements_id = ' . Announcements::tableName() . '.id AND ' . AnnouncementsMl::tableName() . '.lang = "' . \Yii::$app->globalData->lang . '"')
             ->where(['status' => 1])
             ->orderBy(['id' => SORT_DESC]);
 
@@ -60,12 +64,46 @@ class AnnouncementsController extends MyController
             ->one();
 
 
-        if (!$announcement) {
+        $announcementsItemCheckOtherLang = Announcements::find()
+            ->innerJoin(
+                AnnouncementsMl::tableName(),
+                AnnouncementsMl::tableName() . '.announcements_id = ' . Announcements::tableName() . '.id'
+            )
+            ->where([AnnouncementsMl::tableName() . '.slug' => $slug])
+            ->one();
+
+        if (!$announcementsItemCheckOtherLang) {
             $this->redirect('/' . \Yii::$app->globalData->lang . '/announcements');
         }
 
+
+        $announcementsAllLangList = Announcements::find()->select([AnnouncementsMl::tableName() . '.lang', AnnouncementsMl::tableName() . '.title', Announcements::tableName() . '.id', AnnouncementsMl::tableName() . '.slug'])
+            ->innerJoin(
+                AnnouncementsMl::tableName(),
+                AnnouncementsMl::tableName() . '.announcements_id = ' . Announcements::tableName() . '.id'
+            )
+            ->where([Announcements::tableName() . '.id' => $announcementsItemCheckOtherLang->id])
+            ->createCommand()
+            ->queryAll();
+
+        $navLangList = [];
+        foreach ($announcementsAllLangList as $announcementsAllLang) {
+            $navLangList[$announcementsAllLang['lang']] = '/' . $announcementsAllLang['lang'] . '/announcements/' . $announcementsAllLang['slug'];
+        }
+        Yii::$app->globalData->customLanguageSLugs = $navLangList;
+
+
+        Yii::$app->globalData->setPageData('bread', TranslationModel::getTranslation($announcement, Yii::$app->globalData->lang));
+        Yii::$app->globalData->setPageData('preTitle', \common\components\I18n::translate('announcements'));
+        Yii::$app->globalData->setPageData('pageTitle', TranslationModel::getTranslation($announcement, Yii::$app->globalData->lang));
+        Yii::$app->globalData->setPageData('headerImage', '/images/editorial/campus-entrance.jpg');
+
         return $this->render('view',
-            ['announcement' => $announcement]
+            [
+                'announcement' => $announcement,
+                'announcementsItemCheckOtherLang' => $announcementsItemCheckOtherLang,
+                'navLangList' => $navLangList
+            ]
         );
     }
 

@@ -5,9 +5,9 @@ use common\components\I18n;
 use common\models\TranslationModel;
 use yii\widgets\LinkPager;
 
-$this->params['hideMainHeader'] = true;
-$this->params['customHeader'] = '//news/header';
-
+//$this->params['hideMainHeader'] = true;
+//$this->params['customHeader'] = '//news/header';
+//$this->params['customHeader'] = '//partial/dynamic-header';
 ?>
 
 <section class="inner-section" id="latest">

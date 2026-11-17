@@ -33,13 +33,14 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
 
     <?= $this->render('//partial/header') ?>
+
+
     <?= $this->render('//partial/menu-popup') ?>
     <?= $this->render('//partial/search-popup') ?>
 
     <main>
 
         <?php if (isset($this->params['customHeader']) && !empty($this->params['customHeader'])): ?>
-
             <?= $this->render($this->params['customHeader']) ?>
         <?php else: ?>
 
@@ -49,6 +50,11 @@ AppAsset::register($this);
                 <?= $this->render('//partial/main-header') ?>
             <?php endif; ?>
         <?php endif; ?>
+
+        <?php if (isset(Yii::$app->globalData->headerBottomNavbar) && Yii::$app->globalData->headerBottomNavbar): ?>
+            <?= $this->render(Yii::$app->globalData->headerBottomNavbar) ?>
+        <?php endif; ?>
+
 
         <?= $content ?>
     </main>

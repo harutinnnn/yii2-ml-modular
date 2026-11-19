@@ -31,5 +31,11 @@ class StatusList
         return $statuses[$status] ?? 'Unknown';
     }
 
+    public static function statusOptionsShort(): array{
+        return [
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_PUBLISHED => 'Published',
+        ];
+    }
 
 }

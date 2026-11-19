@@ -13,6 +13,7 @@ use Yii;
  * @property string $last_name
  * @property string $email
  * @property string $phone
+ * @property int $status
  *
  * @property Events $event
  */
@@ -35,7 +36,7 @@ class EventMemberRegistrations extends \yii\db\ActiveRecord
     {
         return [
             [['event_id', 'first_name', 'last_name', 'email', 'phone'], 'required'],
-            [['event_id'], 'integer'],
+            [['event_id','status'], 'integer'],
             [['first_name', 'last_name', 'email', 'phone'], 'string', 'max' => 255],
             [['event_id'], 'exist', 'skipOnError' => true, 'targetClass' => Events::class, 'targetAttribute' => ['event_id' => 'id']],
         ];
@@ -53,6 +54,7 @@ class EventMemberRegistrations extends \yii\db\ActiveRecord
             'last_name' => 'Last Name',
             'email' => 'Email',
             'phone' => 'Phone',
+            'status' => 'Status',
         ];
     }
 

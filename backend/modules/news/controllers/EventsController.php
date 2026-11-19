@@ -2,8 +2,10 @@
 
 namespace backend\modules\news\controllers;
 
+use backend\modules\news\models\EventMemberRegistrationsSearch;
 use backend\modules\news\models\EventsForm;
 use backend\modules\news\models\EventsSearch;
+use common\models\EventMemberRegistrations;
 use common\models\Events;
 use Yii;
 use yii\helpers\FileHelper;
@@ -137,5 +139,47 @@ class EventsController extends Controller
         }
 
         return $model;
+    }
+
+    public function actionApplicants($id): string
+    {
+
+        $searchModel = new EventMemberRegistrationsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $id);
+
+        return $this->render('applicants', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'id' => $id
+        ]);
+    }
+
+    public function actionDelete_applicant($id, $event_id)
+    {
+        EventMemberRegistrations::findOne([
+            'event_id' => $event_id, 'id' => $id])->delete();
+        Yii::$app->session->setFlash('success', 'Events applicant deleted.');
+        return $this->redirect(['applicants','id' => $event_id]);
+    }
+
+
+    public function actionUpdate_applicant($id, $event_id)
+    {
+        $model = EventMemberRegistrations::findOne([
+            'event_id' => $event_id, 'id' => $id]);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Events updated.');
+
+            return $this->redirect(['applicants','id' => $event_id]);
+        }
+
+
+        return $this->render('update_applicant', [
+            'model' => $model,
+        ]);
+
+
+
     }
 }

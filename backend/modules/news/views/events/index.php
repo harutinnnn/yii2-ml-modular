@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                     'class' => ActionColumn::class,
                                     'header' => 'Actions',
-                                    'template' => '{update} {delete}',
+                                    'template' => '{update} {delete} {registered_users}',
                                     'contentOptions' => ['class' => 'text-nowrap'],
                                     'buttons' => [
                                             'update' => static fn($url, $model) => Html::a('Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-success btn-sm mr-1']),
@@ -55,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     'data-method' => 'post',
                                                     'data-confirm' => 'Are you sure you want to delete this item?',
                                             ]),
+                                            'registered_users' => static fn($url, $model) => Html::a('Applicants', ['applicants', 'id' => $model->id], ['class' => 'btn btn-warning btn-sm mr-1']),
                                     ],
                             ],
                     ],

@@ -4,6 +4,7 @@
 
 /** @var backend\modules\news\models\EventsForm $model */
 
+use common\components\StatusList;
 use common\helpers\EditorJsHelper;
 use common\models\Events;
 use kartik\datetime\DateTimePicker;
@@ -25,7 +26,7 @@ $csrfToken = Yii::$app->request->csrfToken;
 
     <div class="card card-primary">
         <div class="card-body">
-            <?= $form->field($model, 'status')->dropDownList(Events::statusOptions()) ?>
+            <?= $form->field($model, 'status')->dropDownList(StatusList::statusOptionsShort()) ?>
 
 
             <div class="row">

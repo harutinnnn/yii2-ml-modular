@@ -26,10 +26,14 @@ $menuItems = [
                                 'visible' => RbacUtilities::allowRoles(['admin']),
                                 'active' => Yii::$app->controller->id == 'student'
                         ],
-                        ['label' => 'Teachers', 'icon' => 'chalkboard-teacher', 'url' => ['/user/teacher/index'],
+                        ['label' => 'Staff', 'icon' => 'chalkboard-teacher', 'url' => ['/user/teacher/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
                                 'active' => Yii::$app->controller->id == 'teacher'
                         ],
+//                        ['label' => 'Teachers', 'icon' => 'chalkboard-teacher', 'url' => ['/user/teacher/index'],
+//                                'visible' => RbacUtilities::allowRoles(['admin']),
+//                                'active' => Yii::$app->controller->id == 'teacher'
+//                        ],
                         ['label' => 'Admins', 'icon' => 'users-cog', 'url' => ['/user/admin/index'],
                                 'visible' => RbacUtilities::allowRoles(['admin']),
                                 'active' => Yii::$app->controller->id == 'admin'

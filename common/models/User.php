@@ -17,6 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $verification_token
  * @property string $email
+ * @property string $is_teacher
  * @property string $contact_email
  * @property string $auth_key
  * @property int $status

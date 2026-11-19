@@ -8,13 +8,13 @@ use yii\grid\GridView;
 /** @var backend\modules\user\models\TeacherSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Teachers';
+$this->title = 'Staff';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="Teacher-index">
+<div class="teacher-index">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <?= Html::a('Create Teacher', ['create'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Create Staff', ['create'], ['class' => 'btn btn-primary']) ?>
     </div>
 
 
@@ -44,6 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'attribute' => 'status',
                                     'filter' => \common\models\Teacher::statusOptions(),
                                     'value' => static fn($model) => $model->getStatusLabel(),
+                            ],
+                            [
+                                    'attribute' => 'is_teacher',
+                                    'filter' => [0 => 'No', 1 => 'Yes'],
+                                    'value' => static fn($model) => $model->is_teacher ? "Yes" : "No",
                             ],
                             [
                                     'class' => ActionColumn::class,

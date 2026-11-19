@@ -259,7 +259,7 @@ class SiteController extends MyController
 
             if (!empty($roles)) {
 
-                if (isset($roles[UserRoles::TEACHER])) {
+                if (isset($roles[UserRoles::ADMINISTRATIVE_STAFF])) {
 
 //                    return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturers/personal-dashboard');
                     return $this->redirect('/' . Yii::$app->globalData->lang . '/lecturers/teacher-login');

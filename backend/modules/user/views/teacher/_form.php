@@ -19,6 +19,12 @@ use yii\widgets\ActiveForm;
                 <?= $form->errorSummary($model) ?>
             </div>
 
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'is_teacher')->checkbox() ?>
+                </div>
+            </div>
+
             <?php if (!$model): ?>
 
                 <div class="row">

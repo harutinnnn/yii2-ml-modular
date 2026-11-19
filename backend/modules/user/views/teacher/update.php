@@ -3,7 +3,7 @@
 /** @var yii\web\View $this */
 /** @var common\models\Student $model */
 
-$this->title = 'Update Teacher: ' . $model->id;
+$this->title = 'Update Staff: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Students', 'url' => ['index']];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

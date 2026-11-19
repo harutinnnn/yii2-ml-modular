@@ -23,6 +23,7 @@ use Yii;
  * @property string $last_name
  * @property string $phone
  * @property string $email
+ * @property int $is_teacher
  * @property string $contact_email
  * @property string $teacher_academic_degree
  * @property string $teacher_position
@@ -48,6 +49,7 @@ class TeacherForm extends \yii\base\Model
     public $last_name;
     public $phone;
     public $email;
+    public $is_teacher;
     public $contact_email;
     public $teacher_academic_degree;
     public $teacher_position;
@@ -81,6 +83,7 @@ class TeacherForm extends \yii\base\Model
             $this->last_name = (string)$user->additional->last_name ?? "";
             $this->phone = (string)$user->additional->phone ?? "";
             $this->email = (string)$user->email;
+            $this->is_teacher = (int)$user->is_teacher;
             $this->contact_email = (string)$user->contact_email;
             $this->teacher_academic_degree = (string)$user->additional->teacher_academic_degree ?? "";
             $this->teacher_position = (string)$user->additional->teacher_position ?? "";
@@ -120,6 +123,7 @@ class TeacherForm extends \yii\base\Model
             'last_name',
             'phone',
             'email',
+            'is_teacher',
             'contact_email',
             'teacher_academic_degree',
             'teacher_position',
@@ -135,6 +139,7 @@ class TeacherForm extends \yii\base\Model
             'last_name',
             'phone',
             'email',
+            'is_teacher',
             'contact_email',
             'teacher_academic_degree',
             'teacher_position',
@@ -159,9 +164,9 @@ class TeacherForm extends \yii\base\Model
     {
         return [
             [['status'], 'default', 'value' => 10],
-            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position','profession', 'faculty', 'chair', 'phone', 'contact_email',], 'required'],
-            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position','profession', 'phone', 'contact_email',], 'string'],
-            [['status', 'created_at', 'faculty', 'chair', 'updated_at'], 'integer'],
+            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'profession', 'faculty', 'chair', 'phone', 'contact_email',], 'required'],
+            [['first_name', 'middle_name', 'last_name', 'teacher_academic_degree', 'teacher_position', 'profession', 'phone', 'contact_email',], 'string'],
+            [['status', 'created_at', 'faculty', 'chair', 'updated_at', 'is_teacher'], 'integer'],
 
             [['email'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
             [['email'], 'required', 'on' => self::SCENARIO_CREATE],
@@ -179,7 +184,7 @@ class TeacherForm extends \yii\base\Model
             [
                 'contact_email',
                 'unique',
-                'targetClass' =>Teacher::class,
+                'targetClass' => Teacher::class,
                 'targetAttribute' => 'contact_email',
                 'filter' => function ($query) {
                     if ($this->id) {
@@ -202,6 +207,7 @@ class TeacherForm extends \yii\base\Model
             'last_name' => 'Last name',
             'phone' => 'Phone',
             'email' => 'Email',
+            'is_teacher' => 'Is teacher',
             'contact_email' => 'Contact email',
             'teacher_academic_degree' => 'Academic degree',
             'teacher_position' => 'Teacher position',
@@ -239,6 +245,7 @@ class TeacherForm extends \yii\base\Model
             $user = $this->user ?? new Teacher();
             $user->status = StatusList::STATUS_INACTIVE;
             $user->email = $this->email;
+            $user->is_teacher = $this->is_teacher ? 1 : 0;
             $user->contact_email = $this->contact_email;
             $passHash = Yii::$app->security->generatePasswordHash($pass);
             $user->password_hash = $passHash;
@@ -249,9 +256,8 @@ class TeacherForm extends \yii\base\Model
 
             if ($user->save()) {
 
-
                 $auth = Yii::$app->authManager;
-                $role = $auth->getRole(UserRoles::TEACHER);
+                $role = $auth->getRole(UserRoles::ADMINISTRATIVE_STAFF);
                 $auth->assign($role, $user->id);
 
 
@@ -291,7 +297,7 @@ class TeacherForm extends \yii\base\Model
             }
 
 
-            $this->sendEmail($user,$pass);
+            $this->sendEmail($user, $pass);
             $this->id = $user->id;
             $transaction->commit();
 
@@ -317,8 +323,8 @@ class TeacherForm extends \yii\base\Model
 
             $user = $this->user ?? new Teacher();
             $user->status = $this->status;
+            $user->is_teacher = $this->is_teacher ? 1 : 0;
             $user->updated_at = time();
-
 
 
             if ($user->save()) {
@@ -333,6 +339,7 @@ class TeacherForm extends \yii\base\Model
                 $additional->faculty = $this->faculty;
                 $additional->chair = $this->chair;
                 $additional->phone = $this->phone;
+                $additional->user_id = $user->id;
                 $additional->user_id = $user->id;
 
 
@@ -383,13 +390,13 @@ class TeacherForm extends \yii\base\Model
         }
     }
 
-    public function sendEmail($user,$pass): bool
+    public function sendEmail($user, $pass): bool
     {
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user,'pass' => $pass]
+                ['user' => $user, 'pass' => $pass]
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)

@@ -141,7 +141,8 @@ class LoginForm extends Model
 
         } else if ($usertype == UserRoles::ADMINISTRATIVE_STAFF) {
 
-            return $controller->redirect('/' . Yii::$app->globalData->lang . '/administrative/personal-dashboard');
+            return $controller->redirect('/' . Yii::$app->globalData->lang . '/lecturer/personal-dashboard');
+//            return $controller->redirect('/' . Yii::$app->globalData->lang . '/administrative/personal-dashboard');
 
         } else {
 

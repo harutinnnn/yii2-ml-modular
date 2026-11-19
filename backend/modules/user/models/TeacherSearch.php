@@ -20,7 +20,7 @@ class TeacherSearch extends Teacher
     {
         return [
             [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['email', 'first_name', 'last_name','middle_name', 'phone','contact_email'], 'safe'],
+            [['email', 'first_name', 'last_name','middle_name', 'phone','contact_email','is_teacher'], 'safe'],
         ];
     }
 
@@ -44,7 +44,7 @@ class TeacherSearch extends Teacher
     public function search($params, $formName = null)
     {
         $query = Teacher::find()
-            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::TEACHER])
+            ->innerJoin('auth_assignment aa', 'aa.user_id = user.id')->where(['aa.item_name' => UserRoles::ADMINISTRATIVE_STAFF])
             ->joinWith('additional add');
         // add conditions that should always apply here
 
@@ -64,6 +64,7 @@ class TeacherSearch extends Teacher
         $query->andFilterWhere([
             'id' => $this->id,
             'status' => $this->status,
+            'is_teacher' => $this->is_teacher,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var common\models\Applicant $model */
 
-$this->title = 'Create Teacher';
-$this->params['breadcrumbs'][] = ['label' => 'Applicants', 'url' => ['index']];
+$this->title = 'Create Staff';
+$this->params['breadcrumbs'][] = ['label' => 'Staff', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

@@ -31,7 +31,7 @@ class LecturersController extends MyController
             return $this->redirect(['/site/login']);
         } else {
 
-            if ($this->userType != UserRoles::TEACHER) {
+            if ($this->userType != UserRoles::ADMINISTRATIVE_STAFF) {
                 return $this->redirect('/' . Yii::$app->globalData->lang . '/login');
             }
         }

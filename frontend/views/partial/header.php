@@ -33,11 +33,11 @@ $userAdditional = $user?->additional ?? null;
 
                 $userDashboard = '/student/student-personal-dashboard';
 
-            } else if ($usertype == UserRoles::TEACHER) {
+            } else if ($usertype == UserRoles::ADMINISTRATIVE_STAFF && $user->is_teacher) {
 
                 $userDashboard = '/lecturer/personal-dashboard';
 
-            } else if ($usertype == UserRoles::ADMINISTRATIVE_STAFF) {
+            } else if ($usertype == UserRoles::ADMINISTRATIVE_STAFF && !$user->is_teacher) {
 
                 $userDashboard = '/administrative/personal-dashboard';
 

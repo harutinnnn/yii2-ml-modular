@@ -92,6 +92,11 @@ return [
                 '<language:(en|ru|am)>/announcements/<slug>' => 'announcements/view',
                 '<language:(en|ru|am)>/announcements' => 'announcements',
 
+                '<language:(en|ru|am)>/events/registration/<eventId>' => 'event/registration',
+                '<language:(en|ru|am)>/events/get-calendar/<year>/<month>' => 'event/get-calendar',
+                '<language:(en|ru|am)>/events/view/<id>' => 'event/view',
+                '<language:(en|ru|am)>/events' => 'event',
+
                 '<language:(en|ru|am)>/online-application' => 'admission/online-application',
 
                 '<language:en|ru|am>/<slug1:[^/]+>/<slug2:[^/]+>' => 'content/index',

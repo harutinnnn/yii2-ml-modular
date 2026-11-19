@@ -182,5 +182,44 @@ ul.pagination li.next {
     &:hover {
         color: #e5b6bc;
     }
+
     transition: color .1s;
+}
+
+.calendar-container .fc-daygrid-day-frame {
+    min-height: 40px;
+    height: 40px;
+}
+
+.calendar-container .fc .fc-daygrid-day-top {
+    display: flex;
+    flex-direction: unset;
+}
+
+/* Previous and Next buttons */
+#calendar .fc-prev-button,
+#calendar .fc-next-button {
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+/* Hover */
+#calendar .fc-prev-button:hover,
+#calendar .fc-next-button:hover {
+    background: #eeeeee;
+    color: #000000;
+}
+
+/* Calendar title */
+#calendar .fc-toolbar-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Remove focus shadow */
+#calendar .fc-button:focus {
+    box-shadow: none !important;
 }

@@ -42,7 +42,7 @@ use yii\widgets\LinkPager;
                         </div>
                         <div class="story-copy">
                             <small class="meta-label">
-                                <?= date('d', strtotime($newsItem->image)) ?>
+                                <?= date('d', strtotime($newsItem->date)) ?>
                                 <?= DateHelper::getMonthsShort($newsItem->date, Yii::$app->globalData->lang) ?> ·
                                 <?= TranslationModel::getTranslation($newsItem->category, Yii::$app->globalData->lang) ?>
                             </small>

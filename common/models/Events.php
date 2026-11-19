@@ -11,6 +11,8 @@ use yii\db\ActiveRecord;
  * @property string|null $image
  * @property string $date
  * @property string $time
+ * @property int $event_places
+ * @property string $registration_close_date
  * @property int $created_at
  * @property int $updated_at
  *
@@ -20,6 +22,7 @@ class Events extends ActiveRecord
 {
     public const STATUS_PENDING = 0;
     public const STATUS_PUBLISHED = 1;
+    public const PER_PAGE = 10;
 
     public static function tableName(): string
     {
@@ -37,7 +40,7 @@ class Events extends ActiveRecord
     {
         return [
             [['status','date','time'], 'required'],
-            [['status'], 'integer'],
+            [['status','event_places'], 'integer'],
             [['image','date','time'], 'string', 'max' => 255],
             [['status'], 'in', 'range' => array_keys(self::statusOptions())],
         ];
@@ -51,6 +54,8 @@ class Events extends ActiveRecord
             'image' => 'Image',
             'date' => 'Date',
             'time' => 'Time',
+            'event_places' => 'Event places',
+            'registration_close_date' => 'Registration close date',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

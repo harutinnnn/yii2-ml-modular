@@ -32,7 +32,10 @@ AppAsset::register($this);
           id="top">
     <?php $this->beginBody() ?>
 
-    <?= $this->render('//partial/header') ?>
+
+    <?php if (!isset($this->params['topHeader'])): ?>
+        <?= $this->render('//partial/header') ?>
+    <?php endif; ?>
 
 
     <?= $this->render('//partial/menu-popup') ?>

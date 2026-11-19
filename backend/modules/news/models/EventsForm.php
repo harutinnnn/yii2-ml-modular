@@ -15,7 +15,9 @@ class EventsForm extends Model
     public ?Events $events = null;
     public int $status = Events::STATUS_PUBLISHED;
     public string|null $date = null;
+    public string|null $registration_close_date = null;
     public string|null $time = null;
+    public int|null $event_places = null;
     public ?string $image = null;
     public array $translations = [];
     public $imageFile = null;
@@ -30,7 +32,9 @@ class EventsForm extends Model
         if ($this->events !== null) {
             $this->status = (int)$this->events->status;
             $this->date = (string)$this->events->date;
+            $this->registration_close_date = (string)$this->events->registration_close_date;
             $this->time = (string)$this->events->time;
+            $this->event_places = (int)$this->events->event_places;
             $this->image = $this->events->image;
             foreach ($this->events->translations as $translation) {
                 $this->translations[$translation->lang] = [
@@ -39,13 +43,14 @@ class EventsForm extends Model
                     'place' => $translation->place,
                     'organiser' => $translation->organiser,
                     'contact' => $translation->contact,
+                    'topic' => $translation->topic,
                 ];
             }
         }
 
         foreach ($this->getLanguages() as $language) {
             $this->translations[$language->code] = array_merge(
-                ['title' => '', 'text' => '', 'place' => '', 'organiser' => '', 'contact' => ''],
+                ['title' => '', 'text' => '', 'place' => '', 'organiser' => '', 'contact' => '','topic' => ''],
                 $this->translations[$language->code] ?? []
             );
         }
@@ -55,8 +60,8 @@ class EventsForm extends Model
     {
         return [
             [['status', 'date', 'time'], 'required'],
-            [['status'], 'integer'],
-            [['date', 'time'], 'string'],
+            [['status','event_places'], 'integer'],
+            [['date', 'time','registration_close_date'], 'string'],
             [['status'], 'in', 'range' => array_keys(Events::statusOptions())],
             [['translations'], 'safe'],
             [['translations'], 'validateTranslations', 'skipOnEmpty' => false],
@@ -69,6 +74,8 @@ class EventsForm extends Model
         return [
             'status' => 'Status',
             'date' => 'Date',
+            'registration_close_date' => 'Registration close date',
+            'event_places' => 'Event places',
             'time' => 'Time',
             'imageFile' => 'Image',
         ];
@@ -77,7 +84,7 @@ class EventsForm extends Model
     public function validateTranslations(string $attribute): void
     {
         if ($this->getCompleteTranslations() === []) {
-            $this->addError($attribute, 'Fill in the title, text, place, organiser, and contact in at least one language.');
+            $this->addError($attribute, 'Fill in the title, text, place, organiser, topic and contact in at least one language.');
         }
     }
 
@@ -91,9 +98,10 @@ class EventsForm extends Model
             $place = is_string($data['place'] ?? null) ? trim($data['place']) : '';
             $organiser = is_string($data['organiser'] ?? null) ? trim($data['organiser']) : '';
             $contact = is_string($data['contact'] ?? null) ? trim($data['contact']) : '';
+            $topic = is_string($data['topic'] ?? null) ? trim($data['topic']) : '';
             $editorData = json_decode($text, true);
 
-            if ($title !== '' && $text !== '' && $place !== '' && $organiser !== '' && $contact !== ''
+            if ($title !== '' && $text !== '' && $place !== '' && $organiser !== '' && $contact !== '' && $topic !== ''
                 && (!is_array($editorData) || !empty($editorData['blocks']))) {
                 $translations[$language->code] = [
                     'title' => $title,
@@ -101,6 +109,7 @@ class EventsForm extends Model
                     'place' => $place,
                     'organiser' => $organiser,
                     'contact' => $contact,
+                    'topic' => $topic,
                 ];
             }
         }
@@ -119,7 +128,9 @@ class EventsForm extends Model
         $events = $this->events ?? new Events();
         $events->status = $this->status;
         $events->date = $this->date;
+        $events->registration_close_date = $this->registration_close_date;
         $events->time = $this->time;
+        $events->event_places = $this->event_places;
 
         if ($this->imageFile !== null) {
             $events->image = $this->saveUpload($this->imageFile);
@@ -146,6 +157,7 @@ class EventsForm extends Model
                 $translation->place = $data['place'];
                 $translation->organiser = $data['organiser'];
                 $translation->contact = $data['contact'];
+                $translation->topic = $data['topic'];
 
                 if (!$translation->save()) {
                     $this->addErrors($translation->getErrors());

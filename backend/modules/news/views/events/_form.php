@@ -6,6 +6,7 @@
 
 use common\helpers\EditorJsHelper;
 use common\models\Events;
+use kartik\datetime\DateTimePicker;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 use yii\helpers\Json;
@@ -30,16 +31,19 @@ $csrfToken = Yii::$app->request->csrfToken;
             <div class="row">
 
                 <div class="col-md-6">
-                    <?= $form->field($model, 'date')->widget(DatePicker::class, [
-                            'dateFormat' => 'yyyy-MM-dd',
+                    <?= $form->field($model, 'date')->widget(DateTimePicker::class, [
                             'options' => [
                                     'class' => 'form-control',
                                     'autocomplete' => 'off',
+                                    'placeholder' => 'Select date',
                             ],
-                            'clientOptions' => [
-                                    'changeMonth' => true,
-                                    'changeYear' => true,
-                                    'yearRange' => '1950:2050',
+                            'pluginOptions' => [
+                                    'format' => 'yyyy-mm-dd',
+                                    'autoclose' => true,
+                                    'todayHighlight' => true,
+                                    'minView' => 2, // Date only, hide time selection
+                                    'startDate' => '1950-01-01',
+                                    'endDate' => '2050-12-31',
                             ],
                     ]) ?>
                 </div>
@@ -48,6 +52,33 @@ $csrfToken = Yii::$app->request->csrfToken;
                     <?= $form->field($model, 'time')->input('time', [
                             'step' => 60, // 1-minute intervals
                     ]) ?>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <?= $form->field($model, 'registration_close_date')->widget(DateTimePicker::class, [
+                            'options' => [
+                                    'class' => 'form-control',
+                                    'autocomplete' => 'off',
+                                    'placeholder' => 'Select date and time',
+                            ],
+                            'pluginOptions' => [
+                                    'format' => 'yyyy-mm-dd hh:ii:ss',
+                                    'autoclose' => true,
+                                    'todayHighlight' => true,
+                                    'showMeridian' => false,
+                                    'minuteStep' => 5,
+                                    'startDate' => '1950-01-01',
+                                    'endDate' => '2050-12-31',
+                            ],
+                    ]) ?>
+                </div>
+
+                <div class="col-md-6">
+                    <?= $form->field($model, "event_places")->textInput() ?>
                 </div>
 
             </div>
@@ -120,6 +151,15 @@ $csrfToken = Yii::$app->request->csrfToken;
                                                 'placeholder' => "Contact in {$language->name}",
                                         ]) ?>
                             </div>
+
+                            <div class="col-md-6">
+                                <?= $form->field($model, "translations[{$language->code}][topic]")
+                                        ->label("Topic ({$language->name})")
+                                        ->textInput([
+                                                'maxlength' => true,
+                                                'placeholder' => "Topic in {$language->name}",
+                                        ]) ?>
+                            </div>
                         </div>
                         <?= $form->field($model, "translations[{$language->code}][text]")
                                 ->label("Text ({$language->name})")
@@ -186,5 +226,6 @@ $this->registerJs(<<<'JS'
 
         return false;
     });
-JS);
+JS
+);
 ?>

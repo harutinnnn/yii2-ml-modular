@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $place
  * @property string $organiser
  * @property string $contact
+ * @property string $topic
  *
  * @property Events $events
  */
@@ -26,11 +27,11 @@ class EventsMl extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['events_id', 'lang', 'title','place','organiser','contact', 'text'], 'required'],
+            [['events_id', 'lang', 'title','place','organiser','contact', 'text','topic'], 'required'],
             [['events_id'], 'integer'],
             [['text'], 'string'],
             [['lang'], 'string', 'max' => 8],
-            [['title','place','organiser','contact'], 'string', 'max' => 255],
+            [['title','place','organiser','contact','topic'], 'string', 'max' => 255],
             [['events_id', 'lang'], 'unique', 'targetAttribute' => ['events_id', 'lang']],
             [['events_id'], 'exist', 'targetClass' => Events::class, 'targetAttribute' => ['events_id' => 'id']],
         ];
@@ -46,6 +47,7 @@ class EventsMl extends ActiveRecord
             'organiser' => 'Organiser',
             'place' => 'Place',
             'contact' => 'Contact',
+            'topic' => 'Topic',
             'text' => 'Text',
         ];
     }

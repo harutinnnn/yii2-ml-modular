@@ -74,6 +74,7 @@ class EventController extends MyController
             ->where([Events::tableName() . '.id' => intval($id)])
             ->one();
 
+
         $eventsAllLangList = Events::find()->select([EventsMl::tableName() . '.lang', EventsMl::tableName() . '.title', Events::tableName() . '.id'])
             ->innerJoin(
                 EventsMl::tableName(),
@@ -94,7 +95,14 @@ class EventController extends MyController
         Yii::$app->globalData->setPageData('bread', TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang));
         Yii::$app->globalData->setPageData('preTitle', \common\components\I18n::translate('events'));
         Yii::$app->globalData->setPageData('pageTitle', TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang));
-        Yii::$app->globalData->setPageData('headerImage', $eventItem->image);
+
+        if (isset($eventItem->image)) {
+
+            Yii::$app->globalData->setPageData('headerImage', $eventItem->image);
+
+        } else {
+            Yii::$app->globalData->setPageData('headerImage', '/images/editorial/campus-entrance.jpg');
+        }
 
         return $this->render('view',
             [

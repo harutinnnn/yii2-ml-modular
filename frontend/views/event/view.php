@@ -13,45 +13,71 @@ $languages = ArrayHelper::map(Language::find()->all(), 'code', 'name');
 ?>
 <section class="inner-section">
     <div class="wrap event-detail-grid">
-        <article>
-            <div class="eyebrow red"><?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'topic') ?></div>
-            <h2 class="display-inner"><?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang) ?></h2>
-            <div class="body-copy">
-                <?= EditorJsHelper::render(TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'text')) ?>
+        <?php if ($eventItem): ?>
+
+            <article>
+                <div class="eyebrow red"><?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'topic') ?></div>
+                <h2 class="display-inner"><?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang) ?></h2>
+                <div class="body-copy">
+                    <?= EditorJsHelper::render(TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'text')) ?>
+                </div>
+
+            </article>
+            <aside>
+                <div class="event-info">
+                    <div>
+                        <strong>Ամսաթիվ</strong>
+                        <?= date('d', strtotime($eventItem->date)) ?>
+                        <?= DateHelper::getMonth($eventItem->date, Yii::$app->globalData->lang) ?>,
+                        <?= date('Y', strtotime($eventItem->date)) ?>
+                    </div>
+                    <div>
+                        <strong>Ժամ</strong>
+                        <?= $eventItem->time ?>
+                    </div>
+                    <div>
+                        <strong><?= I18n::translate('location') ?></strong>
+                        <?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'place') ?>
+                    </div>
+                    <div>
+                        <strong><?= I18n::translate('organizer') ?></strong>
+                        <?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'organiser') ?>
+                    </div>
+                    <div>
+                        <strong><?= I18n::translate('contact') ?></strong>
+                        <?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'contact') ?>
+                    </div>
+                    <a href="/<?= Yii::$app->globalData->lang ?>/events/registration/<?= $eventItem->id ?>">
+                        <button class="btn-red" style="width:100%;margin-top:20px">
+                            <?= I18n::translate('register_to_participate') ?>
+                        </button>
+                    </a>
+                </div>
+            </aside>
+        <?php else: ?>
+
+            <div>
+                <h2 class="display-inner">
+                    <?= I18n::translate('no_content_with_current_language_text') ?>
+                </h2>
+                <div class="body-copy">
+                    <?= I18n::translate('for_example') ?>`
+
+                    <?php if (isset($navLangList) && !empty($navLangList)): ?>
+                        <?php foreach ($navLangList as $langKey => $newsSlug): ?>
+                            <?php if ($langKey !== Yii::$app->globalData->lang): ?>
+
+                                <a href="<?= $newsSlug ?>"
+                                   class="no-content-lang-url"><?= $languages[$langKey] ?>
+                                </a>
+                            <?php endif; ?>
+
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             </div>
 
-        </article>
-        <aside>
-            <div class="event-info">
-                <div>
-                    <strong>Ամսաթիվ</strong>
-                    <?= date('d', strtotime($eventItem->date)) ?>
-                    <?= DateHelper::getMonth($eventItem->date, Yii::$app->globalData->lang) ?>,
-                    <?= date('Y', strtotime($eventItem->date)) ?>
-                </div>
-                <div>
-                    <strong>Ժամ</strong>
-                    <?= $eventItem->time ?>
-                </div>
-                <div>
-                    <strong><?= I18n::translate('location') ?></strong>
-                    <?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'place') ?>
-                </div>
-                <div>
-                    <strong><?= I18n::translate('organizer') ?></strong>
-                    <?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'organiser') ?>
-                </div>
-                <div>
-                    <strong><?= I18n::translate('contact') ?></strong>
-                    <?= TranslationModel::getTranslation($eventItem, Yii::$app->globalData->lang, 'contact') ?>
-                </div>
-                <a href="/<?= Yii::$app->globalData->lang ?>/events/registration/<?= $eventItem->id ?>">
-                    <button class="btn-red" style="width:100%;margin-top:20px">
-                        <?= I18n::translate('register_to_participate') ?>
-                    </button>
-                </a>
-            </div>
-        </aside>
+        <?php endif; ?>
     </div>
 </section>
 
